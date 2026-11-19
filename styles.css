@@ -1,0 +1,868 @@
+/* Extra styling. Most of the look comes from theme.scss. */
+
+/* Keep forecast images from getting too wide on large screens */
+.forecast-page img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tables generated from CSV files: scroll sideways on phones instead of overflowing */
+.forecast-page table {
+  display: block;
+  overflow-x: auto;
+}
+
+/* Tables: keep the words of links whole. Quarto lets link text in tables break between any two
+   letters, which squeezes columns of links (such as the block names on the Calculation blocks page)
+   until words are split. */
+.table a {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* Code in list items: wrap like code in paragraphs. The theme keeps code in list items on one
+   line, so a long name in a bullet point pushed the whole page sideways on phones. A name is
+   broken only if it is wider than the screen. */
+li code:not(.sourceCode) {
+  white-space: pre-wrap;
+}
+
+/* Documentation tables. Each one sits in a div of class doc-table, which scrolls sideways
+   when the table is wider than the page (on phones, for example) instead of squeezing its
+   columns. Code in the tables stays on one line, so names are never split; tables marked
+   .nowrap-first also keep their first column (block, option and switch names) on one line. */
+.doc-table {
+  overflow-x: auto;
+}
+
+.doc-table td code,
+table.nowrap-first td:first-child {
+  white-space: nowrap;
+}
+
+/* Other tables (Demonstration, Methodology): on phones, scroll sideways too, instead of pushing
+   the whole page sideways. */
+@media (max-width: 767.98px) {
+  main :not(.doc-table) > table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* Site name in the navbar. The project title is long, so it is set in a small type size.
+   From 1400 px up it sits on four fixed lines beside the menu. Below 1400 px the navbar collapses
+   into the menu button (collapse-below in _quarto.yml) and the title wraps freely across the width. */
+.navbar-brand .navbar-title {
+  display: block;
+  font-size: 0.86rem;
+  line-height: 1.22;
+  white-space: normal;
+}
+
+@media (max-width: 1399.98px) {
+  .navbar-brand .navbar-title br {
+    display: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar-brand .navbar-title {
+    font-size: 0.74rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .navbar-brand-container {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .navbar-brand .navbar-title {
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .navbar-nav .nav-link {
+    white-space: nowrap;
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .navbar-brand .navbar-title {
+    font-size: 0.9rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+}
+
+h1.title:has(br) {
+  font-size: 1.6rem;
+}
+
+/* Home page: full-width layout, with the title, subtitle and welcome text centred. */
+/* The home page has its own title in the middle column, so Quarto's title block is hidden. */
+#quarto-content:has(.home-columns) #title-block-header {
+  display: none;
+}
+
+.home-mid {
+  text-align: center;
+}
+
+.home-title {
+  font-size: 1.45rem;
+  line-height: 1.28;
+  margin: 0 0 0.7rem;
+  text-wrap: balance;
+}
+
+.home-project {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.5rem;
+}
+
+.home-subtitle {
+  font-size: 1.15rem;
+  font-weight: 300;
+  margin: 0 0 1.4rem;
+}
+
+.home-intro p {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 56rem;
+}
+
+/* Home page: use almost the full width of the screen (Quarto's default page column leaves wide margins). */
+#quarto-content:has(.home-columns) #quarto-document-content {
+  grid-column: screen-start-inset / screen-end-inset;
+}
+
+/* Home page: forecasts on the left, blog on the right; they stack on narrow screens. */
+.home-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 991.98px) {
+  .home-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  /* when stacked, the introduction comes first */
+  .home-mid {
+    order: -1;
+  }
+}
+
+.home-col > h2:first-child {
+  margin-top: 0;
+}
+
+/* Slide viewer (see slideshow.js). */
+.slideshow {
+  color: #212529;
+  max-width: 1100px;
+  margin: 1rem auto 2rem;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.slideshow:focus-visible {
+  outline: 3px solid var(--bs-primary, #006a40);
+  outline-offset: 2px;
+}
+
+.slideshow-stage {
+  position: relative;
+  background: #eee;
+  aspect-ratio: 16 / 9;
+}
+
+.slideshow-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.slideshow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1.9rem;
+  line-height: 1;
+  padding: 0 0 0.2rem;
+  cursor: pointer;
+}
+
+.slideshow-btn:hover:not(:disabled),
+.slideshow-btn:focus-visible {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.slideshow-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.slideshow-prev { left: 0.75rem; }
+.slideshow-next { right: 0.75rem; }
+
+.slideshow-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.9rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+}
+
+.slideshow-count {
+  min-width: 4.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.slideshow-range {
+  flex: 1 1 auto;
+  min-width: 0;
+  accent-color: var(--bs-primary, #006a40);
+}
+
+.slideshow-full {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  background: #fff;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.slideshow:fullscreen,
+.slideshow:-webkit-full-screen {
+  max-width: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.slideshow:fullscreen .slideshow-stage,
+.slideshow:-webkit-full-screen .slideshow-stage {
+  flex: 1 1 auto;
+  aspect-ratio: auto;
+  min-height: 0;
+  background: #000;
+}
+
+.slideshow:fullscreen .slideshow-bar,
+.slideshow:-webkit-full-screen .slideshow-bar {
+  background: #fff;
+}
+
+/* The blog list on the home page is in a narrow column, so each post shows its date above the title
+   instead of in a column of its own. */
+.home-col .quarto-listing-default .quarto-post {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: stretch;
+}
+
+.home-col .quarto-listing-default .quarto-post .metadata {
+  margin: 0 0 0.15rem;
+  min-width: 0;
+}
+
+.home-col .quarto-listing-default .quarto-post .body {
+  width: 100%;
+}
+
+/* Home page forecast card: show the whole figure instead of a cropped strip. */
+.home-col img.thumbnail-image {
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain;
+}
+
+/* "Demonstration cases" subsection of the home page: small heading, buttons in a row. */
+.home-intro h3 {
+  font-size: 1.1rem;
+  margin: 1.6rem 0 0.7rem;
+}
+
+/* The slides section: title, byline and instruction line are centred. */
+section#slides > h2 {
+  margin-top: 0;
+  text-align: center;
+  border-bottom: 0;
+}
+
+section#slides > p {
+  text-align: center;
+}
+
+/* Page background: one plain pale green behind every page. To change the colour, edit the value below.
+   (The desert picture, desert.webp, is no longer used; to bring it back, see the earlier version of this file.) */
+body {
+  background: #e6f0e7;
+}
+
+#quarto-content {
+  background: transparent;
+}
+
+.nav-footer {
+  background: #dcebdf;
+}
+
+/* Let the background show behind the left-hand section menu on Methodology, Demonstration and Documentation pages. */
+#quarto-sidebar {
+  background-color: transparent;
+}
+
+/* Slightly darker secondary text (menus, breadcrumbs, captions) so it stays readable over the background picture. */
+#quarto-sidebar .sidebar-item .sidebar-link:not(.active),
+.quarto-page-breadcrumbs .breadcrumb-item.active,
+.quarto-page-breadcrumbs .breadcrumb-item::before {
+  color: #3d4147;
+}
+
+figcaption,
+.figure-caption,
+.quarto-float-caption {
+  color: #454e57;
+}
+
+.listing-category {
+  color: #444b52;
+}
+
+/* Phone: the bar with the section menu button should also let the background through. */
+#quarto-header .quarto-secondary-nav {
+  background-color: #dcebdf !important;
+}
+
+/* ESTCP logo at the right of the top bar (file estcp-logo.png, supplied by the project). It is the link
+   to the ESTCP website; the link text is hidden and the logo is shown on a white plate. */
+.navbar .nav-link[href*="serdp-estcp"] {
+  display: block;
+  width: 158px;
+  height: 44px;
+  padding: 0 !important;
+  margin: 0 0.6rem;
+  font-size: 0;
+  color: transparent !important;
+  background: #fff url("estcp-logo.png") center / contain no-repeat;
+  border-radius: 4px;
+}
+
+@media (max-width: 1399.98px) {
+  .navbar .nav-link[href*="serdp-estcp"] {
+    margin: 0.6rem 0;
+  }
+}
+
+/* Between 1400 and 1600 px the bar is full, so the logo, the title and the menu spacing are a little smaller. */
+@media (min-width: 1400px) and (max-width: 1599.98px) {
+  .navbar .nav-link[href*="serdp-estcp"] {
+    width: 104px;
+    height: 29px;
+    margin: 0 0.25rem;
+  }
+
+  .navbar-brand .navbar-title {
+    font-size: 0.74rem;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.92rem;
+    padding-left: 0.14rem;
+    padding-right: 0.14rem;
+  }
+}
+
+/* Slides and lectures on the home page: four panels, two by two; one column on narrow screens.
+   In each row the titles take the same height, so the viewers and videos line up. */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 2rem;
+  margin-top: 1.5rem;
+}
+
+.media-panel {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.media-panel h3 {
+  font-size: 1.15rem;
+  line-height: 1.3;
+  margin: 0;
+  text-align: center;
+  align-self: end;
+}
+
+.media-by {
+  font-size: 0.92rem;
+  text-align: center;
+  margin: 0 0 0.3rem;
+}
+
+.media-panel .slideshow {
+  margin: 0;
+  max-width: none;
+  align-self: start;
+}
+
+.media-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+  align-self: start;
+}
+
+.media-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 991.98px) {
+  .media-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Dividers on the home page: fine green lines that fade out at their ends.
+   Between the three columns (vertical on wide screens, horizontal when the columns stack),
+   and one across the page above "Slides and lectures". */
+@media (min-width: 992px) {
+  .home-columns {
+    gap: 0;
+  }
+
+  .home-left {
+    padding-right: 1.75rem;
+  }
+
+  .home-right {
+    padding-left: 1.75rem;
+  }
+
+  .home-mid {
+    padding: 0 1.75rem;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-image: linear-gradient(to bottom, rgba(0, 105, 62, 0), rgba(0, 105, 62, 0.6) 12%, rgba(0, 105, 62, 0.6) 88%, rgba(0, 105, 62, 0)) 1;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .home-left,
+  .home-right {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    background: linear-gradient(to right, rgba(0, 105, 62, 0), rgba(0, 105, 62, 0.6) 15%, rgba(0, 105, 62, 0.6) 85%, rgba(0, 105, 62, 0)) top / 100% 1px no-repeat;
+  }
+}
+
+section#slides::before {
+  content: "";
+  display: block;
+  height: 2px;
+  margin: 3rem 0 2.5rem;
+  background: linear-gradient(to right, rgba(0, 105, 62, 0), rgba(0, 105, 62, 0.55) 15%, rgba(0, 105, 62, 0.55) 85%, rgba(0, 105, 62, 0));
+}
+
+/* Home page: each column and the slides section has its own tone of green.
+   To change a tone, edit the colour values below. */
+.home-left {
+  background: #d3e7d6;
+}
+
+.home-mid {
+  background: #f1f8f1;
+}
+
+.home-right {
+  background: #d5e8e3;
+}
+
+.home-col {
+  padding: 1.5rem 1.5rem 1.75rem !important;
+}
+
+@media (min-width: 992px) {
+  .home-left {
+    border-radius: 10px 0 0 10px;
+  }
+
+  .home-right {
+    border-radius: 0 10px 10px 0;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .home-col {
+    border-radius: 10px;
+  }
+
+  .home-left,
+  .home-right {
+    margin-top: 1.25rem;
+    background-image: none;
+  }
+}
+
+section#slides {
+  margin-top: 3rem;
+  padding: 0 1.5rem 2rem;
+  background: #c9e0cf;
+  border-radius: 10px;
+}
+
+section#slides::before {
+  margin: 0 0 2rem;
+  border-radius: 10px 10px 0 0;
+}
+
+section#slides > h2 {
+  padding-top: 0;
+}
+
+/* Top bar on wide screens: the menu sits midway between the site title and the ESTCP logo. */
+@media (min-width: 1400px) {
+  #quarto-header .navbar-collapse .navbar-nav.me-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* the small values even out the built-in spacing of the title and the logo */
+  #quarto-header .navbar-collapse .navbar-nav.ms-auto {
+    margin-left: 13px !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  #quarto-header .navbar-collapse .navbar-nav.ms-auto {
+    margin-left: 7px !important;
+  }
+}
+
+/* Home page, forecast column: one section per type of forecast, separated by a fine line. */
+.forecast-type h3 a {
+  text-decoration: none;
+}
+
+.forecast-type h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.6rem;
+}
+
+.forecast-type + .forecast-type {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  background: linear-gradient(to right, rgba(0, 105, 62, 0), rgba(0, 105, 62, 0.6) 15%, rgba(0, 105, 62, 0.6) 85%, rgba(0, 105, 62, 0)) top / 100% 1px no-repeat;
+}
+
+.forecast-type .quarto-listing {
+  margin-bottom: 0;
+}
+
+/* Home page: "Our predictions" as a row of three across the top; one column on narrow screens. */
+.predictions-row {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem 1.25rem;
+  background: #d3e7d6;
+  border-radius: 10px;
+}
+
+.predictions-row > h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.predictions-row > p {
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.predictions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.75rem;
+  max-width: 1020px;
+  margin: 1rem auto 0;
+}
+
+.predictions-grid .forecast-type {
+  display: flex;
+  flex-direction: column;
+}
+
+.predictions-grid .forecast-type h3 {
+  text-align: center;
+}
+
+.predictions-grid .forecast-type + .forecast-type {
+  margin-top: 0;
+  padding-top: 0;
+  background: none;
+}
+
+/* the picture in each card keeps the plot's shape, and the three cards are the same height */
+.predictions-grid .quarto-listing,
+.predictions-grid .list.grid,
+.predictions-grid .g-col-1,
+.predictions-grid .card {
+  height: 100%;
+}
+
+.predictions-grid img.thumbnail-image {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: 4 / 3;
+  object-fit: contain !important;
+  background: #fff;
+}
+
+@media (max-width: 991.98px) {
+  .predictions-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.predictions-row + .home-columns {
+  margin-top: 0;
+}
+
+/* Left column: section links, stacked as full-width buttons. */
+.home-left {
+  background: #dbeadf;
+}
+
+.home-left h2 {
+  font-size: 1.3rem;
+  margin-top: 0;
+}
+
+.home-left section + section {
+  margin-top: 2rem;
+}
+
+.home-links p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.home-links .btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Predictions row: smaller cards with a short description under each figure. */
+.predictions-row {
+  margin-top: 2rem;
+  margin-bottom: 0;
+}
+
+.predictions-grid .card-body {
+  padding: 0.8rem 0.9rem 0.7rem;
+}
+
+.predictions-grid .card-title {
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+.predictions-grid .card-text,
+.predictions-grid .listing-description {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.predictions-row + section#slides {
+  margin-top: 2rem;
+}
+
+/* show the whole description (Quarto cuts it after a few lines by default) */
+.predictions-grid .card-text,
+.predictions-grid .listing-description {
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  overflow: visible !important;
+}
+
+/* Home page, blog column: the newest post with its picture. On wide screens the picture takes only
+   the space left over in the column, so it never makes the three columns taller. */
+.home-post-date {
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.home-post-title {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: inherit;
+  text-decoration: none;
+  margin-bottom: 0.4rem;
+}
+
+.home-post-title:hover {
+  text-decoration: underline;
+}
+
+.home-post-text {
+  font-size: 0.95rem;
+  margin-bottom: 0.7rem;
+}
+
+.home-post-figure {
+  display: block;
+}
+
+.home-post-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background: #fff;
+}
+
+@media (min-width: 992px) {
+  .home-right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .home-right > section,
+  .home-right .quarto-listing,
+  .home-right #recent-posts,
+  .home-right .home-post {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .home-post-figure {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    margin-bottom: 0.8rem;
+  }
+
+  .home-post-figure img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center top;
+    border: 0;
+    background: transparent;
+  }
+}
+
+/* The project number, under the ESTCP logo in the top bar. */
+.navbar .nav-item:has(> .nav-link[href*="serdp-estcp"]) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar .nav-item:has(> .nav-link[href*="serdp-estcp"])::after {
+  content: "DoW ESTCP project NH24-8392";
+  white-space: nowrap;
+  text-align: center;
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  margin-top: 0.3rem;
+}
+
+@media (min-width: 1400px) and (max-width: 1599.98px) {
+  .navbar .nav-item:has(> .nav-link[href*="serdp-estcp"])::after {
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 1399.98px) {
+  .navbar .nav-item:has(> .nav-link[href*="serdp-estcp"]) {
+    align-items: flex-start;
+    margin-bottom: 0.4rem;
+  }
+
+  .navbar .nav-item:has(> .nav-link[href*="serdp-estcp"])::after {
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  #quarto-header .navbar-collapse .navbar-nav.ms-auto {
+    align-items: center;
+  }
+}
+
+/* On wide screens the caption hangs under the logo and runs on under the icons beside it,
+   so it adds no width to the bar; the logo is lifted a little so the pair sits centred. */
+@media (min-width: 1400px) {
+  .navbar .nav-item:has(> .nav-link[href*="serdp-estcp"]) {
+    position: relative;
+    transform: translateY(-10px);
+  }
+
+  .navbar .nav-item:has(> .nav-link[href*="serdp-estcp"])::after {
+    position: absolute;
+    top: 100%;
+    left: 0.25rem;
+    margin-top: 0.25rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .navbar .nav-item:has(> .nav-link[href*="serdp-estcp"])::after {
+    left: 0.6rem;
+  }
+}

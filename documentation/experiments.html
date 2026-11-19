@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="The experiments run with the NLSA Python toolkit: their data, settings and scripts. ENSO from monthly ERA5 sea surface temperature, the MJO from daily ERA5 outgoing longwave radiation, station forecasts from 14th Weather Squadron records, and the Lorenz 63 test system.">
+
+<title>Experiments – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/index.html">Introduction</a></li><li class="breadcrumb-item"><a href="../documentation/experiments.html">Experiments</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Introduction</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/experiments.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">The code</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/code-structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../documentation/blocks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Calculation blocks</span></a>
+            <button type="button" class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section: Calculation blocks">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Setup and run control</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/delay-embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Delay embedding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/kernel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Kernel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/koopman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Koopman analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/skill-outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Skill and outputs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/pseudo-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pseudo-code</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Reference</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/hyperparameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing hyperparameters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/options.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">All options</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/index.html">Introduction</a></li><li class="breadcrumb-item"><a href="../documentation/experiments.html">Experiments</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Experiments</h1>
+<p class="subtitle lead">ENSO from monthly data, the MJO from daily data, station forecasts, and the Lorenz 63 test system</p>
+</div>
+
+<div>
+  <div class="description">
+    The experiments run with the NLSA Python toolkit: their data, settings and scripts. ENSO from monthly ERA5 sea surface temperature, the MJO from daily ERA5 outgoing longwave radiation, station forecasts from 14th Weather Squadron records, and the Lorenz 63 test system.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In the toolkit, an <strong>experiment</strong> is a complete set of settings: which data to use, how to embed them, which kernel, how many eigenfunctions, what to forecast and how far ahead. In the example scripts, each experiment is a member of the script’s <code>Experiment</code> list and a <code>case</code> of its <code>from_experiment()</code> function, which builds all the parameter objects. Choosing an experiment is then a single switch at the top of the script:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>EXPERIMENT: Experiment <span class="op">=</span> Experiment.ELNINO_2027_FROM_ERA5_NINO34SST</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="doc-table">
+<table class="table-striped table-hover caption-top table">
+<caption>Experiments and their scripts</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 31%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Experiment</th>
+<th>Data</th>
+<th>Script in the repository</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSO: Koopman modes of sea surface temperature</td>
+<td>Monthly ERA5</td>
+<td><code>koopman_diffusion_regularization_kaf.py</code><br>in <code>examples/enso/</code></td>
+<td>In the repository</td>
+</tr>
+<tr class="even">
+<td>ENSO: forecasts of the Niño 3.4 index</td>
+<td>Monthly ERA5</td>
+<td><code>kernel_analog_forecasting.py</code><br>in <code>examples/enso/</code></td>
+<td>In the repository</td>
+</tr>
+<tr class="odd">
+<td>MJO: Koopman index and forecasts</td>
+<td>Daily ERA5</td>
+<td>—</td>
+<td>Configuration below; script not yet in the repository</td>
+</tr>
+<tr class="even">
+<td>Station forecasts</td>
+<td>Daily station records, ERA5</td>
+<td>—</td>
+<td>Configuration below; script not yet in the repository</td>
+</tr>
+<tr class="odd">
+<td>Lorenz 63 test system</td>
+<td>Simulated</td>
+<td>Four scripts in <code>examples/lorenz63/</code></td>
+<td>In the repository</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The scientific background of each experiment is in the <a href="../demonstration/index.html">Demonstration</a> section. This page is about how the experiments are set up in the code.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">ENSO, monthly</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">MJO, daily</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Stations, daily</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Lorenz 63</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>The two ENSO scripts work with monthly ERA5 sea surface temperature (SST). The <strong>Koopman script</strong> extracts patterns of variability, such as the annual cycle, ENSO and the trend, as Koopman eigenfunctions, and then forecasts one of them. The <strong>kernel analog forecasting script</strong> forecasts the Niño 3.4 index directly.</p>
+<section id="kernel-analog-forecasts-of-the-niño-3.4-index" class="level3">
+<h3 class="anchored" data-anchor-id="kernel-analog-forecasts-of-the-niño-3.4-index">Kernel analog forecasts of the Niño 3.4 index</h3>
+<p>Script: <code>examples/enso/kernel_analog_forecasting.py</code></p>
+<div class="doc-table">
+<table class="table-striped table-hover caption-top table">
+<caption>Experiments of the kernel analog forecasting script</caption>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th><code>NINO34_FROM_ERA5_NINO34SST</code></th>
+<th><code>ELNINO_2027_FROM_ERA5_NINO34SST</code> (default)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Purpose</td>
+<td>Hindcasts of the Niño 3.4 index</td>
+<td>Real-time forecast of the 2026/27 El Niño</td>
+</tr>
+<tr class="even">
+<td>Predictors</td>
+<td>ERA5 SST over the Niño 3.4 box (190°E–240°E, 5°S–5°N), every 4th grid point, standardized; the annual cycle is kept</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Target</td>
+<td>Niño 3.4 index: SST averaged over the box, minus its 1940–2019 monthly climatology</td>
+<td>Same, with the 1940–2026 climatology</td>
+</tr>
+<tr class="even">
+<td>Training period</td>
+<td>January 1940 – December 2019</td>
+<td>January 1940 – August 2026</td>
+</tr>
+<tr class="odd">
+<td>Test period</td>
+<td>January 2018 – December 2025</td>
+<td>January 2009 – August 2026</td>
+</tr>
+<tr class="even">
+<td>Delay window</td>
+<td>13 months (<code>num_half_delays=6</code>)</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Kernel</td>
+<td>Cone kernel (ζ = 0.99) on SST and its rate of change; variable bandwidth; diffusion-maps normalization (<code>"fokkerplanck"</code>); 512 eigenfunctions</td>
+<td>Same</td>
+</tr>
+<tr class="even">
+<td>Forecast</td>
+<td>Lead times 0–24 months, using all 512 eigenfunctions</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Extra samples after the data</td>
+<td>None set; add <code>num_after=num_pred_steps</code> to the training and test data (see the note below)</td>
+<td>Training data: 24 months (<code>num_after=num_pred_steps</code>)</td>
+</tr>
+<tr class="even">
+<td>Other output</td>
+<td>Global SST projected onto kernel eigenfunctions 0–3</td>
+<td>Same</td>
+</tr>
+<tr class="odd">
+<td>Data in the repository</td>
+<td>Yes, once <code>num_after</code> is added (see <a href="../documentation/getting-started.html#a-first-run-with-the-data-in-the-repository">A first run</a>)</td>
+<td>No: needs ERA5 files to August 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="koopman-modes-and-their-forecasts" class="level3">
+<h3 class="anchored" data-anchor-id="koopman-modes-and-their-forecasts">Koopman modes and their forecasts</h3>
+<p>Script: <code>examples/enso/koopman_diffusion_regularization_kaf.py</code></p>
+<div class="doc-table">
+<table class="table-striped table-hover caption-top table">
+<caption>Experiments of the Koopman script</caption>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 40%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th><code>ENSO_FROM_ERA5_IPSST</code> (default)</th>
+<th><code>ENSO_FROM_ERA5_NINO34SST</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Purpose</td>
+<td>Koopman modes of Indo-Pacific SST: annual and semiannual cycles, ENSO, trend</td>
+<td>Koopman analysis of Niño 3.4 SST</td>
+</tr>
+<tr class="even">
+<td>Predictors</td>
+<td>ERA5 SST over the Indo-Pacific (28°E–290°E, 60°S–20°N), every 4th grid point, standardized; the annual cycle is kept</td>
+<td>ERA5 SST over the Niño 3.4 box, every 4th grid point, standardized</td>
+</tr>
+<tr class="odd">
+<td>Training period</td>
+<td>1940–2019</td>
+<td>1940–2019</td>
+</tr>
+<tr class="even">
+<td>Test period</td>
+<td>1986–2022</td>
+<td>2016–2025</td>
+</tr>
+<tr class="odd">
+<td>Delay window</td>
+<td>49 months (<code>num_half_delays=24</code>)</td>
+<td>Same</td>
+</tr>
+<tr class="even">
+<td>Kernel</td>
+<td>Euclidean distance with a variable bandwidth (<code>CONE_KERNEL = False</code>), bandwidth factor 1.5, <code>"fokkerplanck"</code>, 512 eigenfunctions</td>
+<td>Same, computed in batches to save memory</td>
+</tr>
+<tr class="odd">
+<td>Koopman generator</td>
+<td>Diffusion regularization τ = 0.01; 256 basis functions; 65 eigenfunctions sorted by Dirichlet energy; 4th-order finite differences</td>
+<td>τ = 0.005; 64 basis functions; 65 eigenfunctions</td>
+</tr>
+<tr class="even">
+<td>Forecast</td>
+<td>Kernel analog forecast of the real part of Koopman eigenfunction 17, lead times 0–24 months</td>
+<td>Same, eigenfunction 3</td>
+</tr>
+<tr class="odd">
+<td>Other output</td>
+<td>Koopman modes: global SST projected onto eigenfunctions 0–24</td>
+<td>Global SST projected onto eigenfunctions 0–3</td>
+</tr>
+<tr class="even">
+<td>Data in the repository</td>
+<td>No: needs ERA5 files</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Notes on these settings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>The annual cycle is kept in the predictors.</strong> The predictors are standardized but their climatology is not removed (<code>Climatology(remove=False, standardize=True)</code>). The kernel then “sees” the season, which lets the Koopman analysis separate the annual cycle, ENSO and their combinations, and lets the forecasts depend on the season of the initial time. The forecast target, in contrast, is an anomaly (<code>remove=True</code>).</li>
+<li><strong>Test and training periods overlap.</strong> In all four experiments the test period overlaps the training period, entirely in the case of <code>ELNINO_2027_FROM_ERA5_NINO34SST</code>, whose aim is the latest forecast rather than a measurement of skill. Skill computed over the overlap is partly in-sample. For independent hindcasts, start the test period after the training period ends.</li>
+<li><strong><code>num_after</code> in <code>NINO34_FROM_ERA5_NINO34SST</code>.</strong> A kernel analog forecast to 24 months needs the 24 months after each training sample, reserved with <code>num_after</code>. This experiment does not set it, so add <code>num_after=num_pred_steps</code> to the training data, and to the test data for the skill scores. The data shipped in the repository were prepared this way.</li>
+<li><strong>Which eigenfunction is ENSO.</strong> Koopman eigenfunctions are sorted by Dirichlet energy, so the index of the ENSO eigenfunction depends on the settings: 15 in the run shown below, 17 in the current settings of the script. Check the printed eigenvalue table, where ENSO appears as a pair with a period of about 3–5 years, before setting <code>idx_koopman_eig</code>.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="example-results" class="level3">
+<h3 class="anchored" data-anchor-id="example-results">Example results</h3>
+<p>These figures were produced by the scripts and are included in the NLSA repository (BSD 3-Clause license).</p>
+<div id="fig-enso-eig" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Four panels. Left: spiral-shaped curves of the real against the imaginary part of the eigenfunction. Right: time series of the real and imaginary parts from the 1940s to 2019, with large peaks in 1982, 1997 and 2015.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-enso-eig-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/enso-koopman-eigenfunction.png" class="img-fluid figure-img" alt="Four panels. Left: spiral-shaped curves of the real against the imaginary part of the eigenfunction. Right: time series of the real and imaginary parts from the 1940s to 2019, with large peaks in 1982, 1997 and 2015.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-enso-eig-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: <strong>ENSO Koopman eigenfunction</strong> from Indo-Pacific SST (<code>ENSO_FROM_ERA5_IPSST</code>), with a frequency of 0.234 cycles per year (period 4.3 years). Left: real against imaginary part, which rotate around the origin like an oscillator. Right: the two parts as time series. Top: training period. Bottom: out-of-sample values in the test period, computed with the Nyström extension.
+</figcaption>
+</figure>
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-enso-spec" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Scatter plot of eigenfrequency against Dirichlet energy, symmetric about zero frequency, with points coloured by index from 0 to 64.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-enso-spec-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/enso-generator-spectrum.png" class="img-fluid figure-img" alt="Scatter plot of eigenfrequency against Dirichlet energy, symmetric about zero frequency, with points coloured by index from 0 to 64.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-enso-spec-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: <strong>Generator spectrum</strong> of the same run: eigenfrequency (radians per month) against Dirichlet energy for the 65 Koopman eigenfunctions. The smoothest eigenfunctions, at the left, include the annual (±0.52 rad/month) and semiannual cycles; ENSO is the pair at ±0.12 rad/month.
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-enso-kaf" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Line plot of forecast Niño 3.4 anomaly against lead time from 0 to 24 months, rising to about 3.7 at 6 months and falling below zero after 12 months; three observed points at leads 0 to 2.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-enso-kaf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/enso-kaf-forecast-2026-06.png" class="img-fluid figure-img" alt="Line plot of forecast Niño 3.4 anomaly against lead time from 0 to 24 months, rising to about 3.7 at 6 months and falling below zero after 12 months; three observed points at leads 0 to 2.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-enso-kaf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: <strong>Kernel analog forecast of the Niño 3.4 index</strong> (°C) initialized on 1 June 2026 (<code>ELNINO_2027_FROM_ERA5_NINO34SST</code>), with observed values for the first months. An exploratory run: its training period extends to August 2026, so it includes the first observed months of the forecast.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="fig-enso-mode" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Two world maps of SST patterns. The real part shows a cold equatorial Pacific tongue; the imaginary part a warm eastern equatorial Pacific.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-enso-mode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/enso-koopman-mode.png" class="img-fluid figure-img" alt="Two world maps of SST patterns. The real part shows a cold equatorial Pacific tongue; the imaginary part a warm eastern equatorial Pacific.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-enso-mode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: <strong>Koopman ENSO mode</strong>: global SST projected onto the eigenfunction of <a href="#fig-enso-eig" class="quarto-xref">Figure&nbsp;1</a>, real part (left) and imaginary part (right). The two patterns are a quarter of a cycle apart.
+</figcaption>
+</figure>
+</div>
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Not yet in the repository
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The MJO results of the June 2026 progress review (a Koopman MJO index from daily OLR, 1975–2025, and its forecasts verified over 2025–2026) were computed with scripts that are not yet in the public repository. The settings below show how the experiment is assembled from the classes of version 0.4. Values written <code>___</code> are to be taken from the experiment logs when the script is published.</p>
+</div>
+</div>
+<p>The MJO experiments of the demonstration (see <a href="../demonstration/era5-daily.html">ERA5 daily data</a>) have two parts:</p>
+<div class="doc-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 34%">
+<col style="width: 34%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>Predictors</th>
+<th>Target</th>
+<th>Lead times</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MJO index</strong></td>
+<td>Daily outgoing longwave radiation (OLR), averaged over 15°S–15°N, 1975–2025</td>
+<td>The leading intraseasonal Koopman eigenfunction, the Koopman MJO index</td>
+<td>0–60 days, by kernel analog forecasting of the index</td>
+</tr>
+<tr class="even">
+<td><strong>OLR forecasts</strong></td>
+<td>As above</td>
+<td>OLR anomaly averaged over 5°S–5°N, 120°E–150°E</td>
+<td>0–60 days</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The Koopman script for ENSO already does both steps (Koopman eigendecomposition, then a kernel analog forecast of one eigenfunction), so the MJO experiment is a new <code>case</code> in a copy of <code>examples/enso/koopman_diffusion_regularization_kaf.py</code>. Its data settings differ from the ENSO ones in three ways: daily sampling, OLR instead of SST, and a strip of the tropics averaged over latitude.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Experiment(StrEnum):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    MJO_FROM_ERA5_OLR <span class="op">=</span> auto()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Koopman MJO index from daily ERA5 OLR, and its forecast."""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>and, in <code>from_experiment()</code>, a new <code>case</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> Experiment.MJO_FROM_ERA5_OLR:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>            cone_pars <span class="op">=</span> ConePars(zeta<span class="op">=</span><span class="fl">0.99</span>) <span class="cf">if</span> cone_kernel <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            era5_io <span class="op">=</span> era5.IO(input_path<span class="op">=</span>ERA5_DAILY_DATA_DIR, file_format<span class="op">=</span><span class="st">"nc"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            time_sampling <span class="op">=</span> <span class="st">"daily"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            fd_order <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            num_pred_steps <span class="op">=</span> <span class="dv">60</span>                     <span class="co"># lead times 0-60 days</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            train_date_range <span class="op">=</span> (<span class="st">"1975-01-01"</span>, <span class="st">"___"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>            test_date_range <span class="op">=</span> (<span class="st">"___"</span>, <span class="st">"___"</span>)        <span class="co"># after the training period</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            climatology_date_range <span class="op">=</span> train_date_range</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            common_pars: CommonPars <span class="op">=</span> {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                <span class="st">"num_half_delays"</span>: ___,             <span class="co"># window of 2*h + 1 days</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">"velocity_covariate"</span>: cone_pars <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">"velocity_fd_order"</span>: fd_order <span class="cf">if</span> cone_pars <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="va">None</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>            strip <span class="op">=</span> era5.Domain(                    <span class="co"># 15S-15N, all longitudes,</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                sampling<span class="op">=</span><span class="st">"meridionally_averaged"</span>,   <span class="co"># averaged over latitude</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                min_lon<span class="op">=</span><span class="dv">0</span>, max_lon<span class="op">=</span><span class="dv">360</span>, min_lat<span class="op">=-</span><span class="dv">15</span>, max_lat<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                step_lon<span class="op">=</span>___,                       <span class="co"># grid points averaged in longitude</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            box <span class="op">=</span> era5.Domain(                      <span class="co"># forecast target</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                sampling<span class="op">=</span><span class="st">"area_averaged"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                min_lon<span class="op">=</span><span class="dv">120</span>, max_lon<span class="op">=</span><span class="dv">150</span>, min_lat<span class="op">=-</span><span class="dv">5</span>, max_lat<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>            <span class="kw">def</span> olr(domain, date_range, climatology):</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> era5.DataSpecs(</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">vars</span><span class="op">=</span>[era5.Var.AVG_TNLWRF],</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                    domain<span class="op">=</span>domain,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                    time<span class="op">=</span>Time(date_range<span class="op">=</span>date_range, sampling<span class="op">=</span>time_sampling,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                              custom_climatology_date_range<span class="op">=</span>climatology_date_range),</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                    io<span class="op">=</span>era5_io,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                    climatology<span class="op">=</span>climatology,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            train_data_pars <span class="op">=</span> DataPars(</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                covariate<span class="op">=</span>Covariate(specs<span class="op">=</span>(olr(strip, train_date_range,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>                                               Climatology(remove<span class="op">=</span>___, standardize<span class="op">=</span><span class="va">True</span>)),)),</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                response<span class="op">=</span>Response(specs<span class="op">=</span>olr(box, train_date_range, Climatology(remove<span class="op">=</span><span class="va">True</span>))),</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                num_before<span class="op">=</span>fd_order <span class="op">//</span> <span class="dv">2</span>,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                num_after<span class="op">=</span>fd_order <span class="op">//</span> <span class="dv">2</span> <span class="op">+</span> num_pred_steps,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                eval_batch_size<span class="op">=</span>___,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>                <span class="op">**</span>common_pars,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>            test_data_pars <span class="op">=</span> DataPars(</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                covariate<span class="op">=</span>Covariate(specs<span class="op">=</span>(olr(strip, test_date_range,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                                               Climatology(remove<span class="op">=</span>___, standardize<span class="op">=</span><span class="va">True</span>)),)),</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                response<span class="op">=</span>Response(specs<span class="op">=</span>olr(box, test_date_range, Climatology(remove<span class="op">=</span><span class="va">True</span>))),</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>                num_before<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                num_after<span class="op">=</span>num_pred_steps,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                <span class="op">**</span>common_pars,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>            bw_tune_pars <span class="op">=</span> TunePars(num_bandwidths<span class="op">=</span><span class="dv">128</span>, log10_bandwidth_lims<span class="op">=</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>))</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>            tune_pars <span class="op">=</span> TunePars(num_bandwidths<span class="op">=</span><span class="dv">128</span>, log10_bandwidth_lims<span class="op">=</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>                                 bandwidth_scl<span class="op">=</span>___, bandwidth_batch_size<span class="op">=</span>___)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>            kernel_pars <span class="op">=</span> DmKernelPars(normalization<span class="op">=</span><span class="st">"fokkerplanck"</span>,</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>                                       eigensolver<span class="op">=</span>___,   <span class="co"># "eigh" or "eigsh"</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>                                       num_eigs<span class="op">=</span>___)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>            koopman_pars <span class="op">=</span> KoopmanParsDiff(fd_order<span class="op">=</span>fd_order, dt<span class="op">=</span><span class="dv">1</span>, antisym<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>                                           tau<span class="op">=</span>___, which_eigs_galerkin<span class="op">=</span>___,</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>                                           num_eigs<span class="op">=</span>___, sort_by<span class="op">=</span><span class="st">"energy"</span>,</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>                                           gram_batch_size<span class="op">=</span>___)</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>            pred_pars <span class="op">=</span> PredPars(dt<span class="op">=</span><span class="dv">1</span>, num_steps<span class="op">=</span>num_pred_steps,</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>                                 idx_koopman_eig<span class="op">=</span>___,   <span class="co"># the MJO eigenfunction</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>                                 which_kernel_eigs<span class="op">=</span>___)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>            kernel_projection_pars <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>            koopman_projection_pars <span class="op">=</span> <span class="va">None</span>          <span class="co"># or a ProjectionPars for MJO maps</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ...followed by the same shardings block as the ENSO experiments</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Things to know for this experiment:</p>
+<ul>
+<li><strong>Sample count and memory.</strong> Fifty years of daily data give about 18,000 training samples, so the kernel matrix needs about 1.3 GB in single precision. The direct solver (<code>"eigh"</code>) needs several times that during the computation; on a GPU with less memory, use <code>eigensolver="eigsh"</code> with a few hundred to a few thousand eigenfunctions. See <a href="../documentation/hyperparameters.html#computing-resources">Choosing hyperparameters</a>.</li>
+<li><strong>The sign of OLR.</strong> ERA5’s <code>avg_tnlwrf</code> is the net longwave flux at the top of the atmosphere, which is negative. Its negative is the OLR. The sign makes no difference to the kernel or the forecasts, but flip it before reading the target as an OLR anomaly, where negative values mean enhanced convection.</li>
+<li><strong>Daily climatology.</strong> For daily data, <code>Climatology(remove=True)</code> subtracts the mean of each day of the year over the climatology period.</li>
+<li><strong>Two forecast targets.</strong> The script above forecasts the Koopman MJO index. To forecast the OLR box average itself, use the kernel analog forecasting script instead, with the same data settings (<code>num_after=num_pred_steps</code> for training and test data, <code>PredPars(num_steps=60, ...)</code>).</li>
+</ul>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Not yet in the repository
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No station script is in the public repository yet. The Pituffik results of the June 2026 progress review (temperature forecasts from the station’s own temperature, pressure and wind, with skill to about 3 days) cannot yet be reproduced from it. The settings below use the station classes of version 0.4; values written <code>___</code> are to be filled in.</p>
+</div>
+</div>
+<p>The station experiments of the demonstration (see <a href="../demonstration/stations/experiment.html">Experiment design</a>) forecast daily anomalies of temperature, pressure and wind at a station, at lead times of 1–14 days in the southwestern United States and the western Pacific and up to 5 days at Pituffik. They use kernel analog forecasting, so a station experiment is a new <code>case</code> in a copy of <code>examples/enso/kernel_analog_forecasting.py</code>.</p>
+<section id="station-data-in-the-toolkit" class="level3">
+<h3 class="anchored" data-anchor-id="station-data-in-the-toolkit">Station data in the toolkit</h3>
+<div class="doc-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 27%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Classes</th>
+<th>Files expected</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Southwestern United States and western Pacific (66 stations registered, including PGUA, PKWA and PWAK)</td>
+<td><code>ws44.DataSpecs</code>, <code>ws44.Station</code>, <code>ws44.Var</code>, <code>ws44.IO</code></td>
+<td>One file per station, <code>&lt;ICAO code&gt;_dailystats.csv</code>, with columns <code>YEAR</code>, <code>MO</code>, <code>DAY</code> and one column per variable (<code>temp_c_max</code>, <code>slp_mean</code>, …)</td>
+</tr>
+<tr class="even">
+<td>Pituffik, Greenland</td>
+<td><code>ws44.HighLatDataSpecs</code>, <code>ws44.HighLatStation</code>, <code>ws44.HighLatVar</code>, <code>ws44.HighLatIO</code></td>
+<td>A folder <code>BGTL/</code> with CSV files that share an <code>obs_date</code> column; they are merged on that column</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The registered stations and the variables are listed on the <a href="../documentation/blocks/data.html#station-records">Data</a> page. Four of the seven western Pacific forward sites (PGUM, PGSN, PGWT, PGRO) are not yet registered in <code>ws44.Station</code>; adding a station is one line in that list.</p>
+</section>
+<section id="pituffik-station-only-predictors" class="level3">
+<h3 class="anchored" data-anchor-id="pituffik-station-only-predictors">Pituffik: station-only predictors</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nlsa_models <span class="im">import</span> ws44</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>io_bgtl <span class="op">=</span> ws44.HighLatIO(input_path<span class="op">=</span><span class="st">"/path/to/pituffik"</span>)   <span class="co"># folder containing BGTL/</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>num_pred_steps <span class="op">=</span> <span class="dv">5</span>                                          <span class="co"># lead times 0-5 days</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> station_pars(date_range, num_after):</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    time <span class="op">=</span> Time(date_range<span class="op">=</span>date_range, sampling<span class="op">=</span><span class="st">"daily"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                custom_climatology_date_range<span class="op">=</span>(<span class="st">"___"</span>, <span class="st">"___"</span>))   <span class="co"># training period</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    predictors <span class="op">=</span> ws44.HighLatDataSpecs(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">vars</span><span class="op">=</span>[ws44.HighLatVar.MEANTEMP, ws44.HighLatVar.MEANSLP,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>              ws44.HighLatVar.MEANSTP, ws44.HighLatVar.AVG_U_WIND,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>              ws44.HighLatVar.AVG_V_WIND],</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        stations<span class="op">=</span>[ws44.HighLatStation.BGTL], time<span class="op">=</span>time, io<span class="op">=</span>io_bgtl,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        climatology<span class="op">=</span>Climatology(remove<span class="op">=</span><span class="va">True</span>, standardize<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    target <span class="op">=</span> ws44.HighLatDataSpecs(</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">vars</span><span class="op">=</span>[ws44.HighLatVar.MEANTEMP],</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        stations<span class="op">=</span>[ws44.HighLatStation.BGTL], time<span class="op">=</span>time, io<span class="op">=</span>io_bgtl,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        climatology<span class="op">=</span>Climatology(remove<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> DataPars(covariate<span class="op">=</span>Covariate(specs<span class="op">=</span>(predictors,)),</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                    response<span class="op">=</span>Response(specs<span class="op">=</span>target),</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                    num_half_delays<span class="op">=</span>___, num_after<span class="op">=</span>num_after)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>train_data_pars <span class="op">=</span> station_pars((<span class="st">"___"</span>, <span class="st">"___"</span>), num_after<span class="op">=</span>num_pred_steps)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>test_data_pars <span class="op">=</span> station_pars((<span class="st">"___"</span>, <span class="st">"___"</span>), num_after<span class="op">=</span>num_pred_steps)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>pred_pars <span class="op">=</span> PredPars(dt<span class="op">=</span><span class="dv">1</span>, num_steps<span class="op">=</span>num_pred_steps, which_eigs<span class="op">=</span>___)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="southwestern-united-states-and-western-pacific-three-predictor-sets" class="level3">
+<h3 class="anchored" data-anchor-id="southwestern-united-states-and-western-pacific-three-predictor-sets">Southwestern United States and western Pacific: three predictor sets</h3>
+<p>For the other regions, <code>ws44.DataSpecs</code> takes a list of stations and variables. The three predictor sets of the demonstration are three choices of the <code>Covariate</code>, whose data specifications are placed side by side:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>time <span class="op">=</span> Time(date_range<span class="op">=</span>(<span class="st">"___"</span>, <span class="st">"___"</span>), sampling<span class="op">=</span><span class="st">"daily"</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>            custom_climatology_date_range<span class="op">=</span>(<span class="st">"___"</span>, <span class="st">"___"</span>))   <span class="co"># training period</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>io_ws <span class="op">=</span> ws44.IO(input_path<span class="op">=</span><span class="st">"/path/to/14ws/dailystats"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>station <span class="op">=</span> ws44.DataSpecs(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">vars</span><span class="op">=</span>[ws44.Var.TEMP_C_MEAN, ws44.Var.SLP_MEAN, ws44.Var.STP_MEAN,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>          ws44.Var.U_WIND_MPS_MEAN, ws44.Var.V_WIND_MPS_MEAN],</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    stations<span class="op">=</span>[ws44.Station.KEDW],         <span class="co"># Edwards AFB, an anchor site</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    time<span class="op">=</span>time, io<span class="op">=</span>io_ws,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    climatology<span class="op">=</span>Climatology(remove<span class="op">=</span><span class="va">True</span>, standardize<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>era5_fields <span class="op">=</span> era5.DataSpecs(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">vars</span><span class="op">=</span>[era5.Var.MSL],                  <span class="co"># for example, sea-level pressure</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    domain<span class="op">=</span>era5.Domain(sampling<span class="op">=</span><span class="st">"coarsened"</span>, min_lon<span class="op">=</span>___, max_lon<span class="op">=</span>___,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                       min_lat<span class="op">=</span>___, max_lat<span class="op">=</span>___, step_lon<span class="op">=</span>___, step_lat<span class="op">=</span>___),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    time<span class="op">=</span>time, io<span class="op">=</span>era5.IO(input_path<span class="op">=</span><span class="st">"/path/to/era5/daily"</span>),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    climatology<span class="op">=</span>Climatology(remove<span class="op">=</span><span class="va">True</span>, standardize<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>station_only <span class="op">=</span> Covariate(specs<span class="op">=</span>(station,))</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>station_plus_era5 <span class="op">=</span> Covariate(specs<span class="op">=</span>(station, era5_fields))</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># station plus Koopman indices: not yet supported by a data class (see below)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong>Target.</strong> <code>Response</code> takes one data specification with <strong>one station and one variable</strong>, for example <code>ws44.DataSpecs(vars=[ws44.Var.TEMP_C_MEAN], stations=[ws44.Station.KEDW], ...)</code>.</li>
+<li><strong>Several stations as predictors.</strong> Listing several stations in <code>stations=[...]</code> adds each station’s variables as further columns.</li>
+<li><strong>Weighting of the predictor blocks.</strong> Each data specification is standardized separately, so the balance between station and ERA5 predictors depends on how many columns each contributes (see <a href="../documentation/blocks/data.html#standardization">Data</a>). This balance is effectively a hyperparameter.</li>
+<li><strong>Koopman indices as predictors.</strong> There is not yet a data class that reads the MJO or ENSO index into a <code>Covariate</code>. The function <code>climate.koopman_efuncs_to_data_frame</code> exports Koopman eigenfunctions as a time-indexed table, which is the starting point for such a class.</li>
+<li><strong>Weekly and monthly means.</strong> Monthly means are available directly with <code>sampling="monthly"</code>, which averages the daily station values. Weekly means can be approximated with a 7-day running mean (<code>Time(rolling_window=7, rolling_mode="center")</code>) on daily data.</li>
+</ul>
+</section>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>The Lorenz 63 system, a three-variable model of convection with chaotic dynamics, is the test case for checking the methods and measuring the speed of the code. The data are simulated by the toolkit (<code>nlsa_models.lorenz63</code>), so no files are needed, and the <code>TEST</code> experiments are small enough for a laptop.</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Lorenz 63 scripts, in <code>examples/lorenz63/</code></caption>
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Script</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>kernel_analog_forecasting.py</code></td>
+<td>Kernel analog forecast of the <em>x</em> component from the full state (<em>x</em>, <em>y</em>, <em>z</em>)</td>
+</tr>
+<tr class="even">
+<td><code>kernel_analog_forecasting_iterative.py</code></td>
+<td>Iterative KAF: learns the one-step map of the state and applies it repeatedly</td>
+</tr>
+<tr class="odd">
+<td><code>koopman_diffusion_regularization.py</code></td>
+<td>Koopman eigenfunctions from the diffusion-regularized generator, and Koopman forecasts</td>
+</tr>
+<tr class="even">
+<td><code>koopman_resolvent_compactification.py</code></td>
+<td>Koopman eigenfunctions from compactified Laplace or Gauss transforms (<code>INTEGRAL_TRANSFORM</code> switch)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each script has a <code>TEST</code> experiment (the default) for a laptop and larger experiments, sized for 40 GB NVIDIA A100 GPUs, that show how the code scales:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Experiments of <code>kernel_analog_forecasting.py</code>; the other scripts have similar ones</caption>
+<colgroup>
+<col style="width: 22%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Experiment</th>
+<th>Training samples</th>
+<th>Kernel eigenfunctions</th>
+<th>Solver and hardware</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TEST</code></td>
+<td>4,096</td>
+<td>512</td>
+<td>Direct solver (<code>"eigh"</code>), CPU or GPU</td>
+</tr>
+<tr class="even">
+<td><code>A100_EIGH</code></td>
+<td>16,384</td>
+<td>1,024</td>
+<td>Direct solver, one GPU</td>
+</tr>
+<tr class="odd">
+<td><code>A100_EIGSH</code></td>
+<td>65,536</td>
+<td>2,048</td>
+<td>Iterative solver (<code>"eigsh"</code>), one GPU</td>
+</tr>
+<tr class="even">
+<td><code>A100_EIGSH_2GPU</code></td>
+<td>131,072</td>
+<td>4,096</td>
+<td>Iterative solver, data split over two GPUs</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The Lorenz 63 data parameters (<code>lorenz63.DataPars</code>) are listed on the <a href="../documentation/blocks/data.html#lorenz-63">Data</a> page.</p>
+</div>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

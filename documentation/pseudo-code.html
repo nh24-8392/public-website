@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Pseudo-code for the algorithms of the NLSA Python toolkit: the full kernel analog forecasting pipeline, data extraction and delay embedding, kernel tuning and eigendecomposition, the Koopman generator, forecasting, skill scores, and quantum mechanical data assimilation as implemented in MATLAB.">
+
+<title>Pseudo-code – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../documentation/pseudo-code.html">Pseudo-code</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Introduction</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">The code</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/code-structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../documentation/blocks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Calculation blocks</span></a>
+            <button type="button" class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section: Calculation blocks">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Setup and run control</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/delay-embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Delay embedding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/kernel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Kernel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/koopman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Koopman analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/skill-outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Skill and outputs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/pseudo-code.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Pseudo-code</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Reference</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/hyperparameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing hyperparameters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/options.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">All options</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../documentation/pseudo-code.html">Pseudo-code</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Pseudo-code</h1>
+<p class="subtitle lead">Each algorithm step by step, with the function that carries it out</p>
+</div>
+
+<div>
+  <div class="description">
+    Pseudo-code for the algorithms of the NLSA Python toolkit: the full kernel analog forecasting pipeline, data extraction and delay embedding, kernel tuning and eigendecomposition, the Koopman generator, forecasting, skill scores, and quantum mechanical data assimilation as implemented in MATLAB.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The pseudo-code below follows the code of version 0.4 step by step, without the bookkeeping (batching, devices, saving). The right-hand column names the function that carries out each step. Notation: <span class="math inline">\(x_n\)</span> are the training samples (delay windows), <span class="math inline">\(N\)</span> their number, <span class="math inline">\(\langle u, w\rangle = \frac1N\sum_n u(x_n) w(x_n)\)</span>, <span class="math inline">\(\varphi_j\)</span> the kernel eigenfunctions and <span class="math inline">\(\varphi'_j\)</span> their duals, <span class="math inline">\(f\)</span> the target, and <span class="math inline">\(t_n\)</span> the time of the last snapshot of sample <span class="math inline">\(n\)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Full pipeline</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Data and delays</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Kernel</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Koopman</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Forecasting</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Skill and patterns</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">QMDA (MATLAB)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>The kernel analog forecasting script, <code>examples/enso/kernel_analog_forecasting.py</code>, from data to skill scores:</p>
+<pre class="text"><code>INPUT   predictor fields, target series, training and test periods
+        settings: window half-width h, cone ζ, tuning ranges, normalization,
+                  number of eigenfunctions L, forecast steps Q
+OUTPUT  forecasts F[n, q] for every test sample n and lead q = 0..Q;  NRMSE(q), ACC(q)
+
+ 1  initialize JAX: devices, precision                          clim.initialize_jax
+ 2  for period in (training, test):
+ 3      read the data; remove climatology; smooth; standardize     clim.extract_data_arrays
+ 4      form the delay windows  x_n = (y_n, ..., y_{n+2h})        clim.make_data_driven_l2_space
+ 5  if a variable bandwidth is used:
+ 6      tune a Gaussian kernel on the states                       knl.tune_bandwidth
+ 7      σ(x) ← (c / density(x))^(1/m)                              knl.make_data_driven_bandwidth_function
+ 8  d²(x, x') ← cone (or Euclidean) distance / (σ(x) σ(x'))     dst.make_sqcone,
+                                                                  knl.make_data_driven_scaled_sqdist
+ 9  ε ← bandwidth_scl × (bandwidth maximizing the dimension D)  knl.tune_bandwidth
+10  k(x, x') ← exp(−d²(x, x') / ε²)                             knl.make_data_driven_rbf_kernel
+11  (λ_j, φ_j, φ'_j), j &lt; L ← eigendecomposition of normalized k  knl.compute_eigen
+12  c[q, j] ← ⟨φ'_j, f(· + q)⟩ for q = 0..Q                       clim.compute_kaf_expansion_coeffs
+13  for each test sample x:  F[x, q] ← Σ_j c[q, j] φ_j(x)          knl.compute_kaf_preds
+14  NRMSE(q), ACC(q) ← compare F[·, q] with the observed target   clim.compute_skill_scores</code></pre>
+<p>The Koopman script, <code>examples/enso/koopman_diffusion_regularization_kaf.py</code>, runs steps 1–11, then:</p>
+<pre class="text"><code>12  G ← generator matrix in the basis φ_1..φ_L                    koop.compute_generator_matrix
+13  (γ_k, ζ_k) ← eigenpairs of ½(G − Gᵀ) − τ diag(η), by energy    koop.compute_diffusion_regularized_generator_eigen
+14  z(t) ← Re ζ_k on the training windows and Q windows after     koop.evaluate_eigenfunction
+15  c[q, j] ← ⟨φ'_j, z(· + q)⟩                                     clim.compute_kaf_expansion_coeffs(responses=z)
+16  F[x, q] ← Σ_j c[q, j] φ_j(x) for each test sample              knl.compute_kaf_preds
+17  NRMSE(q), ACC(q) ← compare with Re ζ_k on the test windows     clim.compute_skill_scores</code></pre>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<pre class="text"><code>FUNCTION extract_data_arrays(data_pars)                          clim.extract_data_arrays
+  for each data specification S (predictors, then target):
+      D ← all files in S.io.input_path with extension S.io.file_format
+      D ← D sorted by latitude, cut to S.domain
+      D ← spatial sampling of D (pointwise, coarsened, or averaged)
+      if S.climatology.remove:
+          D ← D − (mean of D for the same calendar month, or day of year,
+                   over the climatology period)
+      if S.time.rolling_window:
+          D ← running mean of D over rolling_window samples
+      if S.climatology.standardize:
+          D ← (D − mean over the climatology period) / scale        see the Data page
+      D ← D for the dates in S.time.date_range
+      A_S ← D as a matrix: time × (grid points and variables);
+            drop columns with missing values
+  Y ← [A_S1  A_S2  ...]                     predictors side by side
+  f ← A_target as a vector                  target
+  if velocity_covariate:
+      V ← central finite difference of Y along time, order velocity_fd_order
+      Y ← (Y, V)
+  return NPData(time, Y, f)
+
+FUNCTION make_data_driven_l2_space(data_pars)                    clim.make_data_driven_l2_space
+  T  ← number of dates;  n_v ← velocity_fd_order (0 without velocities)
+  N  ← T − 2h − num_before − num_after − n_v                     DataPars.num_samples
+  i0 ← n_v/2 + num_before                                         DataPars.delay_embedding_origin
+  x_n ← (Y[i0+n], Y[i0+n+1], ..., Y[i0+n+2h]),  n = 0..N−1       assembled on the fly
+  t_n ← i0 + 2h + n                                               time of the last snapshot
+  ⟨u, w⟩ ← (1/N) Σ_n u(x_n) w(x_n)</code></pre>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<pre class="text"><code>FUNCTION tune_bandwidth(pars, samples, d²)                        knl.tune_bandwidth
+  for ε in 10^linspace(lims[0], lims[1], num_bandwidths):
+      S(ε) ← (1/N²) Σ_{n, n'} exp(−d²(x_n, x_n') / ε²)
+      D(ε) ← d log S / d log ε             closed form or automatic differentiation
+  ε* ← argmax D(ε)      or argmin |D(ε) − manifold_dim| if manifold_dim is set
+  ε  ← bandwidth_scl × ε*;   m ← D(ε)
+  return TuneInfo(ε, m, ...)
+
+FUNCTION compute_eigen(kernel_pars, samples, k)                   knl.compute_eigen
+  # diffusion maps; α = 1 for "laplace", ½ for "fokkerplanck"
+  q(x)      ← (1/N) Σ_n k(x, x_n)
+  k_α(x, x') ← k(x, x') / (q(x) q(x'))^α
+  d(x)      ← (1/N) Σ_n k_α(x, x_n)
+  M[n, n']  ← k_α(x_n, x_n') / (N √(d(x_n) d(x_n')))            symmetric N × N
+  (λ_j, u_j) ← leading num_eigs eigenpairs of M                   "eigh" (dense) or "eigsh" (iterative)
+  φ_j  ← u_j / u_0, normalized                                    eigenfunctions; φ_0 constant
+  φ'_j ← N u_j u_0, scaled so that ⟨φ'_i, φ_j⟩ = δ_ij             duals
+  return KernelEigen(λ, φ, φ', weights = u_0², ε)
+
+FUNCTION φ_j(x) for a new sample x                                Nyström extension, in
+  p(x, x_n) ← k_α(x, x_n) / ((1/N) Σ_m k_α(x, x_m))              knl.make_data_driven_eigenbasis
+  return (1/λ_j) (1/N) Σ_n p(x, x_n) φ_j(x_n)</code></pre>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<pre class="text"><code>FUNCTION generator_eigen(koopman_pars, samples, φ, λ, ε)
+  B ← (φ_1, ..., φ_L)                       which_eigs_galerkin; φ_0 handled separately
+  for each training sample n:                                     clim.make_data_driven_tangent_
+      ẋ_n ← central finite difference of order p of the windows      evaluation_functional_fd
+            around x_n                       needs p/2 samples before and after
+  G[i, j] ← (1/N) Σ_n φ'_i(x_n) (∇φ_j(x_n) · ẋ_n)                 koop.compute_generator_matrix
+            gradient of the Nyström extension, by automatic differentiation
+  η_j ← −4 ln λ_j / ε²                      Laplace eigenvalues
+  L_τ ← ½ (G − Gᵀ) − τ diag(η)              (G − τ diag(η) if antisym is False)
+  (γ_k, c_k) ← eigenpairs of L_τ;  duals c'_k from (C C*)⁻¹ C       koop.compute_diffusion_
+  E_k ← Σ_j |c_jk|² (1/λ_j − 1)             Dirichlet energy         regularized_generator_eigen
+  sort by E_k (sort_by="energy") or |Im γ_k| ("frequency")
+  prepend ζ_0 = 1 with γ_0 = 0;  keep num_eigs
+  ζ_k(x) ← Σ_j c_jk φ_j(x);   ω_k ← Im γ_k;   period_k ← 2π / ω_k
+  return KoopmanEigen(γ, E, ω, period, c, c')</code></pre>
+<p>For the compactified integral transforms (<code>KoopmanParsTransf</code>), the generator matrix is replaced by:</p>
+<pre class="text"><code>  w_m ← quadrature weight × e^(−z m Δt)  (Laplace)  or  e^(−(z m Δt)²)  (Gauss),  m = 0..num_quad
+  (Tφ_j)(x_n) ← Σ_m w_m φ_j(x_{n+m})                              koop.compute_integral_
+  A[i, j] ← ⟨φ'_i, Tφ_j⟩;   A ← ½ (A − Aᵀ)                         transform_matrix
+  Λ ← diag(λ_j^τ)  or  diag((1 − √(η_j/η_max))^τ)                  koop.compute_integral_
+  eigenpairs of Λ A Λ;  generator eigenvalues by inverting the transform     transform_eigen_comp</code></pre>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<pre class="text"><code>FUNCTION kaf_coefficients(Q, J, f)                                clim.compute_kaf_expansion_coeffs
+  for q = 0..Q, j ∈ J:
+      c[q, j] ← (1/N) Σ_n φ'_j(x_n) f(t_n + q)       needs num_after ≥ Q
+  return c                                            (Q + 1) × |J|
+
+FUNCTION kaf_forecast(c, x)                                       knl.compute_kaf_preds
+  for q = 0..Q:
+      F[q] ← Σ_{j ∈ J} c[q, j] φ_j(x)                 φ_j(x) by the Nyström extension
+  return F
+
+FUNCTION iterative_kaf(x, Q)                                      knl.compute_iterative_kaf_preds
+  c ← kaf coefficients of the next snapshot y(t_n + 1)
+  repeat Q times:
+      y_next ← Σ_j c_j φ_j(x);   x ← window shifted by one snapshot, ending in y_next
+      record y_next
+
+FUNCTION koopman_forecast(x, t)                                   koop.compute_koopman_preds
+  a_k ← ⟨ζ'_k, f⟩                                                  clim.compute_koopman_response_coeffs
+  return Σ_k e^(γ_k t) a_k ζ_k(x)</code></pre>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<pre class="text"><code>FUNCTION skill_scores(test_pars, test, F)                         clim.compute_skill_scores
+  e_n ← test_pars.delay_embedding_end + n          index of the initial time of test sample n
+  for q = 0..Q:
+      a[n] ← f_test[e_n + q],  n = 0..N_test − 1   observed target
+      NRMSE[q] ← √( Σ_n (a[n] − F[n, q])² / Σ_n a[n]² )
+      ACC[q]   ← correlation over n of a[n] and F[n, q]
+  return SkillScores(nrmses = NRMSE, accs = ACC)
+
+FUNCTION spatial_pattern(k, field F, t_0, w)                      clim.compute_eigenfunction_projections
+  return  mode_k(s) = w Σ_n ψ_k(x_n) F(s, t_0 + n)   ψ_k: dual eigenfunction (kernel or Koopman)</code></pre>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<p>Quantum mechanical data assimilation as implemented in <code>MATLAB/nlsa/utils/forecasting/qmda.m</code>, with the set-up of the ENSO example <code>ensoQMDA.m</code>. The quantum state is a row vector <span class="math inline">\(\xi\)</span> of coefficients in the basis <span class="math inline">\(\varphi_1, \dots, \varphi_L\)</span> (<code>nL</code> eigenfunctions, with weights <span class="math inline">\(\mu_n\)</span> on the training samples).</p>
+<pre class="text"><code>INPUT   basis φ_l (l = 1..L) on the training samples, weights μ, target y on the training samples,
+        observed states x_τ at the analysis times
+        settings: L = nL, nTO (steps between observations), nTF (forecast steps),
+                  kernel shape (bump), bandwidth scale epsilonScl, ifVB, ifSqrtm
+OUTPUT  mean, standard deviation and probabilities of y at leads 0..nTF after each analysis
+
+ 1  U_q[i, j] ← Σ_n μ_n φ_i(x_n) φ_j(x_{n+q}),  q = 1..nTF          koopmanOperator.m
+ 2  A[i, j]   ← Σ_n μ_n φ_i(x_n) y(x_n) φ_j(x_n);   A2 ← A²          multiplicationOperator.m
+ 3  bins of y from its quantiles; group the eigenvectors e of A by bin   (for probabilities)
+ 4  for each analysis time τ:
+        κ_τ(x_n) ← √ shape( d²(x_n, x_τ) / (ε · epsilonScl)² )     feature function of the observation
+        K_τ[i, j] ← Σ_n μ_n φ_i(x_n) κ_τ(x_n) φ_j(x_n)            multiplicationOperator.m
+ 5  ξ ← (1, 0, ..., 0)                     constant wavefunction: the invariant distribution
+ 6  ξ ← ξ U_nTO / ‖ξ U_nTO‖                prior for the first analysis
+ 7  for each analysis time τ:                                         qmda.m
+ 8      ξ ← ξ K_τ / ‖ξ K_τ‖                analysis: update with the observation
+ 9      for q = 0..nTF   (U_0 = identity):
+10          ξ_q ← ξ U_q / ‖ξ U_q‖          forecast
+11          mean_q ← ξ_q A ξ_qᴴ;   std_q ← √(ξ_q A2 ξ_qᴴ − mean_q²)
+12          prob_q(bin) ← Σ_{e ∈ bin} |ξ_q e|²
+13      ξ ← ξ_nTO                          prior for the next analysis</code></pre>
+<p>A Python version would use the same ingredients: the kernel eigenfunctions of block 4, Koopman operator matrices estimated from time-shifted eigenfunctions, and multiplication operators for the target and the observations. The Python toolkit has the forecast–analysis combinator (<code>nlsa.qmda.make_da</code>) but not yet these operators.</p>
+</div>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

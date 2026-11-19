@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="How to install the NLSA Python toolkit on a laptop or GPU server, run the ENSO examples (including from the data shipped with the repository), run unattended on a server, and use the toolkit from your own scripts or notebooks.">
+
+<title>Using Python – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/index.html">Introduction</a></li><li class="breadcrumb-item"><a href="../documentation/getting-started.html">Using Python</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Introduction</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/getting-started.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Using Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">The code</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/code-structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../documentation/blocks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Calculation blocks</span></a>
+            <button type="button" class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section: Calculation blocks">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Setup and run control</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/delay-embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Delay embedding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/kernel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Kernel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/koopman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Koopman analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/skill-outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Skill and outputs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/pseudo-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pseudo-code</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Reference</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/hyperparameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing hyperparameters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/options.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">All options</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-you-need" id="toc-what-you-need" class="nav-link active" data-scroll-target="#what-you-need">What you need</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
+  <li><a href="#running-the-examples" id="toc-running-the-examples" class="nav-link" data-scroll-target="#running-the-examples">Running the examples</a>
+  <ul class="collapse">
+  <li><a href="#a-first-run-with-the-data-in-the-repository" id="toc-a-first-run-with-the-data-in-the-repository" class="nav-link" data-scroll-target="#a-first-run-with-the-data-in-the-repository">A first run with the data in the repository</a></li>
+  <li><a href="#computing-saving-and-reading-results" id="toc-computing-saving-and-reading-results" class="nav-link" data-scroll-target="#computing-saving-and-reading-results">Computing, saving and reading results</a></li>
+  </ul></li>
+  <li><a href="#running-unattended-on-a-server" id="toc-running-unattended-on-a-server" class="nav-link" data-scroll-target="#running-unattended-on-a-server">Running unattended on a server</a></li>
+  <li><a href="#using-the-toolkit-from-your-own-code" id="toc-using-the-toolkit-from-your-own-code" class="nav-link" data-scroll-target="#using-the-toolkit-from-your-own-code">Using the toolkit from your own code</a></li>
+  <li><a href="#common-problems" id="toc-common-problems" class="nav-link" data-scroll-target="#common-problems">Common problems</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/index.html">Introduction</a></li><li class="breadcrumb-item"><a href="../documentation/getting-started.html">Using Python</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Using Python</h1>
+<p class="subtitle lead">Installing the toolkit, running the examples, and calling it from your own code</p>
+</div>
+
+<div>
+  <div class="description">
+    How to install the NLSA Python toolkit on a laptop or GPU server, run the ENSO examples (including from the data shipped with the repository), run unattended on a server, and use the toolkit from your own scripts or notebooks.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="what-you-need" class="level2">
+<h2 class="anchored" data-anchor-id="what-you-need">What you need</h2>
+<div class="doc-table">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Requirement</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Python</td>
+<td>Version <strong>3.13 or newer</strong>. The package metadata (<code>pyproject.toml</code>) requires 3.13; the README still says 3.12, but installation is refused on 3.12.</td>
+</tr>
+<tr class="even">
+<td>Operating system</td>
+<td>Linux or macOS. GPU acceleration needs Linux with an NVIDIA GPU.</td>
+</tr>
+<tr class="odd">
+<td>GPU (optional)</td>
+<td>An NVIDIA GPU on Linux, with driver version 525 or newer. The JAX packages installed by <code>pip</code> include the CUDA libraries, so CUDA itself does not need to be installed. Everything also runs on a CPU, more slowly.</td>
+</tr>
+<tr class="even">
+<td>Memory</td>
+<td>The kernel matrix has <em>N</em> × <em>N</em> entries for <em>N</em> training samples: about 4 MB for the monthly ENSO examples (<em>N</em> ≈ 1,000) but 1.3 GB for 50 years of daily data (<em>N</em> ≈ 18,000) in single precision. See <a href="../documentation/hyperparameters.html#computing-resources">Choosing hyperparameters</a>.</td>
+</tr>
+<tr class="odd">
+<td>Data</td>
+<td>ERA5 files in NetCDF or GRIB format, or 14th Weather Squadron station files. The repository includes a small processed data set for the ENSO examples, so you can try the code without downloading ERA5.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>Clone the repository and create a virtual environment inside its <code>Python</code> folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/dg227/NLSA.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> NLSA/Python</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.13</span> <span class="at">-m</span> venv venv</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> venv/bin/activate</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> pip</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then install the toolkit together with its dependencies. The <code>-e</code> flag installs it in <em>editable</em> mode: changes you make to the code, or a later <code>git pull</code>, take effect without reinstalling.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">CPU only</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">NVIDIA GPU</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">For development</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> .</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install cartopy <span class="st">"dask[array]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> <span class="st">".[cuda]"</span>     <span class="co"># JAX 0.8.0 with CUDA 12</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install cartopy <span class="st">"dask[array]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>With an NVIDIA driver of version 580 or newer you can instead install the most recent JAX built for CUDA 13, with <code>pip install -e ".[cuda13]"</code>.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> <span class="st">".[cuda,dev]"</span>   <span class="co"># or ".[dev]" without a GPU</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install cartopy <span class="st">"dask[array]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>dev</code> extra adds the test, lint and type-checking tools (<code>pytest</code>, <code>ruff</code>, <code>mypy</code>, <code>pyright</code>).</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Install <code>cartopy</code> and <code>dask</code> separately
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two packages that the climate code needs are not yet listed among the dependencies in <code>pyproject.toml</code>, so they are installed with the extra <code>pip install</code> line above:</p>
+<ul>
+<li><a href="https://scitools.org.uk/cartopy/">cartopy</a>, which <code>nlsa_models.climate</code> uses to draw maps. Every climate example imports it, and stops with <code>ModuleNotFoundError: No module named 'cartopy'</code> without it. The Lorenz 63 examples do not need it.</li>
+<li><a href="https://www.dask.org">dask</a>, which xarray needs to open the ERA5 files (the code opens all files in a folder at once, in parallel) and to project fields onto eigenfunctions.</li>
+</ul>
+<p>Alternatively, add the <code>xarray_complete</code> extra of the toolkit, which installs both: <code>pip install -e ".[xarray_complete]"</code> or <code>pip install -e ".[cuda,xarray_complete]"</code>.</p>
+</div>
+</div>
+<p>Check that the installation works and see which devices JAX can use:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import jax; print(jax.devices())"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>On a CPU-only machine this prints <code>[CpuDevice(id=0)]</code>; on a GPU machine it lists the GPUs, for example <code>[CudaDevice(id=0), CudaDevice(id=1)]</code>.</p>
+<p>When you open a new terminal later, activate the environment again with <code>source venv/bin/activate</code> (from the <code>Python</code> folder), and leave it with <code>deactivate</code>.</p>
+</section>
+<section id="running-the-examples" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-examples">Running the examples</h2>
+<p>The example scripts are in <code>Python/examples/</code>. Run them <strong>from the <code>Python</code> folder</strong>, because results are saved and read relative to the folder the script is started from:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> NLSA/Python</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> examples/enso/kernel_analog_forecasting.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>python &lt;script&gt; --help</code> prints the script’s description.</p>
+<p>Each script is configured by editing it:</p>
+<ol type="1">
+<li><strong>Switches at the top of the file</strong>: which experiment to run, CPU or GPU, precision, which steps to compute or read from disk, and which plots to make. They are listed on the <a href="../documentation/blocks/setup.html">Setup and run control</a> page.</li>
+<li><strong>The function <code>from_experiment()</code></strong>: the settings of each experiment (data, delay window, kernel, Koopman and forecast settings), written as parameter objects. They are documented block by block on the <a href="../documentation/blocks/index.html">Calculation blocks</a> pages.</li>
+</ol>
+<p>The experiments in the scripts, and those planned for the MJO and the stations, are described on the <a href="../documentation/experiments.html">Experiments</a> page.</p>
+<section id="a-first-run-with-the-data-in-the-repository" class="level3">
+<h3 class="anchored" data-anchor-id="a-first-run-with-the-data-in-the-repository">A first run with the data in the repository</h3>
+<p>The folder <code>Python/examples/enso/data</code> holds processed training and test data (monthly sea surface temperature over the Niño 3.4 region from ERA5, 1940–2025) for two Niño 3.4 configurations. With the edits below, both ENSO scripts run without any ERA5 files. The edits follow from the code but have not been tried out for this documentation; if a step fails, the error message usually names a missing file, which tells you which setting does not match the shipped data.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Kernel analog forecast</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Koopman analysis</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>In <code>examples/enso/kernel_analog_forecasting.py</code>:</p>
+<ol type="1">
+<li><p>Set the switches:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>EXPERIMENT: Experiment <span class="op">=</span> Experiment.NINO34_FROM_ERA5_NINO34SST</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>IDX_GPU: <span class="bu">int</span> <span class="op">|</span> Sequence[<span class="bu">int</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>   <span class="co"># None: CPU. Keep 0 on a GPU machine.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>EXTRACT_DATA_MODE <span class="op">=</span> <span class="st">"read"</span>                  <span class="co"># already the default</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>PLOT_MODE <span class="op">=</span> <span class="st">"save"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>LEAD_TIMES_PLT <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">12</span>]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>INITIALIZATION_TIMES_PLT <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">24</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>In <code>from_experiment()</code>, under <code>case Experiment.NINO34_FROM_ERA5_NINO34SST:</code>, add <code>num_after=num_pred_steps,</code> to <strong>both</strong> <code>train_data_pars = DataPars(...)</code> and <code>test_data_pars = DataPars(...)</code>. The shipped data were prepared with these extra 24 months, and the forecast needs them (see <a href="../documentation/blocks/delay-embedding.html#how-many-samples">Delay embedding</a>).</p></li>
+<li><p>In the same block, replace the <code>kernel_projection_pars = ProjectionPars(...)</code> statement by <code>kernel_projection_pars = None</code>. The projection reads global SST from ERA5 files, which are not in the repository.</p></li>
+</ol>
+<p>Keep <code>CONE_KERNEL = True</code>, as the shipped data include the velocities that the cone kernel needs. The script prints the skill table (normalized RMSE and anomaly correlation at leads 0–24 months) and saves the plots under <code>examples/enso/data/</code>.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>In <code>examples/enso/koopman_diffusion_regularization_kaf.py</code>:</p>
+<ol type="1">
+<li><p>Set the switches:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>EXPERIMENT: Experiment <span class="op">=</span> Experiment.ENSO_FROM_ERA5_NINO34SST</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>TUNE_KERNEL_MODE <span class="op">=</span> <span class="st">"calcsave"</span>     <span class="co"># default "read" needs results from an earlier run</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>KERNEL_EIGEN_MODE <span class="op">=</span> <span class="st">"calcsave"</span>    <span class="co"># same</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>PLOT_MODE <span class="op">=</span> <span class="st">"save"</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>WHICH_PLOTS <span class="op">=</span> {<span class="st">"generator_spec"</span>, <span class="st">"koopman_eigen"</span>, <span class="st">"skill_scores"</span>}</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>KOOPMAN_EIGS_PLT <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Keep <code>CONE_KERNEL = False</code> and <code>IDX_GPU = None</code> (the defaults in this script).</p></li>
+<li><p>In <code>from_experiment()</code>, under <code>case Experiment.ENSO_FROM_ERA5_NINO34SST:</code>, replace <code>koopman_projection_pars = ProjectionPars(...)</code> by <code>koopman_projection_pars = None</code> (the projection needs ERA5 files).</p></li>
+</ol>
+<p>The script prints the Koopman eigenvalue table (growth rate, energy, frequency in cycles per year, period in years), forecasts Koopman eigenfunction 3 with kernel analog forecasting, and prints the skill table.</p>
+</div>
+</div>
+</div>
+<p>The default experiments of the two scripts (<code>ELNINO_2027_FROM_ERA5_NINO34SST</code> and <code>ENSO_FROM_ERA5_IPSST</code>) read monthly ERA5 files from the paths set in <code>from_experiment()</code>. To run them, download the data (see <a href="../demonstration/era5-monthly.html">ERA5 monthly data</a>) and change <code>era5.IO(input_path=...)</code> or <code>ERA5_MONTHLY_DATA_DIR</code> to your folder.</p>
+</section>
+<section id="computing-saving-and-reading-results" class="level3">
+<h3 class="anchored" data-anchor-id="computing-saving-and-reading-results">Computing, saving and reading results</h3>
+<p>Each step of a script has a <strong>run mode</strong> switch (<code>EXTRACT_DATA_MODE</code>, <code>TUNE_KERNEL_MODE</code>, <code>KERNEL_EIGEN_MODE</code>, …) with three values:</p>
+<div class="doc-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 91%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"calc"</code></td>
+<td>Compute the result; do not save it.</td>
+</tr>
+<tr class="even">
+<td><code>"calcsave"</code></td>
+<td>Compute the result and save it to disk.</td>
+</tr>
+<tr class="odd">
+<td><code>"read"</code></td>
+<td>Read a result saved earlier by a <code>"calcsave"</code> run.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Results are saved in a tree of folders whose names spell out the settings (for example <code>ns920_nd12_nb0_na24_vfd4</code> for the training samples), so runs with different settings never overwrite each other. The flip side is that <code>"read"</code> only finds a file if <strong>every</strong> setting that leads to it is the same as in the run that saved it. A typical pattern is to run the expensive steps (data extraction, kernel eigendecomposition, Koopman eigendecomposition) once with <code>"calcsave"</code>, then switch them to <code>"read"</code> while you experiment with the later steps. Details are on the <a href="../documentation/blocks/setup.html#run-modes-and-saved-results">Setup and run control</a> page.</p>
+</section>
+</section>
+<section id="running-unattended-on-a-server" class="level2">
+<h2 class="anchored" data-anchor-id="running-unattended-on-a-server">Running unattended on a server</h2>
+<p>For runs on the campus server, from a scheduled job or over SSH without a display, change the switches that wait for a person:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>MATPLOTLIB_BACKEND <span class="op">=</span> <span class="st">"Agg"</span>          <span class="co"># draw plots without a screen</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>PLOT_MODE <span class="op">=</span> <span class="st">"save"</span>                  <span class="co"># "show" waits for Enter after every plot</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>KERNEL_EIGS_PLT <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]         <span class="co"># lists or None instead of "interactive",</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>LEAD_TIMES_PLT <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">6</span>, <span class="dv">12</span>]         <span class="co"># which asks for input at the prompt</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>INITIALIZATION_TIMES_PLT <span class="op">=</span> <span class="va">None</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then start the script in the background and keep a log:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/NLSA/Python</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> venv/bin/activate</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nohup</span> python examples/enso/kernel_analog_forecasting.py <span class="op">&gt;</span> enso_kaf.log <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">&amp;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To run it on a schedule, add a line to the crontab (<code>crontab -e</code>), calling the environment’s Python directly. For example, at 07:00 on the 10th of every month, after the monthly ERA5 fields are released:</p>
+<pre class="text"><code>0 7 10 * * cd $HOME/NLSA/Python &amp;&amp; ./venv/bin/python examples/enso/kernel_analog_forecasting.py &gt;&gt; $HOME/logs/enso_kaf.log 2&gt;&amp;1</code></pre>
+<p>On a server with several GPUs, <code>IDX_GPU</code> selects the GPU (<code>0</code>, <code>1</code>, …), or several with a list such as <code>[0, 1]</code>; the examples then split the training samples across the GPUs. The switch <code>XLA_MEM_FRACTION</code> (default <code>"0.95"</code>) sets how much of each GPU’s memory JAX reserves when it starts; lower it if other jobs share the GPU.</p>
+<p>To publish forecast figures on this website, copy the PNG files you want to show into the folder that <code>scripts/publish_forecast.sh</code> of the website repository reads (<code>FORECAST_OUTPUT_DIR</code>) and run that script, as described in the website’s README.</p>
+</section>
+<section id="using-the-toolkit-from-your-own-code" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-toolkit-from-your-own-code">Using the toolkit from your own code</h2>
+<p>The example scripts are the most complete way to run an experiment, but the functions can also be called directly, from a script or a Jupyter notebook (JupyterLab is installed with the toolkit; start it with <code>jupyter lab</code>). The sketch below runs the whole kernel analog forecasting chain for the Niño 3.4 index. Each line corresponds to one <a href="../documentation/blocks/index.html">calculation block</a>, and the function signatures are those of version 0.4.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nlsa.jax.distance <span class="im">as</span> dst</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nlsa.jax.kernels <span class="im">as</span> knl</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nlsa.jax.scalars <span class="im">as</span> scls</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nlsa_models.climate <span class="im">as</span> clim</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nlsa_models.era5 <span class="im">as</span> era5</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nlsa.jax.kernels <span class="im">import</span> DmKernelPars, TunePars</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nlsa_models.climate <span class="im">import</span> Climatology, Covariate, DataPars, Response, Time</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Setup: CPU (use idx_gpu=0 for the first GPU), single precision</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>jax_env <span class="op">=</span> clim.initialize_jax(idx_gpu<span class="op">=</span><span class="va">None</span>, fp<span class="op">=</span><span class="st">"f32"</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Data: predictors = Nino 3.4 SST field, target = area-averaged Nino 3.4 anomaly</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>io5 <span class="op">=</span> era5.IO(input_path<span class="op">=</span><span class="st">"/path/to/era5/monthly"</span>, file_format<span class="op">=</span><span class="st">"nc"</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>clim_period <span class="op">=</span> (<span class="st">"1940-01-01"</span>, <span class="st">"2019-12-31"</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>num_steps <span class="op">=</span> <span class="dv">24</span>                                    <span class="co"># forecast leads 0-24 months</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_data_pars(date_range):</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    time <span class="op">=</span> Time(date_range<span class="op">=</span>date_range, sampling<span class="op">=</span><span class="st">"monthly"</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>                custom_climatology_date_range<span class="op">=</span>clim_period)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    sst_field <span class="op">=</span> era5.DataSpecs(</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">vars</span><span class="op">=</span>[era5.Var.SST], domain<span class="op">=</span>era5.nino34_domain(step_lon<span class="op">=</span><span class="dv">4</span>, step_lat<span class="op">=</span><span class="dv">4</span>),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        time<span class="op">=</span>time, io<span class="op">=</span>io5, climatology<span class="op">=</span>Climatology(standardize<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    nino34 <span class="op">=</span> era5.DataSpecs(</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">vars</span><span class="op">=</span>[era5.Var.SST], domain<span class="op">=</span>era5.nino34_domain(sampling<span class="op">=</span><span class="st">"area_averaged"</span>),</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        time<span class="op">=</span>time, io<span class="op">=</span>io5, climatology<span class="op">=</span>Climatology(remove<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. Delay embedding: windows of 2*6 + 1 = 13 months</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> DataPars(covariate<span class="op">=</span>Covariate(specs<span class="op">=</span>(sst_field,)),</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>                    response<span class="op">=</span>Response(specs<span class="op">=</span>nino34),</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>                    num_half_delays<span class="op">=</span><span class="dv">6</span>, num_after<span class="op">=</span>num_steps)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>train_pars <span class="op">=</span> make_data_pars(clim_period)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>test_pars <span class="op">=</span> make_data_pars((<span class="st">"2020-01-01"</span>, <span class="st">"2025-12-31"</span>))</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> clim.extract_data_arrays(train_pars, dtype<span class="op">=</span>np.dtype(np.float64)).to_device(</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>jax_env.real_dtype)</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> clim.extract_data_arrays(test_pars, dtype<span class="op">=</span>np.dtype(np.float64)).to_device(</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span>jax_env.real_dtype)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>impl_l2 <span class="op">=</span> clim.make_data_driven_l2_space(data_pars<span class="op">=</span>train_pars, dtype<span class="op">=</span>jax_env.real_dtype)</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>impl_l2_tst <span class="op">=</span> clim.make_data_driven_l2_space(data_pars<span class="op">=</span>test_pars, dtype<span class="op">=</span>jax_env.real_dtype)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Kernel: tune the bandwidth, build the kernel, compute 512 eigenfunctions</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>scl_r <span class="op">=</span> scls.scalar_field(jax_env.real_dtype)</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>tune_info <span class="op">=</span> knl.tune_bandwidth(TunePars(), impl_l2, jnp.exp, dst.sqeuclidean, train)</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>kernel <span class="op">=</span> knl.make_data_driven_rbf_kernel(scl_r, jnp.exp, dst.sqeuclidean,</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>                                         tune_info.bandwidth)</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>kernel_pars <span class="op">=</span> DmKernelPars(normalization<span class="op">=</span><span class="st">"fokkerplanck"</span>, eigensolver<span class="op">=</span><span class="st">"eigh"</span>, num_eigs<span class="op">=</span><span class="dv">512</span>)</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>kernel_eigen <span class="op">=</span> knl.compute_eigen(kernel_pars, impl_l2, kernel, train, tune_info.bandwidth,</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>                                 train_pars.num_samples, jax_env.real_dtype)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Forecasting: kernel analog forecast with all 512 eigenfunctions</span></span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>coeffs <span class="op">=</span> clim.compute_kaf_expansion_coeffs((train_pars, kernel_pars), impl_l2, train,</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>                                           kernel, kernel_eigen, num_steps, <span class="dv">512</span>)</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>preds <span class="op">=</span> knl.compute_kaf_preds(kernel_pars, impl_l2, train, kernel, kernel_eigen, coeffs,</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>                              impl_l2_tst, test, <span class="dv">512</span>)</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Skill: one value per lead time 0..num_steps</span></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> clim.compute_skill_scores(test_pars, test, preds)</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(scores[<span class="st">"accs"</span>], scores[<span class="st">"nrmses"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>preds</code> has one row per initial time in the test period and one column per lead time (0 to <code>num_steps</code>). This sketch uses the plain Euclidean distance; the examples add a variable bandwidth function and the cone kernel, as shown on the <a href="../documentation/blocks/kernel.html">Kernel</a> page.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About the code on these pages
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The code excerpts were checked against the source of version 0.4 (names, arguments and their order) but have not been run as part of preparing this documentation. If you find a difference, the example scripts in the repository are the reference.</p>
+</div>
+</div>
+<p>In an interactive session, after you edit a module of the toolkit, reload it without restarting Python:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> importlib</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>importlib.<span class="bu">reload</span>(clim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="common-problems" class="level2">
+<h2 class="anchored" data-anchor-id="common-problems">Common problems</h2>
+<div class="doc-table">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Message or symptom</th>
+<th>Cause and fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ModuleNotFoundError: No module named 'cartopy'</code> (or <code>'dask'</code>)</td>
+<td>Install them: <code>pip install cartopy "dask[array]"</code>.</td>
+</tr>
+<tr class="even">
+<td>An error that JAX finds no <code>gpu</code> backend or platform</td>
+<td><code>IDX_GPU</code> is set to a GPU index on a machine without a usable GPU, or JAX was installed without GPU support. Set <code>IDX_GPU = None</code>, or reinstall with <code>pip install -e ".[cuda]"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>FileNotFoundError</code> for a <code>.pkl</code>, <code>.h5</code> or <code>.nc</code> file</td>
+<td>A step is in <code>"read"</code> mode but no earlier <code>"calcsave"</code> run with the same settings exists. Run it once with <code>"calcsave"</code>.</td>
+</tr>
+<tr class="even">
+<td><code>pip</code> refuses to install, saying a different Python is required</td>
+<td>The toolkit needs Python 3.13 or newer.</td>
+</tr>
+<tr class="odd">
+<td>The script stops and waits</td>
+<td>A plot switch is <code>"show"</code> or <code>"interactive"</code>, which wait for keyboard input. See <a href="#running-unattended-on-a-server">Running unattended on a server</a>.</td>
+</tr>
+<tr class="even">
+<td>GPU out of memory in the kernel step</td>
+<td>Use the iterative eigensolver (<code>eigensolver="eigsh"</code> with <code>DmKernelPars</code>), set <code>batch_size</code>, or use fewer training samples. See <a href="../documentation/blocks/kernel.html#eigendecomposition">Kernel</a>.</td>
+</tr>
+<tr class="odd">
+<td>The first run of a step is slow, later runs fast</td>
+<td>JAX compiles each function for the shapes of your data the first time it runs.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

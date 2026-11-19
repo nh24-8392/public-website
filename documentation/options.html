@@ -1,0 +1,2983 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Reference tables of every option of the NLSA Python toolkit’s parameter classes, grouped by calculation block, with types, allowed values, defaults and descriptions, generated from the source code of version 0.4.">
+
+<title>All options – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/hyperparameters.html">Reference</a></li><li class="breadcrumb-item"><a href="../documentation/options.html">All options</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Introduction</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">The code</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/code-structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../documentation/blocks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Calculation blocks</span></a>
+            <button type="button" class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section: Calculation blocks">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Setup and run control</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/delay-embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Delay embedding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/kernel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Kernel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/koopman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Koopman analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/blocks/skill-outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Skill and outputs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/pseudo-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pseudo-code</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Reference</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/hyperparameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing hyperparameters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../documentation/options.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">All options</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../documentation/hyperparameters.html">Reference</a></li><li class="breadcrumb-item"><a href="../documentation/options.html">All options</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">All options</h1>
+<p class="subtitle lead">Every option of the parameter classes, in one place</p>
+</div>
+
+<div>
+  <div class="description">
+    Reference tables of every option of the NLSA Python toolkit’s parameter classes, grouped by calculation block, with types, allowed values, defaults and descriptions, generated from the source code of version 0.4.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This page collects the option tables of the <a href="../documentation/blocks/index.html">calculation block</a> pages. They are generated from the source code of version 0.4: option names, types, allowed values and defaults are those of the code, and every documented option has been checked to exist. <strong>required</strong> means that the option has no default.</p>
+<p>Classes from the toolkit are imported as shown in each table’s caption. <code>PredPars</code>, <code>TrainPars</code>, <code>TestPars</code> and <code>Pars</code> are defined in each example script, and differ slightly between the scripts.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Setup</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Delay embedding</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Kernel</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Koopman</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Forecasting</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">Outputs</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><code>EXPERIMENT</code> chooses the configuration to run. It is a member of the script’s <code>Experiment</code> enumeration, from which <code>from_experiment()</code> builds the parameters of the run (together with <code>CONE_KERNEL</code> and <code>KERNEL_NORMALIZATION</code>); see <a href="../documentation/experiments.html">Experiments</a>. The kernel analog forecasting script runs <code>ELNINO_2027_FROM_ERA5_NINO34SST</code>, the Koopman script <code>ENSO_FROM_ERA5_IPSST</code>.</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: computing</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Type or values</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>IDX_GPU</code></td>
+<td><code>int</code> or <code>Sequence[int]</code> or <code>None</code></td>
+<td>KAF: <code>0</code><br>Koopman: <code>None</code></td>
+<td>GPU to use: an index, a list of indices for several GPUs, or <code>None</code> to run on the CPU.</td>
+</tr>
+<tr class="even">
+<td><code>XLA_MEM_FRACTION</code></td>
+<td><code>str</code> or <code>None</code></td>
+<td><code>"0.95"</code></td>
+<td>Fraction of GPU memory that JAX may reserve at start-up (passed to <code>initialize_jax</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>JAX_CACHE_DIR</code></td>
+<td><code>str</code> or <code>None</code></td>
+<td><code>"jax_cache"</code></td>
+<td>Folder for JAX’s compilation cache (defined in the scripts but not passed to <code>initialize_jax</code> at present).</td>
+</tr>
+<tr class="even">
+<td><code>FP</code></td>
+<td><code>"f32"</code> or <code>"f64"</code></td>
+<td><code>"f32"</code></td>
+<td>Floating-point precision: <code>"f32"</code> (single, faster) or <code>"f64"</code> (double).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: kernel</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Type or values</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CONE_KERNEL</code></td>
+<td><code>bool</code></td>
+<td>KAF: <code>True</code><br>Koopman: <code>False</code></td>
+<td>Use the cone kernel. It also switches on the velocity covariates in the experiment settings.</td>
+</tr>
+<tr class="even">
+<td><code>KERNEL_TUNING_GRAD_METHOD</code></td>
+<td><code>"explicit"</code> or <code>"automatic"</code></td>
+<td>KAF: <code>"automatic"</code><br>Koopman: <code>"explicit"</code></td>
+<td>How the tuning curve is differentiated: <code>"explicit"</code> (a closed-form gradient for the exponential shape function) or <code>"automatic"</code> (JAX automatic differentiation).</td>
+</tr>
+<tr class="odd">
+<td><code>KERNEL_NORMALIZATION</code></td>
+<td><code>"diffusion_maps"</code> or <code>"bistochastic"</code></td>
+<td><code>"diffusion_maps"</code></td>
+<td><code>"diffusion_maps"</code> (uses <code>DmKernelPars</code>) or <code>"bistochastic"</code> (uses <code>BsKernelPars</code>).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: folders (each a string)</caption>
+<colgroup>
+<col style="width: 19%">
+<col style="width: 26%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>OUTPUT_DATA_DIR</code></td>
+<td><code>"examples/enso/data"</code></td>
+<td>Folder, relative to where the script is run, under which results are saved and read.</td>
+</tr>
+<tr class="even">
+<td><code>ERA5_DAILY_DATA_DIR</code></td>
+<td>Koopman script: <code>"/storage/data/era5/daily01"</code></td>
+<td>Folder with the daily ERA5 files. Defined in the Koopman script but not used by its current experiments, which are monthly.</td>
+</tr>
+<tr class="odd">
+<td><code>ERA5_MONTHLY_DATA_DIR</code></td>
+<td>Koopman script: <code>"/storage/data/era5/month_nc_1940_2025"</code></td>
+<td>Folder with the monthly ERA5 files.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: run modes (each <code>"calc"</code>, <code>"calcsave"</code> or <code>"read"</code>)</caption>
+<colgroup>
+<col style="width: 19%">
+<col style="width: 26%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Value in the scripts</th>
+<th>Step</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>EXTRACT_DATA_MODE</code></td>
+<td><code>"read"</code></td>
+<td>Reading and preparing the data.</td>
+</tr>
+<tr class="even">
+<td><code>TUNE_KERNEL_MODE</code></td>
+<td>KAF: <code>"calc"</code><br>Koopman: <code>"read"</code></td>
+<td>Bandwidth tuning.</td>
+</tr>
+<tr class="odd">
+<td><code>KERNEL_EIGEN_MODE</code></td>
+<td>KAF: <code>"calc"</code><br>Koopman: <code>"read"</code></td>
+<td>The kernel eigendecomposition.</td>
+</tr>
+<tr class="even">
+<td><code>KERNEL_PROJECTION_MODE</code></td>
+<td>KAF: <code>"calc"</code><br>Koopman: <code>"calcsave"</code></td>
+<td>Projecting a field onto the kernel eigenfunctions.</td>
+</tr>
+<tr class="odd">
+<td><code>GENERATOR_MATRIX_MODE</code></td>
+<td>Koopman script: <code>"calc"</code></td>
+<td>The generator matrix.</td>
+</tr>
+<tr class="even">
+<td><code>KOOPMAN_EIGEN_MODE</code></td>
+<td>Koopman script: <code>"calc"</code></td>
+<td>The Koopman eigendecomposition.</td>
+</tr>
+<tr class="odd">
+<td><code>KOOPMAN_PROJECTION_MODE</code></td>
+<td>Koopman script: <code>"calcsave"</code></td>
+<td>Projecting a field onto the Koopman eigenfunctions.</td>
+</tr>
+<tr class="even">
+<td><code>KOOPMAN_EIG_EVAL_MODE</code></td>
+<td>Koopman script: <code>"calc"</code></td>
+<td>Evaluating the selected Koopman eigenfunction.</td>
+</tr>
+<tr class="odd">
+<td><code>KAF_EXPANSION_COEFFS_MODE</code></td>
+<td><code>"calc"</code></td>
+<td>The KAF expansion coefficients.</td>
+</tr>
+<tr class="even">
+<td><code>KAF_PREDS_MODE</code></td>
+<td><code>"calc"</code></td>
+<td>The forecasts.</td>
+</tr>
+<tr class="odd">
+<td><code>SKILL_SCORES_MODE</code></td>
+<td><code>"calc"</code></td>
+<td>The skill scores.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: plots and printed tables</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Type or values</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PLOT_MODE</code></td>
+<td><code>"save"</code> or <code>"show"</code> or <code>"saveshow"</code> or <code>None</code></td>
+<td><code>"show"</code></td>
+<td><code>"show"</code> (open windows), <code>"save"</code> (write PNG files), <code>"saveshow"</code> (both) or <code>None</code> (no plots).</td>
+</tr>
+<tr class="even">
+<td><code>WHICH_PLOTS</code></td>
+<td>set of plot names</td>
+<td>KAF: {<code>"running_pred"</code>, <code>"pred_timeseries"</code>, <code>"skill_scores"</code>}<br>Koopman: <code>{"koopman_modes"}</code></td>
+<td>Set of plots to make (see the plot list on the <em>Skill and outputs</em> page); <code>{"all"}</code> makes every plot.</td>
+</tr>
+<tr class="odd">
+<td><code>MATPLOTLIB_BACKEND</code></td>
+<td><code>"Agg"</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Matplotlib backend; set <code>"Agg"</code> on a server without a display.</td>
+</tr>
+<tr class="even">
+<td><code>DELAY_PLOT_MODE</code></td>
+<td><code>"backward"</code> or <code>"central"</code></td>
+<td><code>"central"</code></td>
+<td>Time stamp given to a delay window in plots: its centre (<code>"central"</code>) or its last sample (<code>"backward"</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>PLT_DATE_RANGE</code></td>
+<td><code>tuple[str, str]</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Restrict time-series plots to this date range; <code>None</code> plots the whole period.</td>
+</tr>
+<tr class="even">
+<td><code>KERNEL_EIGS_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Kernel eigenfunctions to plot: a list of indices, <code>"interactive"</code> (ask at the prompt) or <code>None</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>KERNEL_MODES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Kernel modes (spatial patterns) to plot, as above.</td>
+</tr>
+<tr class="even">
+<td><code>KOOPMAN_EIGS_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td>Koopman script: <code>"interactive"</code></td>
+<td>Koopman eigenfunctions to plot, as above.</td>
+</tr>
+<tr class="odd">
+<td><code>KOOPMAN_MODES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td>Koopman script: <code>"interactive"</code></td>
+<td>Koopman modes (spatial patterns) to plot, as above.</td>
+</tr>
+<tr class="even">
+<td><code>LEAD_TIMES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Lead times for the running-forecast plot, as above.</td>
+</tr>
+<tr class="odd">
+<td><code>INITIALIZATION_TIMES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Initialization times for the forecast time-series plot, as above.</td>
+</tr>
+<tr class="even">
+<td><code>NUM_TABULATE</code></td>
+<td><code>int</code></td>
+<td><code>40</code></td>
+<td>Number of eigenvalues printed in the summary tables.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Time</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>date_range</code></td>
+<td><code>tuple[str, str]</code></td>
+<td>required</td>
+<td>First and last date (<code>"YYYY-MM-DD"</code>) of the data. For training data this is the training period, for test data the test period.</td>
+</tr>
+<tr class="even">
+<td><code>sampling</code></td>
+<td><code>"monthly"</code> or <code>"daily"</code></td>
+<td>required</td>
+<td>Time sampling: <code>"monthly"</code> or <code>"daily"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>rolling_window</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Length, in samples, of a running mean applied after the climatology is removed. <code>None</code> means no smoothing.</td>
+</tr>
+<tr class="even">
+<td><code>rolling_mode</code></td>
+<td><code>"forward"</code> or <code>"backward"</code> or <code>"center"</code></td>
+<td><code>"center"</code></td>
+<td>Alignment of the running-mean window: <code>"center"</code> (centred), <code>"backward"</code> (the current and previous samples) or <code>"forward"</code> (the current and following samples).</td>
+</tr>
+<tr class="odd">
+<td><code>custom_climatology_date_range</code></td>
+<td><code>tuple[str, str]</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Period used to compute the climatology and the standardization statistics. If <code>None</code>, <code>date_range</code> is used. Set it to the training period for both training and test data, so that test anomalies use the training climatology.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Climatology</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>remove</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Subtract the mean annual cycle (the average for each calendar month, or each day of the year for daily data) computed over the climatology period.</td>
+</tr>
+<tr class="even">
+<td><code>standardize</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Rescale the data using statistics from the climatology period (see <em>Standardization</em> above).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Domain</code> (<code>nlsa_models.era5</code>, defined in <code>src/nlsa_models/era5.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sampling</code></td>
+<td><code>"pointwise"</code> or <code>"coarsened"</code> or <code>"area_averaged"</code> or <code>"meridionally_averaged"</code> or <code>"zonally_averaged"</code></td>
+<td>required</td>
+<td>How grid points are used: <code>"pointwise"</code>, <code>"coarsened"</code>, <code>"area_averaged"</code>, <code>"meridionally_averaged"</code> or <code>"zonally_averaged"</code> (see <em>Spatial sampling</em>).</td>
+</tr>
+<tr class="even">
+<td><code>min_lon</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Western edge of the domain, in degrees east (0–360).</td>
+</tr>
+<tr class="odd">
+<td><code>max_lon</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Eastern edge of the domain, in degrees east (0–360).</td>
+</tr>
+<tr class="even">
+<td><code>min_lat</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Southern edge of the domain, in degrees north.</td>
+</tr>
+<tr class="odd">
+<td><code>max_lat</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Northern edge of the domain, in degrees north.</td>
+</tr>
+<tr class="even">
+<td><code>step_lon</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Step in grid points along longitude: keep every <code>step_lon</code>-th point (<code>"pointwise"</code>) or average blocks of <code>step_lon</code> points (<code>"coarsened"</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>step_lat</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Step in grid points along latitude, as for <code>step_lon</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>IO</code> (<code>nlsa_models.era5</code>, defined in <code>src/nlsa_models/era5.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>input_path</code></td>
+<td><code>str</code> or <code>Path</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Folder with the ERA5 files. All files with the chosen extension in the folder are opened together as one data set.</td>
+</tr>
+<tr class="even">
+<td><code>file_format</code></td>
+<td><code>"grib"</code> or <code>"nc"</code></td>
+<td><code>"nc"</code></td>
+<td>File format: <code>"nc"</code> (NetCDF) or <code>"grib"</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataSpecs</code> (<code>nlsa_models.era5</code>, defined in <code>src/nlsa_models/era5.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>vars</code></td>
+<td><code>Sequence[Var]</code></td>
+<td>required</td>
+<td>ERA5 variables to read (see the variable table).</td>
+</tr>
+<tr class="even">
+<td><code>domain</code></td>
+<td><code>Domain</code></td>
+<td>required</td>
+<td>Spatial domain and spatial sampling, as an <code>era5.Domain</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>time</code></td>
+<td><code>Time</code></td>
+<td>required</td>
+<td>Period, time sampling and smoothing, as a <code>climate.Time</code>.</td>
+</tr>
+<tr class="even">
+<td><code>io</code></td>
+<td><code>IO</code></td>
+<td>required</td>
+<td>Location and format of the files, as an <code>era5.IO</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>climatology</code></td>
+<td><code>Climatology</code></td>
+<td><code>Climatology()</code></td>
+<td>Anomaly and standardization settings, as a <code>climate.Climatology</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>IO</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>input_path</code></td>
+<td><code>str</code> or <code>Path</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Folder with one <code>&lt;STATION&gt;_dailystats.csv</code> file per station.</td>
+</tr>
+<tr class="even">
+<td><code>file_format</code></td>
+<td><code>"csv"</code></td>
+<td><code>"csv"</code></td>
+<td>File format; only <code>"csv"</code> is supported.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataSpecs</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>vars</code></td>
+<td><code>Sequence[Var]</code></td>
+<td>required</td>
+<td>Station variables, as <code>ws44.Var</code> members (columns of the daily-statistics files).</td>
+</tr>
+<tr class="even">
+<td><code>stations</code></td>
+<td><code>Sequence[Station]</code></td>
+<td>required</td>
+<td>Stations, as <code>ws44.Station</code> members (ICAO codes). Each station adds its variables as columns of the predictor vector.</td>
+</tr>
+<tr class="odd">
+<td><code>time</code></td>
+<td><code>Time</code></td>
+<td>required</td>
+<td>Period, time sampling and smoothing, as a <code>climate.Time</code>. Monthly sampling averages the daily values.</td>
+</tr>
+<tr class="even">
+<td><code>io</code></td>
+<td><code>IO</code></td>
+<td>required</td>
+<td>Location of the files, as a <code>ws44.IO</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>climatology</code></td>
+<td><code>Climatology</code></td>
+<td><code>Climatology()</code></td>
+<td>Anomaly and standardization settings, as a <code>climate.Climatology</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>HighLatIO</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>input_path</code></td>
+<td><code>str</code> or <code>Path</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Folder with one subfolder per station; all CSV files in a station’s subfolder are merged on their <code>obs_date</code> column.</td>
+</tr>
+<tr class="even">
+<td><code>file_format</code></td>
+<td><code>"csv"</code></td>
+<td><code>"csv"</code></td>
+<td>File format; only <code>"csv"</code> is supported.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>HighLatDataSpecs</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>vars</code></td>
+<td><code>Sequence[HighLatVar]</code></td>
+<td>required</td>
+<td>Variables, as <code>ws44.HighLatVar</code> members.</td>
+</tr>
+<tr class="even">
+<td><code>stations</code></td>
+<td><code>Sequence[HighLatStation]</code></td>
+<td>required</td>
+<td>Stations, as <code>ws44.HighLatStation</code> members (currently <code>BGTL</code>, Pituffik Space Base).</td>
+</tr>
+<tr class="odd">
+<td><code>time</code></td>
+<td><code>Time</code></td>
+<td>required</td>
+<td>Period, time sampling and smoothing, as a <code>climate.Time</code>.</td>
+</tr>
+<tr class="even">
+<td><code>io</code></td>
+<td><code>HighLatIO</code></td>
+<td>required</td>
+<td>Location of the files, as a <code>ws44.HighLatIO</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>climatology</code></td>
+<td><code>Climatology</code></td>
+<td><code>Climatology()</code></td>
+<td>Anomaly and standardization settings, as a <code>climate.Climatology</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Covariate</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>specs</code></td>
+<td>sequence of <code>era5.DataSpecs</code>, <code>ws44.DataSpecs</code> or <code>ws44.HighLatDataSpecs</code></td>
+<td>required</td>
+<td>One or more data specifications (ERA5 or station). Their columns are joined side by side into the predictor vector.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Response</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>specs</code></td>
+<td><code>era5.DataSpecs</code> (area-averaged), <code>ws44.DataSpecs</code> or <code>ws44.HighLatDataSpecs</code></td>
+<td>required</td>
+<td>One data specification for the quantity to forecast: an ERA5 field with <code>"area_averaged"</code> sampling (for example the Niño 3.4 index) or a station variable.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataPars</code> (<code>nlsa_models.lorenz63</code>, defined in <code>src/nlsa_models/lorenz63.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>covariate</code></td>
+<td><code>"x"</code> or <code>"y"</code> or <code>"z"</code> or <code>"xy"</code> or <code>"xyz"</code></td>
+<td>required</td>
+<td>Components of the Lorenz 63 state used as predictors: <code>"x"</code>, <code>"y"</code>, <code>"z"</code>, <code>"xy"</code> or <code>"xyz"</code>.</td>
+</tr>
+<tr class="even">
+<td><code>response</code></td>
+<td><code>"x"</code> or <code>"y"</code> or <code>"z"</code></td>
+<td>required</td>
+<td>Component to forecast: <code>"x"</code>, <code>"y"</code> or <code>"z"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>dt</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Sampling interval, in model time units.</td>
+</tr>
+<tr class="even">
+<td><code>x0</code></td>
+<td><code>tuple[float, float, float]</code></td>
+<td>required</td>
+<td>Initial condition of the simulated trajectory.</td>
+</tr>
+<tr class="odd">
+<td><code>num_spinup</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Samples discarded at the start of the simulation, so that the trajectory is on the attractor.</td>
+</tr>
+<tr class="even">
+<td><code>num_samples</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of samples left after spin-up, delay embedding and finite differences (set directly here, unlike the climate pipeline where it follows from the dates).</td>
+</tr>
+<tr class="odd">
+<td><code>num_half_delays</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>delay_embedding_mode</code></td>
+<td><code>"explicit"</code> or <code>"on_the_fly"</code></td>
+<td><code>"on_the_fly"</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>num_before</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>num_after</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>velocity_covariate</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>velocity_fd_order</code></td>
+<td><code>2</code> or <code>4</code> or <code>6</code> or <code>8</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>eval_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataPars</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>covariate</code></td>
+<td><code>Covariate</code></td>
+<td>required</td>
+<td>Predictors, as a <code>climate.Covariate</code>.</td>
+</tr>
+<tr class="even">
+<td><code>response</code></td>
+<td><code>Response</code></td>
+<td>required</td>
+<td>Forecast target, as a <code>climate.Response</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>num_half_delays</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>Half-width <em>h</em> of the delay window. Each sample is represented by 2<em>h</em> + 1 consecutive snapshots (2<em>h</em> delays); <code>0</code> means no delay embedding.</td>
+</tr>
+<tr class="even">
+<td><code>delay_embedding_mode</code></td>
+<td><code>"explicit"</code> or <code>"on_the_fly"</code></td>
+<td><code>"on_the_fly"</code></td>
+<td>How delay vectors are formed: <code>"on_the_fly"</code> assembles each window when it is needed (low memory); <code>"explicit"</code> builds the matrix of all windows (Hankel matrix) once (more memory). In the climate pipeline this field is currently not read: the builder functions such as <code>make_data_driven_l2_space</code> take their own <code>delay_embedding_mode</code> argument, which defaults to <code>"on_the_fly"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>num_before</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>Extra samples reserved before the first delay window. The Koopman generator needs <code>fd_order // 2</code> of them for its finite differences.</td>
+</tr>
+<tr class="even">
+<td><code>num_after</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>Extra samples reserved after the last sample, so that future values are available. For kernel analog forecasting it must be at least the number of prediction steps; the Koopman generator needs <code>fd_order // 2</code> more.</td>
+</tr>
+<tr class="odd">
+<td><code>velocity_covariate</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Add the time tendency (a finite-difference velocity) to every snapshot. Required by the cone kernel.</td>
+</tr>
+<tr class="even">
+<td><code>velocity_fd_order</code></td>
+<td><code>2</code> or <code>4</code> or <code>6</code> or <code>8</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Order (2, 4, 6 or 8) of the central finite difference used for the velocities. It also reserves that many samples, half at each end of the record.</td>
+</tr>
+<tr class="odd">
+<td><code>eval_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Evaluate functions on the samples in batches of this size, to reduce memory. <code>None</code> evaluates all samples at once.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>ConePars</code> (<code>nlsa.jax.kernels</code>, defined in <code>src/nlsa/kernels.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>zeta</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Anisotropy ζ of the cone kernel, between 0 and 1. With ζ = 0 the cone distance reduces to the ordinary distance; as ζ approaches 1, displacements along the direction of motion count less. The examples use 0.99.</td>
+</tr>
+<tr class="even">
+<td><code>threshold</code></td>
+<td><code>float</code></td>
+<td><code>1e-12</code></td>
+<td>Small constant added inside the square root of the cone distance, so that automatic differentiation is stable when two points coincide.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>TunePars</code> (<code>nlsa.jax.kernels</code>, defined in <code>src/nlsa/kernels.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>num_bandwidths</code></td>
+<td><code>int</code></td>
+<td><code>128</code></td>
+<td>Number of trial bandwidths, spaced evenly in log10.</td>
+</tr>
+<tr class="even">
+<td><code>log10_bandwidth_lims</code></td>
+<td><code>tuple[int, int]</code></td>
+<td><code>(-3, 3)</code></td>
+<td>Range of the trial bandwidths, as powers of ten: <code>(-3, 3)</code> scans 10⁻³ to 10³.</td>
+</tr>
+<tr class="odd">
+<td><code>manifold_dim</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>If <code>None</code>, choose the bandwidth at which the estimated dimension is largest. If a number, choose the bandwidth whose estimated dimension is closest to it.</td>
+</tr>
+<tr class="even">
+<td><code>bandwidth_scl</code></td>
+<td><code>float</code></td>
+<td><code>1</code></td>
+<td>Factor that multiplies the selected bandwidth. Values above 1 give a wider, smoother kernel.</td>
+</tr>
+<tr class="odd">
+<td><code>bandwidth_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Evaluate the trial bandwidths in batches of this size, to reduce memory.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DmKernelPars</code> (<code>nlsa.jax.kernels</code>, defined in <code>src/nlsa/kernels.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>normalization</code></td>
+<td><code>"laplace"</code> or <code>"fokkerplanck"</code> or <code>None</code></td>
+<td>required</td>
+<td>Diffusion-maps normalization: <code>"laplace"</code> (α = 1, removes the influence of the sampling density), <code>"fokkerplanck"</code> (α = ½), or <code>None</code> (use the kernel as it is).</td>
+</tr>
+<tr class="even">
+<td><code>eigensolver</code></td>
+<td><code>"eigh"</code> or <code>"eigsh"</code></td>
+<td>required</td>
+<td><code>"eigh"</code>: builds the full N × N matrix and computes all its eigenpairs (memory grows as N²). <code>"eigsh"</code>: iterative solver (SciPy) that computes only <code>num_eigs</code> eigenpairs without storing the matrix; use it for large N.</td>
+</tr>
+<tr class="odd">
+<td><code>num_eigs</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of eigenpairs kept. They form the data-driven basis used by the later blocks.</td>
+</tr>
+<tr class="even">
+<td><code>batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Build the kernel matrix in batches of this many columns (<code>"eigh"</code> only), to reduce peak memory.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>BsKernelPars</code> (<code>nlsa.jax.kernels</code>, defined in <code>src/nlsa/kernels.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>eigensolver</code></td>
+<td><code>"svd"</code> or <code>"svds"</code></td>
+<td>required</td>
+<td><code>"svd"</code>: dense singular-value decomposition. <code>"svds"</code>: iterative truncated decomposition that computes only <code>num_eigs</code> singular vectors.</td>
+</tr>
+<tr class="even">
+<td><code>num_eigs</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of eigenpairs kept.</td>
+</tr>
+<tr class="odd">
+<td><code>batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for matrix products, to reduce peak memory.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Results:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>TuneInfo</code> (<code>nlsa.jax.kernels</code>, defined in <code>src/nlsa/jax/kernels/_kernels.py</code>)</caption>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 23%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>log10_bandwidths</code></td>
+<td>array</td>
+<td>The trial bandwidths (log10).</td>
+</tr>
+<tr class="even">
+<td><code>est_dims</code></td>
+<td>array</td>
+<td>Estimated dimension at each trial bandwidth (the tuning curve).</td>
+</tr>
+<tr class="odd">
+<td><code>opt_bandwidth</code></td>
+<td>array</td>
+<td>Bandwidth selected by the tuning criterion.</td>
+</tr>
+<tr class="even">
+<td><code>opt_dim</code></td>
+<td>array</td>
+<td>Estimated dimension at the selected bandwidth.</td>
+</tr>
+<tr class="odd">
+<td><code>i_opt</code></td>
+<td>array</td>
+<td>Index of the selected bandwidth among the trial bandwidths.</td>
+</tr>
+<tr class="even">
+<td><code>bandwidth</code></td>
+<td>array</td>
+<td>Bandwidth actually used: <code>opt_bandwidth × bandwidth_scl</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>dim</code></td>
+<td>array</td>
+<td>Estimated dimension at the bandwidth actually used.</td>
+</tr>
+<tr class="even">
+<td><code>vol</code></td>
+<td>array</td>
+<td>Estimated volume of the data manifold (used to normalize the bandwidth function).</td>
+</tr>
+<tr class="odd">
+<td><code>kernel_vol</code></td>
+<td>array</td>
+<td>Normalization constant from the kernel integral (used with <code>vol</code>).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>KernelEigen</code> (<code>nlsa.jax.kernels</code>, defined in <code>src/nlsa/jax/kernels/_kernels.py</code>)</caption>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 23%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>evals</code></td>
+<td>array</td>
+<td>Kernel eigenvalues λ, in decreasing order. With a normalized kernel the first is 1 and belongs to the constant eigenfunction.</td>
+</tr>
+<tr class="even">
+<td><code>evecs</code></td>
+<td>array</td>
+<td>Kernel eigenvectors φ: the eigenfunctions evaluated on the training samples (one row per eigenfunction).</td>
+</tr>
+<tr class="odd">
+<td><code>dual_evecs</code></td>
+<td>array</td>
+<td>Dual (left) eigenvectors, used to compute expansion coefficients by inner products.</td>
+</tr>
+<tr class="even">
+<td><code>weights</code></td>
+<td>array</td>
+<td>Sample weights that make the eigenvectors orthonormal (for diffusion maps, the invariant measure of the Markov kernel).</td>
+</tr>
+<tr class="odd">
+<td><code>bandwidth</code></td>
+<td>array</td>
+<td>Bandwidth used, stored for converting λ to Laplace eigenvalues.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>KoopmanParsDiff</code> (<code>nlsa.jax.koopman</code>, defined in <code>src/nlsa/koopman.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fd_order</code></td>
+<td><code>2</code> or <code>4</code> or <code>6</code> or <code>8</code></td>
+<td>required</td>
+<td>Order (2, 4, 6 or 8) of the central finite differences used for time derivatives along the trajectory. Reserve <code>fd_order // 2</code> samples before and after with <code>num_before</code> and <code>num_after</code>.</td>
+</tr>
+<tr class="even">
+<td><code>dt</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Time step. Recorded in the output folder name only: the finite differences use the sampling interval of the data (one sample in the climate pipeline, <code>DataPars.dt</code> for Lorenz 63). The ENSO example sets it to 1.</td>
+</tr>
+<tr class="odd">
+<td><code>tau</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Strength τ of the diffusion regularization: the generator is replaced by V − τΔ, which damps rough eigenfunctions. The examples use 0.002 to 0.01.</td>
+</tr>
+<tr class="even">
+<td><code>antisym</code></td>
+<td><code>bool</code></td>
+<td>required</td>
+<td>Keep only the antisymmetric part (V − Vᵀ)/2 of the generator matrix, the structure the generator has for measure-preserving dynamics.</td>
+</tr>
+<tr class="odd">
+<td><code>which_eigs_galerkin</code></td>
+<td><code>int</code> or <code>tuple[int, int]</code> or <code>list[int]</code></td>
+<td>required</td>
+<td>Kernel eigenfunctions spanning the Galerkin space (the constant one is added separately): an integer <em>L</em> means φ₁ … φ_<em>L</em>; a tuple <code>(a, b)</code> means φ_a … φ_b; a list gives the indices.</td>
+</tr>
+<tr class="even">
+<td><code>num_eigs</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Number of Koopman eigenpairs kept after sorting, including the constant eigenfunction. <code>None</code> keeps nearly all of them.</td>
+</tr>
+<tr class="odd">
+<td><code>laplacian_method</code></td>
+<td><code>"log"</code> or <code>"lin"</code> or <code>"inv"</code></td>
+<td><code>"log"</code></td>
+<td>Formula for converting kernel eigenvalues λ into Laplace eigenvalues η: <code>"log"</code> η = −4 ln λ / ε², <code>"lin"</code> η = 4(1 − λ)/ε², <code>"inv"</code> η = (1/λ − 1) rescaled by a reference eigenvalue. In the current code the value only enters the output folder name: the regularization always uses <code>"log"</code>.</td>
+</tr>
+<tr class="even">
+<td><code>sort_by</code></td>
+<td><code>"energy"</code> or <code>"frequency"</code></td>
+<td><code>"frequency"</code></td>
+<td>Order of the results: <code>"energy"</code> (smallest Dirichlet energy, i.e.&nbsp;smoothest, first) or <code>"frequency"</code> (smallest |frequency| first).</td>
+</tr>
+<tr class="odd">
+<td><code>eval_tx_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for evaluating the time derivatives on the samples (used by the Lorenz 63 scripts).</td>
+</tr>
+<tr class="even">
+<td><code>grad_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the directional derivatives of the basis functions.</td>
+</tr>
+<tr class="odd">
+<td><code>gram_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the inner products that form the generator matrix.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>KoopmanParsTransf</code> (<code>nlsa.jax.koopman</code>, defined in <code>src/nlsa/koopman.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>transform</code></td>
+<td><code>"laplace"</code> or <code>"gauss"</code></td>
+<td>required</td>
+<td>Integral transform of the Koopman evolution: <code>"laplace"</code> (weights <span class="math inline">\(e^{-zt}\)</span>, the resolvent) or <code>"gauss"</code> (weights <span class="math inline">\(e^{-(zt)^2}\)</span>).</td>
+</tr>
+<tr class="even">
+<td><code>quadrature</code></td>
+<td><code>"trapezoidal"</code> or <code>"simpson"</code></td>
+<td>required</td>
+<td>Rule for the time integral: <code>"trapezoidal"</code> or <code>"simpson"</code> (Simpson needs an even <code>num_quad</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>num_quad</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of quadrature intervals. The transform uses the next <code>num_quad</code> samples after each training sample, so reserve them with <code>num_after</code>.</td>
+</tr>
+<tr class="even">
+<td><code>bandwidth</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Transform parameter <em>z</em>. Larger values weight short times more heavily.</td>
+</tr>
+<tr class="odd">
+<td><code>dt</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Time step of the quadrature (the sampling interval of the data).</td>
+</tr>
+<tr class="even">
+<td><code>tau</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Exponent τ of the smoothing weights that make the operator compact.</td>
+</tr>
+<tr class="odd">
+<td><code>which_eigs_galerkin</code></td>
+<td><code>int</code> or <code>tuple[int, int]</code> or <code>list[int]</code></td>
+<td>required</td>
+<td>As for <code>KoopmanParsDiff</code>.</td>
+</tr>
+<tr class="even">
+<td><code>antisym</code></td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+<td>Use the antisymmetric part of the transform matrix and a Hermitian eigensolver.</td>
+</tr>
+<tr class="odd">
+<td><code>num_eigs</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As for <code>KoopmanParsDiff</code>.</td>
+</tr>
+<tr class="even">
+<td><code>laplacian_method</code></td>
+<td><code>"log"</code> or <code>"lin"</code> or <code>"inv"</code></td>
+<td><code>"log"</code></td>
+<td>As for <code>KoopmanParsDiff</code>: recorded in the folder name; the Laplace eigenvalues used by the <code>"fejer"</code> smoothing are always computed with <code>"log"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>smoothing_kernel</code></td>
+<td><code>"exponential"</code> or <code>"fejer"</code></td>
+<td><code>"exponential"</code></td>
+<td>Smoothing weights: <code>"exponential"</code> λ_j^τ (kernel eigenvalues to the power τ) or <code>"fejer"</code> (1 − √(η_j / η_max))^τ.</td>
+</tr>
+<tr class="even">
+<td><code>sort_by</code></td>
+<td><code>"energy"</code> or <code>"frequency"</code></td>
+<td><code>"frequency"</code></td>
+<td>As for <code>KoopmanParsDiff</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>eval_quad_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for evaluating the basis functions at the quadrature samples.</td>
+</tr>
+<tr class="even">
+<td><code>quad_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the quadrature over basis functions.</td>
+</tr>
+<tr class="odd">
+<td><code>gram_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the inner products that form the transform matrix.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Result:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>KoopmanEigen</code> (<code>nlsa.jax.koopman</code>, defined in <code>src/nlsa/jax/koopman/_koopman.py</code>)</caption>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 23%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>evals</code></td>
+<td>array</td>
+<td>Eigenvalues of the operator that was diagonalized (the regularized generator, or the transform for resolvent schemes).</td>
+</tr>
+<tr class="even">
+<td><code>gen_evals</code></td>
+<td>array</td>
+<td>Generator eigenvalues; the imaginary part is the angular frequency, the real part a growth or decay rate.</td>
+</tr>
+<tr class="odd">
+<td><code>engys</code></td>
+<td>array</td>
+<td>Dirichlet energy of each eigenfunction, a measure of roughness (smaller is smoother).</td>
+</tr>
+<tr class="even">
+<td><code>efreqs</code></td>
+<td>array</td>
+<td>Eigenfrequencies ω, in radians per unit time (per sample in the climate pipeline).</td>
+</tr>
+<tr class="odd">
+<td><code>eperiods</code></td>
+<td>array</td>
+<td>Eigenperiods 2π/ω, in the same time units.</td>
+</tr>
+<tr class="even">
+<td><code>evec_coeffs</code></td>
+<td>array</td>
+<td>Expansion coefficients of the Koopman eigenfunctions in the kernel basis.</td>
+</tr>
+<tr class="odd">
+<td><code>dual_evec_coeffs</code></td>
+<td>array</td>
+<td>Expansion coefficients of the dual eigenfunctions (used to project data onto the eigenfunctions).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<p>Kernel analog forecasting script (<code>examples/enso/kernel_analog_forecasting.py</code>):</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>PredPars</code> (<code>examples/enso/kernel_analog_forecasting.py</code>, defined in <code>examples/enso/kernel_analog_forecasting.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dt</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Prediction time step. Currently ignored: the KAF implementation assumes a step of one sample.</td>
+</tr>
+<tr class="even">
+<td><code>num_steps</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of prediction steps; forecasts are made at leads 0, 1, …, <code>num_steps</code> samples.</td>
+</tr>
+<tr class="odd">
+<td><code>which_eigs</code></td>
+<td><code>int</code> or <code>tuple[int, int]</code> or <code>list[int]</code></td>
+<td>required</td>
+<td>Kernel eigenfunctions used in the forecast: an integer <em>n</em> means φ₀ … φ_<em>n</em>−1; a tuple <code>(a, b)</code> means φ_a … φ_b; a list gives the indices.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>TrainPars</code> (<code>examples/enso/kernel_analog_forecasting.py</code>, defined in <code>examples/enso/kernel_analog_forecasting.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data</code></td>
+<td><code>DataPars</code></td>
+<td>required</td>
+<td>Training data and embedding settings, as a <code>climate.DataPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>tune</code></td>
+<td><code>TunePars</code></td>
+<td>required</td>
+<td>Settings for tuning the kernel bandwidth, as a <code>TunePars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>kernel</code></td>
+<td><code>DmKernelPars</code> or <code>BsKernelPars</code></td>
+<td>required</td>
+<td>Kernel normalization and eigensolver, as a <code>DmKernelPars</code> or <code>BsKernelPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>pred</code></td>
+<td><code>PredPars</code></td>
+<td>required</td>
+<td>Prediction settings, as a <code>PredPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>cone</code></td>
+<td><code>ConePars</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Cone-kernel settings, as a <code>ConePars</code>, or <code>None</code> for an ordinary distance.</td>
+</tr>
+<tr class="even">
+<td><code>bw_tune</code></td>
+<td><code>TunePars</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Settings for tuning the variable-bandwidth function, as a <code>TunePars</code>, or <code>None</code> for a fixed bandwidth.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>TestPars</code> (<code>examples/enso/kernel_analog_forecasting.py</code>, defined in <code>examples/enso/kernel_analog_forecasting.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>num_pred_steps</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of prediction steps (equal to <code>PredPars.num_steps</code>).</td>
+</tr>
+<tr class="even">
+<td><code>data</code></td>
+<td><code>DataPars</code></td>
+<td>required</td>
+<td>Test data, as a <code>climate.DataPars</code> with the same embedding settings as the training data.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Pars</code> (<code>examples/enso/kernel_analog_forecasting.py</code>, defined in <code>examples/enso/kernel_analog_forecasting.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>train</code></td>
+<td><code>TrainPars</code></td>
+<td>required</td>
+<td>Training parameters.</td>
+</tr>
+<tr class="even">
+<td><code>test</code></td>
+<td><code>TestPars</code></td>
+<td>required</td>
+<td>Test parameters.</td>
+</tr>
+<tr class="odd">
+<td><code>kernel_projection</code></td>
+<td><code>ProjectionPars</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Optional projection of a gridded field onto the kernel eigenfunctions, as a <code>ProjectionPars</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Koopman script (<code>examples/enso/koopman_diffusion_regularization_kaf.py</code>):</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>PredPars</code> (<code>examples/enso/koopman_diffusion_regularization_kaf.py</code>, defined in <code>examples/enso/koopman_diffusion_regularization_kaf.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dt</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Prediction time step (redundant for KAF; set to 1).</td>
+</tr>
+<tr class="even">
+<td><code>num_steps</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of prediction steps.</td>
+</tr>
+<tr class="odd">
+<td><code>idx_koopman_eig</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Index of the Koopman eigenfunction to forecast (the ENSO eigenfunction in this example).</td>
+</tr>
+<tr class="even">
+<td><code>which_kernel_eigs</code></td>
+<td><code>int</code> or <code>tuple[int, int]</code> or <code>list[int]</code></td>
+<td>required</td>
+<td>Kernel eigenfunctions used in the KAF forecast of that eigenfunction, as for <code>which_eigs</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>TrainPars</code> (<code>examples/enso/koopman_diffusion_regularization_kaf.py</code>, defined in <code>examples/enso/koopman_diffusion_regularization_kaf.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data</code></td>
+<td><code>DataPars</code></td>
+<td>required</td>
+<td>As in the KAF script.</td>
+</tr>
+<tr class="even">
+<td><code>tune</code></td>
+<td><code>TunePars</code></td>
+<td>required</td>
+<td>As in the KAF script.</td>
+</tr>
+<tr class="odd">
+<td><code>kernel</code></td>
+<td><code>DmKernelPars</code> or <code>BsKernelPars</code></td>
+<td>required</td>
+<td>As in the KAF script.</td>
+</tr>
+<tr class="even">
+<td><code>pred</code></td>
+<td><code>PredPars</code></td>
+<td>required</td>
+<td>Prediction settings, as this script’s <code>PredPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>koopman</code></td>
+<td><code>KoopmanParsDiff</code></td>
+<td>required</td>
+<td>Koopman settings, as a <code>KoopmanParsDiff</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cone</code></td>
+<td><code>ConePars</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As in the KAF script.</td>
+</tr>
+<tr class="odd">
+<td><code>bw_tune</code></td>
+<td><code>TunePars</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As in the KAF script.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>TestPars</code> (<code>examples/enso/koopman_diffusion_regularization_kaf.py</code>, defined in <code>examples/enso/koopman_diffusion_regularization_kaf.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>num_pred_steps</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>As in the KAF script.</td>
+</tr>
+<tr class="even">
+<td><code>data</code></td>
+<td><code>DataPars</code></td>
+<td>required</td>
+<td>As in the KAF script.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Pars</code> (<code>examples/enso/koopman_diffusion_regularization_kaf.py</code>, defined in <code>examples/enso/koopman_diffusion_regularization_kaf.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>train</code></td>
+<td><code>TrainPars</code></td>
+<td>required</td>
+<td>Training parameters.</td>
+</tr>
+<tr class="even">
+<td><code>test</code></td>
+<td><code>TestPars</code></td>
+<td>required</td>
+<td>Test parameters.</td>
+</tr>
+<tr class="odd">
+<td><code>kernel_projection</code></td>
+<td><code>ProjectionPars</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Optional projection onto the kernel eigenfunctions.</td>
+</tr>
+<tr class="even">
+<td><code>koopman_projection</code></td>
+<td><code>ProjectionPars</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Optional projection of a gridded field onto the Koopman eigenfunctions (the spatial Koopman modes).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Quantum mechanical data assimilation (building blocks):</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Qmda</code> (<code>nlsa.qmda</code>, defined in <code>src/nlsa/qmda.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>nTO</code></td>
+<td><code>int</code></td>
+<td><code>1</code></td>
+<td>Number of time steps between observations.</td>
+</tr>
+<tr class="even">
+<td><code>nTF</code></td>
+<td><code>int</code></td>
+<td><code>1</code></td>
+<td>Number of forecast time steps.</td>
+</tr>
+<tr class="odd">
+<td><code>nL</code></td>
+<td><code>int</code></td>
+<td><code>1</code></td>
+<td>Number of basis functions.</td>
+</tr>
+<tr class="even">
+<td><code>shape_fun</code></td>
+<td><code>str</code></td>
+<td><code>"bump"</code></td>
+<td>Kernel shape function (default <code>"bump"</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>epsilon</code></td>
+<td><code>float</code></td>
+<td><code>1</code></td>
+<td>Kernel bandwidth scaling.</td>
+</tr>
+<tr class="even">
+<td><code>ifVB</code></td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+<td>Use a variable-bandwidth kernel.</td>
+</tr>
+<tr class="odd">
+<td><code>ifSqrtm</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Perform the analysis (Bayesian update) step with the matrix square root of the feature operator.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>ProjectionPars</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data</code></td>
+<td><code>era5.DataSpecs</code></td>
+<td>required</td>
+<td>The gridded field to project, as an <code>era5.DataSpecs</code> (for example global SST).</td>
+</tr>
+<tr class="even">
+<td><code>which_pcs</code></td>
+<td><code>int</code> or <code>slice</code> or <code>Sequence[int]</code></td>
+<td><code>slice(None)</code></td>
+<td>Eigenfunctions to project onto: an integer (a single eigenfunction), a <code>slice</code> or a list of indices.</td>
+</tr>
+<tr class="odd">
+<td><code>time_origin</code></td>
+<td><code>str</code> or <code>int</code></td>
+<td><code>0</code></td>
+<td>Index or date that aligns the eigenfunction time series with the field. The examples use the centre of the delay window, <code>delay_embedding_center</code>.</td>
+</tr>
+<tr class="even">
+<td><code>lead_steps</code></td>
+<td><code>int</code> or <code>Sequence[int]</code></td>
+<td><code>0</code></td>
+<td>Time shift, in samples, between the field and the eigenfunctions; a list gives one pattern per shift, stored along a <code>lead</code> dimension.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>SkillScores</code> (<code>nlsa_models.core</code>, defined in <code>src/nlsa_models/core.py</code>)</caption>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 23%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>nrmses</code></td>
+<td>array</td>
+<td>Normalized root-mean-square error at each lead time 0 … <code>num_steps</code>.</td>
+</tr>
+<tr class="even">
+<td><code>accs</code></td>
+<td>array</td>
+<td>Anomaly correlation at each lead time 0 … <code>num_steps</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>EEOFPars</code> (<code>nlsa.eofs</code>, defined in <code>src/nlsa/eofs.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>num_delays</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of delays in the extended EOF analysis.</td>
+</tr>
+<tr class="even">
+<td><code>delay_step</code></td>
+<td><code>int</code></td>
+<td><code>1</code></td>
+<td>Step between delays, in samples.</td>
+</tr>
+<tr class="odd">
+<td><code>eigensolver</code></td>
+<td><code>"svd"</code></td>
+<td><code>"svd"</code></td>
+<td>Solver; only <code>"svd"</code> is available.</td>
+</tr>
+<tr class="even">
+<td><code>num_eigs</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Number of EOF pairs kept.</td>
+</tr>
+<tr class="odd">
+<td><code>batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for matrix products.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

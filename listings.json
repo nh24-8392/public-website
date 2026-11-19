@@ -1,0 +1,31 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/forecast/2026-11-18/index.html",
+      "/forecast/2026-10-21/index.html",
+      "/forecast/2026-11-15/index.html",
+      "/forecast/2026-11-15-mjo/index.html",
+      "/blog/posts/2026-11-second-quantization/index.html",
+      "/blog/posts/vsa-kuramoto-sivashinsky/index.html"
+    ]
+  },
+  {
+    "listing": "/blog/index.html",
+    "items": [
+      "/blog/posts/2026-11-second-quantization/index.html",
+      "/blog/posts/vsa-kuramoto-sivashinsky/index.html"
+    ]
+  },
+  {
+    "listing": "/forecast/archive.html",
+    "items": [
+      "/forecast/2026-11-18/index.html",
+      "/forecast/2026-11-15-mjo/index.html",
+      "/forecast/2026-11-15/index.html",
+      "/forecast/2026-10-21/index.html",
+      "/forecast/2026-09-28/index.html",
+      "/forecast/2026-09-27/index.html"
+    ]
+  }
+]

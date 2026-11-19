@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="The setup block of the NLSA Python toolkit: initializing JAX on CPU or GPU, numerical precision, the switches at the top of the example scripts, run modes for computing, saving and reading results, and the folder structure of saved results.">
+
+<title>1. Setup and run control – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/index.html">Calculation blocks</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/setup.html">1. Setup and run control</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Introduction</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">The code</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/code-structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../documentation/blocks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Calculation blocks</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Calculation blocks">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/setup.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">1. Setup and run control</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/delay-embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Delay embedding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/kernel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Kernel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/koopman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Koopman analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/skill-outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Skill and outputs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/pseudo-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pseudo-code</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Reference</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/hyperparameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing hyperparameters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/options.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">All options</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-jax-environment" id="toc-the-jax-environment" class="nav-link active" data-scroll-target="#the-jax-environment">The JAX environment</a></li>
+  <li><a href="#script-switches" id="toc-script-switches" class="nav-link" data-scroll-target="#script-switches">Script switches</a></li>
+  <li><a href="#run-modes-and-saved-results" id="toc-run-modes-and-saved-results" class="nav-link" data-scroll-target="#run-modes-and-saved-results">Run modes and saved results</a>
+  <ul class="collapse">
+  <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure">Folder structure</a></li>
+  </ul></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  <li><a href="#several-gpus" id="toc-several-gpus" class="nav-link" data-scroll-target="#several-gpus">Several GPUs</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/index.html">Calculation blocks</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/setup.html">1. Setup and run control</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">1. Setup and run control</h1>
+<p class="subtitle lead">Hardware, precision, which steps to compute, and where results go</p>
+</div>
+
+<div>
+  <div class="description">
+    The setup block of the NLSA Python toolkit: initializing JAX on CPU or GPU, numerical precision, the switches at the top of the example scripts, run modes for computing, saving and reading results, and the folder structure of saved results.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Before any calculation, a script decides where it runs (CPU or which GPUs), in which precision, which steps to compute and which to read from earlier runs, and which plots to make. These choices are <strong>switches</strong>: constants in capitals at the top of each example script.</p>
+<section id="the-jax-environment" class="level2">
+<h2 class="anchored" data-anchor-id="the-jax-environment">The JAX environment</h2>
+<p>JAX is initialized once, when the script starts, by <code>initialize_jax</code> (in <code>nlsa_models.core</code>, also available as <code>clim.initialize_jax</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>jax_env <span class="op">=</span> clim.initialize_jax(idx_gpu<span class="op">=</span>IDX_GPU, xla_mem_fraction<span class="op">=</span>XLA_MEM_FRACTION, fp<span class="op">=</span>FP)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Arguments of <code>initialize_jax</code> (<code>nlsa_models.core</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>idx_cpu</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Which CPU device to use; <code>None</code> takes the first.</td>
+</tr>
+<tr class="even">
+<td><code>idx_gpu</code></td>
+<td><code>int</code>, list of <code>int</code>, or <code>None</code></td>
+<td><code>None</code></td>
+<td>GPU to use, or a list for several GPUs; <code>None</code> (or an empty list) runs on the CPU.</td>
+</tr>
+<tr class="odd">
+<td><code>xla_mem_fraction</code></td>
+<td><code>str</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Fraction of each GPU’s memory that JAX reserves at start-up, as a string such as <code>"0.95"</code> (sets the environment variable <code>XLA_PYTHON_CLIENT_MEM_FRACTION</code>). <code>None</code> keeps JAX’s default.</td>
+</tr>
+<tr class="even">
+<td><code>fp</code></td>
+<td><code>"f32"</code> or <code>"f64"</code></td>
+<td><code>"f32"</code></td>
+<td>Precision: single (<code>float32</code>, <code>complex64</code>) or double (<code>float64</code>, <code>complex128</code>). Double precision switches on JAX’s 64-bit mode.</td>
+</tr>
+<tr class="odd">
+<td><code>cache_dir</code></td>
+<td><code>str</code>, <code>Path</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Folder for JAX’s persistent compilation cache, so that later runs skip recompiling. A relative path is taken from the current folder.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>It returns a <code>JaxEnv</code> object with the chosen devices (<code>devices</code>), the CPU device (<code>device_cpu</code>), the real and complex data types (<code>real_dtype</code>, <code>complex_dtype</code>) used throughout the script, and the cache folder. <code>jax_env.tabulate()</code> prints them at the start of a run.</p>
+<p>Single precision, which the examples use, needs half the memory of double precision and is faster, by a large factor on GPUs built for graphics, which have little double-precision hardware. Double precision is worth a try when results change noticeably with the precision, for example with very many eigenfunctions or very small kernel eigenvalues.</p>
+<p><code>clim.initialize_matplotlib(backend=MATPLOTLIB_BACKEND)</code> chooses how plots are drawn; set <code>MATPLOTLIB_BACKEND = "Agg"</code> on a server without a display.</p>
+</section>
+<section id="script-switches" class="level2">
+<h2 class="anchored" data-anchor-id="script-switches">Script switches</h2>
+<p>These are the switches of the two ENSO scripts, with their values in the repository. The run-mode switches are listed with the steps they control <a href="#run-modes-and-saved-results">below</a>. The Lorenz 63 scripts have the same kind of switches, with run modes named after their own steps.</p>
+<p><code>EXPERIMENT</code> chooses the configuration to run. It is a member of the script’s <code>Experiment</code> enumeration, from which <code>from_experiment()</code> builds the parameters of the run (together with <code>CONE_KERNEL</code> and <code>KERNEL_NORMALIZATION</code>); see <a href="../../documentation/experiments.html">Experiments</a>. The kernel analog forecasting script runs <code>ELNINO_2027_FROM_ERA5_NINO34SST</code>, the Koopman script <code>ENSO_FROM_ERA5_IPSST</code>.</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: computing</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Type or values</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>IDX_GPU</code></td>
+<td><code>int</code> or <code>Sequence[int]</code> or <code>None</code></td>
+<td>KAF: <code>0</code><br>Koopman: <code>None</code></td>
+<td>GPU to use: an index, a list of indices for several GPUs, or <code>None</code> to run on the CPU.</td>
+</tr>
+<tr class="even">
+<td><code>XLA_MEM_FRACTION</code></td>
+<td><code>str</code> or <code>None</code></td>
+<td><code>"0.95"</code></td>
+<td>Fraction of GPU memory that JAX may reserve at start-up (passed to <code>initialize_jax</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>JAX_CACHE_DIR</code></td>
+<td><code>str</code> or <code>None</code></td>
+<td><code>"jax_cache"</code></td>
+<td>Folder for JAX’s compilation cache (defined in the scripts but not passed to <code>initialize_jax</code> at present).</td>
+</tr>
+<tr class="even">
+<td><code>FP</code></td>
+<td><code>"f32"</code> or <code>"f64"</code></td>
+<td><code>"f32"</code></td>
+<td>Floating-point precision: <code>"f32"</code> (single, faster) or <code>"f64"</code> (double).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: kernel</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Type or values</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CONE_KERNEL</code></td>
+<td><code>bool</code></td>
+<td>KAF: <code>True</code><br>Koopman: <code>False</code></td>
+<td>Use the cone kernel. It also switches on the velocity covariates in the experiment settings.</td>
+</tr>
+<tr class="even">
+<td><code>KERNEL_TUNING_GRAD_METHOD</code></td>
+<td><code>"explicit"</code> or <code>"automatic"</code></td>
+<td>KAF: <code>"automatic"</code><br>Koopman: <code>"explicit"</code></td>
+<td>How the tuning curve is differentiated: <code>"explicit"</code> (a closed-form gradient for the exponential shape function) or <code>"automatic"</code> (JAX automatic differentiation).</td>
+</tr>
+<tr class="odd">
+<td><code>KERNEL_NORMALIZATION</code></td>
+<td><code>"diffusion_maps"</code> or <code>"bistochastic"</code></td>
+<td><code>"diffusion_maps"</code></td>
+<td><code>"diffusion_maps"</code> (uses <code>DmKernelPars</code>) or <code>"bistochastic"</code> (uses <code>BsKernelPars</code>).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: folders (each a string)</caption>
+<colgroup>
+<col style="width: 19%">
+<col style="width: 26%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>OUTPUT_DATA_DIR</code></td>
+<td><code>"examples/enso/data"</code></td>
+<td>Folder, relative to where the script is run, under which results are saved and read.</td>
+</tr>
+<tr class="even">
+<td><code>ERA5_DAILY_DATA_DIR</code></td>
+<td>Koopman script: <code>"/storage/data/era5/daily01"</code></td>
+<td>Folder with the daily ERA5 files. Defined in the Koopman script but not used by its current experiments, which are monthly.</td>
+</tr>
+<tr class="odd">
+<td><code>ERA5_MONTHLY_DATA_DIR</code></td>
+<td>Koopman script: <code>"/storage/data/era5/month_nc_1940_2025"</code></td>
+<td>Folder with the monthly ERA5 files.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Switches of the ENSO scripts: plots and printed tables</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 16%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Switch</th>
+<th>Type or values</th>
+<th>Value in the scripts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PLOT_MODE</code></td>
+<td><code>"save"</code> or <code>"show"</code> or <code>"saveshow"</code> or <code>None</code></td>
+<td><code>"show"</code></td>
+<td><code>"show"</code> (open windows), <code>"save"</code> (write PNG files), <code>"saveshow"</code> (both) or <code>None</code> (no plots).</td>
+</tr>
+<tr class="even">
+<td><code>WHICH_PLOTS</code></td>
+<td>set of plot names</td>
+<td>KAF: {<code>"running_pred"</code>, <code>"pred_timeseries"</code>, <code>"skill_scores"</code>}<br>Koopman: <code>{"koopman_modes"}</code></td>
+<td>Set of plots to make (see the plot list on the <em>Skill and outputs</em> page); <code>{"all"}</code> makes every plot.</td>
+</tr>
+<tr class="odd">
+<td><code>MATPLOTLIB_BACKEND</code></td>
+<td><code>"Agg"</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Matplotlib backend; set <code>"Agg"</code> on a server without a display.</td>
+</tr>
+<tr class="even">
+<td><code>DELAY_PLOT_MODE</code></td>
+<td><code>"backward"</code> or <code>"central"</code></td>
+<td><code>"central"</code></td>
+<td>Time stamp given to a delay window in plots: its centre (<code>"central"</code>) or its last sample (<code>"backward"</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>PLT_DATE_RANGE</code></td>
+<td><code>tuple[str, str]</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Restrict time-series plots to this date range; <code>None</code> plots the whole period.</td>
+</tr>
+<tr class="even">
+<td><code>KERNEL_EIGS_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Kernel eigenfunctions to plot: a list of indices, <code>"interactive"</code> (ask at the prompt) or <code>None</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>KERNEL_MODES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Kernel modes (spatial patterns) to plot, as above.</td>
+</tr>
+<tr class="even">
+<td><code>KOOPMAN_EIGS_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td>Koopman script: <code>"interactive"</code></td>
+<td>Koopman eigenfunctions to plot, as above.</td>
+</tr>
+<tr class="odd">
+<td><code>KOOPMAN_MODES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td>Koopman script: <code>"interactive"</code></td>
+<td>Koopman modes (spatial patterns) to plot, as above.</td>
+</tr>
+<tr class="even">
+<td><code>LEAD_TIMES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Lead times for the running-forecast plot, as above.</td>
+</tr>
+<tr class="odd">
+<td><code>INITIALIZATION_TIMES_PLT</code></td>
+<td><code>Sequence[int]</code> or <code>"interactive"</code> or <code>None</code></td>
+<td><code>"interactive"</code></td>
+<td>Initialization times for the forecast time-series plot, as above.</td>
+</tr>
+<tr class="even">
+<td><code>NUM_TABULATE</code></td>
+<td><code>int</code></td>
+<td><code>40</code></td>
+<td>Number of eigenvalues printed in the summary tables.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="run-modes-and-saved-results" class="level2">
+<h2 class="anchored" data-anchor-id="run-modes-and-saved-results">Run modes and saved results</h2>
+<p>Each step of a script has a run-mode switch with three values:</p>
+<ul>
+<li><code>"calc"</code>: compute the result, keep it in memory only.</li>
+<li><code>"calcsave"</code>: compute the result and save it.</li>
+<li><code>"read"</code>: read the result saved by an earlier <code>"calcsave"</code> run.</li>
+</ul>
+<p>The run mode is applied by wrapping the function that does the step. For example, in the kernel analog forecasting script:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>compute_kernel_eigen <span class="op">=</span> timeit(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    pickleit(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        knl.compute_eigen,         <span class="co"># the computation</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        io<span class="op">=</span>io,                     <span class="co"># where to save or read</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        mode<span class="op">=</span>KERNEL_EIGEN_MODE,    <span class="co"># "calc", "calcsave" or "read"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        fname<span class="op">=</span><span class="st">"kernel_eigen"</span>,      <span class="co"># file name: kernel_eigen.pkl</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        cls<span class="op">=</span>KernelEigen,           <span class="co"># type checked when reading</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>compute_kernel_eigen</code> is then called with exactly the arguments of <code>knl.compute_eigen</code>. In <code>"read"</code> mode the arguments are ignored and the file is loaded instead. <code>timeit</code> prints how long each step took.</p>
+<div class="doc-table">
+<table class="table-striped table-hover caption-top table">
+<caption>Steps of the ENSO scripts and their saved files</caption>
+<colgroup>
+<col style="width: 27%">
+<col style="width: 29%">
+<col style="width: 14%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Run-mode switch</th>
+<th>Wrapper</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Data</td>
+<td><code>EXTRACT_DATA_MODE</code></td>
+<td><code>pickleit</code></td>
+<td><code>data.pkl</code></td>
+</tr>
+<tr class="even">
+<td>Tuning of the bandwidth function and of the kernel</td>
+<td><code>TUNE_KERNEL_MODE</code></td>
+<td><code>pickleit</code></td>
+<td><code>tune_info.pkl</code> (one in each folder)</td>
+</tr>
+<tr class="odd">
+<td>Kernel eigenfunctions</td>
+<td><code>KERNEL_EIGEN_MODE</code></td>
+<td><code>pickleit</code></td>
+<td><code>kernel_eigen.pkl</code></td>
+</tr>
+<tr class="even">
+<td>Projection onto kernel eigenfunctions</td>
+<td><code>KERNEL_PROJECTION_MODE</code></td>
+<td><code>netcdfit</code></td>
+<td><code>kernel_eigen_proj.nc</code></td>
+</tr>
+<tr class="odd">
+<td>Generator matrix</td>
+<td><code>GENERATOR_MATRIX_MODE</code></td>
+<td><code>npyit</code></td>
+<td><code>gen_mat.npy</code></td>
+</tr>
+<tr class="even">
+<td>Koopman eigendecomposition</td>
+<td><code>KOOPMAN_EIGEN_MODE</code></td>
+<td><code>pickleit</code></td>
+<td><code>generator_eigen_diff.pkl</code></td>
+</tr>
+<tr class="odd">
+<td>Values of the forecast Koopman eigenfunction</td>
+<td><code>KOOPMAN_EIG_EVAL_MODE</code></td>
+<td><code>pickleit</code></td>
+<td><code>koop_eig.pkl</code></td>
+</tr>
+<tr class="even">
+<td>Projection onto Koopman eigenfunctions</td>
+<td><code>KOOPMAN_PROJECTION_MODE</code></td>
+<td><code>netcdfit</code></td>
+<td><code>koopman_eigen_proj.nc</code></td>
+</tr>
+<tr class="odd">
+<td>KAF expansion coefficients</td>
+<td><code>KAF_EXPANSION_COEFFS_MODE</code></td>
+<td><code>pickleit</code></td>
+<td><code>kaf_coeffs.pkl</code></td>
+</tr>
+<tr class="even">
+<td>Forecasts</td>
+<td><code>KAF_PREDS_MODE</code></td>
+<td><code>pickleit</code></td>
+<td><code>kaf_preds.pkl</code></td>
+</tr>
+<tr class="odd">
+<td>Skill scores</td>
+<td><code>SKILL_SCORES_MODE</code></td>
+<td><code>h5it</code></td>
+<td><code>pred_scores.h5</code></td>
+</tr>
+<tr class="even">
+<td>Plots</td>
+<td><code>PLOT_MODE</code></td>
+<td><code>plotit</code>, <code>plotem</code></td>
+<td><code>&lt;name&gt;.png</code>, or <code>&lt;name&gt;_&lt;number&gt;.png</code> for a series of plots</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The wrappers are in <code>nlsa.io_actions</code>: <code>pickleit</code> (Python pickle files), <code>h5it</code> (HDF5), <code>npyit</code> (NumPy <code>.npy</code>), <code>netcdfit</code> (NetCDF, for xarray data sets) and <code>csvit</code> (CSV tables); <code>plotit</code> and <code>plotem</code> save or show one figure or a numbered series of figures.</p>
+<section id="folder-structure" class="level3">
+<h3 class="anchored" data-anchor-id="folder-structure">Folder structure</h3>
+<p>Results are saved under <code>OUTPUT_DATA_DIR</code> (by default <code>examples/enso/data</code>, relative to the folder the script is started from), in a tree of folders whose names are the text forms of the parameter objects. Before each step, <code>main()</code> extends the current path with the settings of that step:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>io <span class="op">@=</span> <span class="bu">str</span>(pars.train.data.covariate)   <span class="co"># start a new path from the root</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>io <span class="op">/=</span> <span class="bu">str</span>(pars.train.data)             <span class="co"># go one level deeper</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>io <span class="op">-=</span> <span class="dv">2</span>                                <span class="co"># go back to the folder two steps earlier</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For the Niño 3.4 kernel analog forecast, for example, the forecasts end up in</p>
+<pre class="text"><code>examples/enso/data/
+└── sst_190-240-4_-5-5-4_1940-01-01-2019-12-31_monthly_clim1940-01-01-2019-12-31_std   predictors
+    └── ns920_nd12_nb0_na24_vfd4                     samples, delays, extra samples, velocities
+        └── nb128_loglim-3_loglim3_dimNone_scl1      tuning of the bandwidth function
+            └── zeta0.9900_thresh1e-12               cone kernel
+                └── nb128_loglim-3_loglim3_dimNone_scl2          kernel tuning
+                    └── fokkerplanck_eigh_neigs512               kernel eigenfunctions
+                        └── sst_190-240_-5-5_…_anom              target
+                            └── pred24_eigs0-512                 forecast settings
+                                └── ns56_nd12_nb0_na24_vfd4      test samples
+                                    ├── kaf_preds.pkl
+                                    └── pred_scores.h5</code></pre>
+<p>Two consequences follow:</p>
+<ul>
+<li>Runs with different settings never overwrite each other, and a <code>"read"</code> step finds its file only if all the settings that lead to it are unchanged.</li>
+<li>Old results are never deleted. Remove folders you no longer need by hand.</li>
+</ul>
+</section>
+</section>
+<section id="plots" class="level2">
+<h2 class="anchored" data-anchor-id="plots">Plots</h2>
+<p><code>PLOT_MODE</code> sets what happens to plots: <code>"show"</code> opens a window and waits for Enter, <code>"save"</code> writes PNG files next to the results, <code>"saveshow"</code> does both, and <code>None</code> skips plotting. <code>WHICH_PLOTS</code> selects the plots (listed on the <a href="../../documentation/blocks/skill-outputs.html#plots">Skill and outputs</a> page). For plots that come as a series (eigenfunctions, modes, lead times, initial times), the <code>*_PLT</code> switches give the numbers to plot, or <code>"interactive"</code> to type them in at the prompt.</p>
+</section>
+<section id="several-gpus" class="level2">
+<h2 class="anchored" data-anchor-id="several-gpus">Several GPUs</h2>
+<p>With more than one GPU in <code>IDX_GPU</code>, <code>from_experiment()</code> builds a sharding layout: the training samples are split across the GPUs along the sample dimension, while small arrays such as eigenvalues are copied to every GPU. The layout is held in <code>TrainShardings</code> and <code>TestShardings</code> (defined in each script), which contain the toolkit’s <code>L2FnAlgebraShardings</code>, <code>KernelEigenShardings</code> and, in the Koopman script, <code>GeneratorShardings</code> and <code>KoopmanEigenShardings</code>. Nothing needs to be set for one GPU or a CPU.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

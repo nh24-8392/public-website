@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="How Koopman operators are learned from data: delay-coordinate embeddings, kernels and diffusion maps, nonlinear Laplacian spectral analysis (NLSA), data-driven Koopman spectral analysis and vector-valued spectral analysis (VSA).">
+
+<title>Data-driven methods – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methodology/data-driven-methods.html">Data-driven methods</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methodology/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Methodology</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methodology/koopman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Koopman operator theory</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methodology/data-driven-methods.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Data-driven methods</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methodology/kaf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kernel analog forecasting (KAF)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methodology/qmda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-from-a-time-series" id="toc-learning-from-a-time-series" class="nav-link active" data-scroll-target="#learning-from-a-time-series">Learning from a time series</a></li>
+  <li><a href="#delay-coordinate-embedding" id="toc-delay-coordinate-embedding" class="nav-link" data-scroll-target="#delay-coordinate-embedding">Delay-coordinate embedding</a></li>
+  <li><a href="#kernels-and-a-data-driven-basis" id="toc-kernels-and-a-data-driven-basis" class="nav-link" data-scroll-target="#kernels-and-a-data-driven-basis">Kernels and a data-driven basis</a></li>
+  <li><a href="#nlsa-nonlinear-laplacian-spectral-analysis" id="toc-nlsa-nonlinear-laplacian-spectral-analysis" class="nav-link" data-scroll-target="#nlsa-nonlinear-laplacian-spectral-analysis">NLSA: nonlinear Laplacian spectral analysis</a></li>
+  <li><a href="#learning-the-koopman-operator" id="toc-learning-the-koopman-operator" class="nav-link" data-scroll-target="#learning-the-koopman-operator">Learning the Koopman operator</a></li>
+  <li><a href="#koopman-indices-compared-with-eof-based-indices" id="toc-koopman-indices-compared-with-eof-based-indices" class="nav-link" data-scroll-target="#koopman-indices-compared-with-eof-based-indices">Koopman indices compared with EOF-based indices</a></li>
+  <li><a href="#spatially-varying-patterns-vsa" id="toc-spatially-varying-patterns-vsa" class="nav-link" data-scroll-target="#spatially-varying-patterns-vsa">Spatially varying patterns: VSA</a></li>
+  <li><a href="#where-the-methods-have-been-applied" id="toc-where-the-methods-have-been-applied" class="nav-link" data-scroll-target="#where-the-methods-have-been-applied">Where the methods have been applied</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data-driven methods</h1>
+<p class="subtitle lead">Kernel methods for the approximation of Koopman operators from time series</p>
+</div>
+
+<div>
+  <div class="description">
+    How Koopman operators are learned from data: delay-coordinate embeddings, kernels and diffusion maps, nonlinear Laplacian spectral analysis (NLSA), data-driven Koopman spectral analysis and vector-valued spectral analysis (VSA).
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>We have developed a family of kernel methods that approximate <a href="../methodology/koopman.html">Koopman operators</a> from data by combining ideas from ergodic theory with kernel methods from machine learning <span class="citation" data-cites="giannakis2012nlsa berry2015 giannakis2015pmlr giannakis2019acha das2020 das2021 berry2020">(<a href="#ref-giannakis2012nlsa" role="doc-biblioref">Giannakis and Majda 2012</a>; <a href="#ref-berry2015" role="doc-biblioref">Berry et al. 2015</a>, <a href="#ref-berry2020" role="doc-biblioref">2020</a>; <a href="#ref-giannakis2015pmlr" role="doc-biblioref">Giannakis et al. 2015</a>; <a href="#ref-giannakis2019acha" role="doc-biblioref">Giannakis 2019</a>; <a href="#ref-das2020" role="doc-biblioref">Das and Giannakis 2020</a>; <a href="#ref-das2021" role="doc-biblioref">Das et al. 2021</a>)</span>. The work summarized on this page was carried out with a number of collaborators and, for the most part, before the present project. The elements common to these methods are described below.</p>
+<section id="learning-from-a-time-series" class="level2">
+<h2 class="anchored" data-anchor-id="learning-from-a-time-series">Learning from a time series</h2>
+<p>The training data are a time series <span class="math inline">\(y_1, y_2, \ldots, y_N\)</span> sampled at a fixed interval <span class="math inline">\(\Delta t\)</span>. Each sample is regarded as a measurement <span class="math inline">\(y_n = F(x_n)\)</span> of an unobserved state <span class="math inline">\(x_n = \Phi^{n\,\Delta t}(x_0)\)</span> through an observation map <span class="math inline">\(F\)</span>. The measurements may be high-dimensional, such as a gridded field with thousands of points, may combine different variables and sources, and need not lie on a regular grid.</p>
+<p>Two properties make it possible to learn from a single long record. The first is ergodicity: time averages along a long trajectory converge to averages with respect to the invariant measure <span class="math inline">\(\mu\)</span>, so the training samples serve as quadrature nodes for integrals over state space. The second is the time ordering of the samples: since consecutive samples are separated by one time step, a shift of the data by one step corresponds to an application of the Koopman operator <span class="math inline">\(U^{\Delta t}\)</span>.</p>
+</section>
+<section id="delay-coordinate-embedding" class="level2">
+<h2 class="anchored" data-anchor-id="delay-coordinate-embedding">Delay-coordinate embedding</h2>
+<p>A single measurement generally determines the state only in part. Each sample is therefore augmented with its recent history to form the delay-coordinate vector</p>
+<p><span class="math display">\[
+\tilde y_n = \big(y_n,\ y_{n-1},\ \ldots,\ y_{n-Q+1}\big),
+\]</span></p>
+<p>where <span class="math inline">\(Q\)</span> is the length of the embedding window. By the embedding theorem of Takens and its generalizations, a sufficiently long window determines the state <span class="citation" data-cites="takens1981 giannakis2021rms">(<a href="#ref-takens1981" role="doc-biblioref">Takens 1981</a>; <a href="#ref-giannakis2021rms" role="doc-biblioref">Giannakis 2021</a>)</span>. The same construction underlies extended EOF analysis and singular spectrum analysis in climate science <span class="citation" data-cites="ghil2002">(<a href="#ref-ghil2002" role="doc-biblioref">Ghil et al. 2002</a>)</span>.</p>
+<p>Delay embedding has a second effect. As the window length increases, the kernel integral operators described below commute with the Koopman operator to an increasing degree, and in the limit the two have common eigenspaces. The kernel eigenfunctions then separate timescales and approach approximate Koopman eigenfunctions <span class="citation" data-cites="das2019 giannakis2021rms">(<a href="#ref-das2019" role="doc-biblioref">Das and Giannakis 2019</a>; <a href="#ref-giannakis2021rms" role="doc-biblioref">Giannakis 2021</a>)</span>. The window length is one of the principal parameters of the method.</p>
+</section>
+<section id="kernels-and-a-data-driven-basis" class="level2">
+<h2 class="anchored" data-anchor-id="kernels-and-a-data-driven-basis">Kernels and a data-driven basis</h2>
+<p>A kernel <span class="math inline">\(k(\tilde y_m, \tilde y_n)\)</span> is a measure of similarity between two embedded samples. The default choice is a Gaussian kernel,</p>
+<p><span class="math display">\[
+k(\tilde y_m, \tilde y_n) = \exp\!\left(-\frac{\lVert \tilde y_m - \tilde y_n \rVert^2}{\epsilon^2}\right),
+\]</span></p>
+<p>with three modifications. The bandwidth <span class="math inline">\(\epsilon\)</span> is taken to vary with the local sampling density of the data, so that resolution is finer where data are plentiful and coarser in sparsely sampled regions of state space; this is of consequence for intermittent and extreme behavior. The kernel matrix is normalized so that its rows sum to one, as in the diffusion maps algorithm <span class="citation" data-cites="coifman2006">(<a href="#ref-coifman2006" role="doc-biblioref">Coifman and Lafon 2006</a>)</span>; the resulting Markov matrix approximates a heat semigroup on the set traced out by the data. The overall bandwidth is selected by optimizing a scaling criterion over a range of candidate values.</p>
+<p>The leading eigenvectors <span class="math inline">\(\phi_1, \ldots, \phi_L\)</span> of the normalized <span class="math inline">\(N \times N\)</span> kernel matrix form an orthonormal basis of functions on the data, ordered by increasing roughness. For a linear kernel, <span class="math inline">\(k(y_m, y_n) = y_m \cdot y_n\)</span>, they reduce to the principal components of EOF analysis; nonlinear kernels generalize this construction.</p>
+<p>A basis function is evaluated at a new data point <span class="math inline">\(y\)</span>, for example the observations available at the time a forecast is issued, by the Nyström extension</p>
+<p><span class="math display">\[
+\varphi_j(y) = \frac{1}{N \lambda_j} \sum_{n=1}^{N} k(y, y_n)\, \phi_j(x_n),
+\]</span></p>
+<p>where <span class="math inline">\(\lambda_j\)</span> is the eigenvalue corresponding to <span class="math inline">\(\phi_j\)</span>.</p>
+</section>
+<section id="nlsa-nonlinear-laplacian-spectral-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="nlsa-nonlinear-laplacian-spectral-analysis">NLSA: nonlinear Laplacian spectral analysis</h2>
+<p>Nonlinear Laplacian spectral analysis <span class="citation" data-cites="giannakis2012nlsa">(<a href="#ref-giannakis2012nlsa" role="doc-biblioref">Giannakis and Majda 2012</a>)</span> was the first method of this family. The kernel construction above is applied to delay-embedded data, with a kernel that also depends on the local velocity of the trajectory, and the leading eigenfunctions are taken as temporal patterns. The corresponding spatiotemporal patterns are obtained by projecting the data onto these eigenfunctions.</p>
+<p>Methods that rank patterns by explained variance, such as EOF analysis and singular spectrum analysis, can fail to isolate signals that carry little variance but are dynamically significant. NLSA was designed to recover intermittent and low-frequency signals of this kind. It has been applied to decadal variability in the North Pacific, the structure of the MJO <span class="citation" data-cites="tung2014 szekely2016">(<a href="#ref-tung2014" role="doc-biblioref">Tung et al. 2014</a>; <a href="#ref-szekely2016" role="doc-biblioref">Székely et al. 2016</a>)</span>, monsoon intraseasonal oscillations <span class="citation" data-cites="sabeerali2017">(<a href="#ref-sabeerali2017" role="doc-biblioref">Sabeerali et al. 2017</a>)</span>, sea ice reemergence <span class="citation" data-cites="bushuk2014">(<a href="#ref-bushuk2014" role="doc-biblioref">Bushuk et al. 2014</a>)</span>, Indo-Pacific variability <span class="citation" data-cites="slawinska2017 giannakis2018jclim">(<a href="#ref-slawinska2017" role="doc-biblioref">Slawinska and Giannakis 2017</a>; <a href="#ref-giannakis2018jclim" role="doc-biblioref">Giannakis and Slawinska 2018</a>)</span> and convection <span class="citation" data-cites="brenowitz2016">(<a href="#ref-brenowitz2016" role="doc-biblioref">Brenowitz et al. 2016</a>)</span>. The open-source code in which all the methods on these pages are implemented retains the name NLSA <span class="citation" data-cites="nlsacode">(<a href="#ref-nlsacode" role="doc-biblioref"><span class="nocase">Giannakis et al.</span> 2026</a>)</span>.</p>
+</section>
+<section id="learning-the-koopman-operator" class="level2">
+<h2 class="anchored" data-anchor-id="learning-the-koopman-operator">Learning the Koopman operator</h2>
+<p>Given the basis, the Koopman operator is represented by an <span class="math inline">\(L \times L\)</span> matrix. Since the application of the one-step operator <span class="math inline">\(U^{\Delta t}\)</span> to a basis function amounts to a shift by one sample, the matrix elements <span class="math inline">\(\langle \phi_i, U^{\Delta t} \phi_j \rangle\)</span> are estimated directly from the data,</p>
+<p><span class="math display">\[
+U_{ij} = \frac{1}{N} \sum_{n=1}^{N-1} \phi_i(x_n)\, \phi_j(x_{n+1}).
+\]</span></p>
+<p>Under suitable conditions on the dynamics and the kernel, this matrix converges to a representation of the Koopman operator as the number of samples <span class="math inline">\(N\)</span> tends to infinity, followed by the number of basis functions <span class="math inline">\(L\)</span> <span class="citation" data-cites="berry2020 giannakis2019acha">(<a href="#ref-berry2020" role="doc-biblioref">Berry et al. 2020</a>; <a href="#ref-giannakis2019acha" role="doc-biblioref">Giannakis 2019</a>)</span>.</p>
+<p>Two approaches to the computation of eigenfunctions are available in the toolkit. In the first, the generator <span class="math inline">\(V\)</span> is approximated by finite differences along the trajectory and is regularized by the addition of a small diffusion term <span class="citation" data-cites="giannakis2019acha">(<a href="#ref-giannakis2019acha" role="doc-biblioref">Giannakis 2019</a>)</span>. Each eigenfunction of the regularized operator has an eigenfrequency and a Dirichlet energy, which measures its roughness with respect to the kernel. Eigenfunctions of low Dirichlet energy are the least sensitive to sampling error and are the ones retained for interpretation (<a href="#fig-spectrum" class="quarto-xref">Figure&nbsp;1</a>). In the second approach, the generator is approximated by a one-parameter family of compact, skew-adjoint operators on a reproducing kernel Hilbert space (RKHS). These operators have discrete spectra, and their spectral measures converge to that of the generator in the limit of vanishing regularization and large data <span class="citation" data-cites="das2021 giannakis2021rms">(<a href="#ref-das2021" role="doc-biblioref">Das et al. 2021</a>; <a href="#ref-giannakis2021rms" role="doc-biblioref">Giannakis 2021</a>)</span>.</p>
+<p>In either case each eigenfunction is a linear combination of basis functions, <span class="math inline">\(z_l = \sum_j c_{lj}\, \phi_j\)</span>. Evaluated along the data it is a complex-valued time series whose real and imaginary parts are in quadrature, so its phase follows the stage of an oscillation. The spatial pattern associated with the oscillation is obtained by projecting gridded fields onto the eigenfunction.</p>
+<div id="fig-spectrum" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Scatter plot of eigenfrequency against Dirichlet energy, forming a fan of points that spreads out as energy increases.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spectrum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig-l63-spectrum.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Eigenfrequencies of the Koopman generator for the Lorenz 63 system, plotted against the Dirichlet energy of the corresponding eigenfunctions. Colors give the index j of the eigenfunction. Low-energy eigenfunctions, on the left, are the smoothest."><img src="fig-l63-spectrum.png" class="img-fluid figure-img" style="width:70.0%" alt="Scatter plot of eigenfrequency against Dirichlet energy, forming a fan of points that spreads out as energy increases."></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spectrum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Eigenfrequencies of the Koopman generator for the Lorenz 63 system, plotted against the Dirichlet energy of the corresponding eigenfunctions. Colors give the index <span class="math inline">\(j\)</span> of the eigenfunction. Low-energy eigenfunctions, on the left, are the smoothest.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="koopman-indices-compared-with-eof-based-indices" class="level2">
+<h2 class="anchored" data-anchor-id="koopman-indices-compared-with-eof-based-indices">Koopman indices compared with EOF-based indices</h2>
+<p>In <a href="#fig-mjo" class="quarto-xref">Figure&nbsp;2</a> an MJO index obtained as an approximate Koopman eigenfunction is compared with the leading intraseasonal pair of an extended EOF analysis of the same data, namely daily outgoing longwave radiation averaged over 15°S–15°N for 1975–2025. The Koopman eigenfunction, with a period of about 51 days, traces more regular cycles, and individual MJO events are more clearly delineated. A detailed comparison is given by <span class="citation" data-cites="lintner2023">Lintner et al. (<a href="#ref-lintner2023" role="doc-biblioref">2023</a>)</span>.</p>
+<div id="fig-mjo" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mjo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mjo" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mjo-koopman" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mjo-koopman-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig-mjo-koopman.png" class="lightbox" data-gallery="fig-mjo" title="Figure&nbsp;2&nbsp;(a): Koopman eigenfunction"><img src="fig-mjo-koopman.png" class="img-fluid figure-img" data-ref-parent="fig-mjo"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mjo-koopman-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Koopman eigenfunction
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-mjo" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-mjo-eeof" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-mjo-eeof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig-mjo-eeof.png" class="lightbox" data-gallery="fig-mjo" title="Figure&nbsp;2&nbsp;(b): Extended EOF pair"><img src="fig-mjo-eeof.png" class="img-fluid figure-img" data-ref-parent="fig-mjo"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mjo-eeof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Extended EOF pair
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mjo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: MJO indices from daily outgoing longwave radiation. (a) Approximate Koopman eigenfunction with an eigenperiod of 51.4 days. (b) Leading intraseasonal pair of principal components from extended EOF analysis. In each panel, the left column plots the two components of the index against each other and the right column shows them as time series, for 1975–2025 (top) and for October 1991 to October 1993 (bottom).
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="spatially-varying-patterns-vsa" class="level2">
+<h2 class="anchored" data-anchor-id="spatially-varying-patterns-vsa">Spatially varying patterns: VSA</h2>
+<p>The methods above yield scalar-valued indices. Some phenomena, such as traveling waves, have no fixed location and may occur anywhere under similar conditions. For these, vector-valued spectral analysis (VSA) replaces the scalar kernel by an operator-valued kernel, so that each recovered pattern is a spatial field that depends on the state of the system <span class="citation" data-cites="giannakis2019vsa slawinska2018ssp">(<a href="#ref-giannakis2019vsa" role="doc-biblioref">Giannakis et al. 2019</a>; <a href="#ref-slawinska2018ssp" role="doc-biblioref">Slawinska et al. 2018</a>)</span>. The symmetries of the dynamics, such as spatial translations, are incorporated in the kernel. Patterns that merely reflect those symmetries, which classical decompositions tend to produce <span class="citation" data-cites="aubry1993">(<a href="#ref-aubry1993" role="doc-biblioref">Aubry et al. 1993</a>)</span>, are thereby avoided.</p>
+<p>An example is given in the blog post on the <a href="../blog/posts/vsa-kuramoto-sivashinsky/index.html">Kuramoto–Sivashinsky model</a>. Related ideas are developed in space–time Koopman analysis <span class="citation" data-cites="giannakis2020physd">(<a href="#ref-giannakis2020physd" role="doc-biblioref">Giannakis and Das 2020</a>)</span>.</p>
+</section>
+<section id="where-the-methods-have-been-applied" class="level2">
+<h2 class="anchored" data-anchor-id="where-the-methods-have-been-applied">Where the methods have been applied</h2>
+<p>In earlier studies the methods have been applied to ENSO and Indo-Pacific variability <span class="citation" data-cites="slawinska2017 giannakis2018jclim froyland2021 wang2020">(<a href="#ref-slawinska2017" role="doc-biblioref">Slawinska and Giannakis 2017</a>; <a href="#ref-giannakis2018jclim" role="doc-biblioref">Giannakis and Slawinska 2018</a>; <a href="#ref-froyland2021" role="doc-biblioref">Froyland et al. 2021</a>; <a href="#ref-wang2020" role="doc-biblioref">Wang et al. 2020</a>)</span>, to the MJO and other intraseasonal oscillations <span class="citation" data-cites="tung2014 szekely2016 alexander2017 lintner2023">(<a href="#ref-tung2014" role="doc-biblioref">Tung et al. 2014</a>; <a href="#ref-szekely2016" role="doc-biblioref">Székely et al. 2016</a>; <a href="#ref-alexander2017" role="doc-biblioref">Alexander et al. 2017</a>; <a href="#ref-lintner2023" role="doc-biblioref">Lintner et al. 2023</a>)</span>, to North Pacific variability and Arctic sea ice <span class="citation" data-cites="comeau2017 bushuk2014 comeau2019">(<a href="#ref-comeau2017" role="doc-biblioref">Comeau et al. 2017</a>, <a href="#ref-comeau2019" role="doc-biblioref">2019</a>; <a href="#ref-bushuk2014" role="doc-biblioref">Bushuk et al. 2014</a>)</span>, to climate trends <span class="citation" data-cites="froyland2024">(<a href="#ref-froyland2024" role="doc-biblioref">Froyland et al. 2024</a>)</span>, and to turbulent convection and other fluid flows <span class="citation" data-cites="brenowitz2016 giannakis2018jfm giannakis2020physd">(<a href="#ref-brenowitz2016" role="doc-biblioref">Brenowitz et al. 2016</a>; <a href="#ref-giannakis2018jfm" role="doc-biblioref">Giannakis et al. 2018</a>; <a href="#ref-giannakis2020physd" role="doc-biblioref">Giannakis and Das 2020</a>)</span>.</p>
+<p>Current research includes tensor-network approximations of Koopman operators <span class="citation" data-cites="giannakis2024tensor">(<a href="#ref-giannakis2024tensor" role="doc-biblioref">Giannakis et al. 2024</a>)</span> and connections with quantum computing <span class="citation" data-cites="giannakis2022pra">(<a href="#ref-giannakis2022pra" role="doc-biblioref">Giannakis et al. 2022</a>)</span>, the latter described on the <a href="../methodology/qmda.html">QMDA page</a>.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-alexander2017" class="csl-entry" role="listitem">
+Alexander, R., Z. Zhao, E. Székely, and D. Giannakis. 2017. <span>“Kernel Analog Forecasting of Tropical Intraseasonal Oscillations.”</span> <em>Journal of the Atmospheric Sciences</em> 74: 1321–42. <a href="https://doi.org/10.1175/JAS-D-16-0147.1">https://doi.org/10.1175/JAS-D-16-0147.1</a>.
+</div>
+<div id="ref-aubry1993" class="csl-entry" role="listitem">
+Aubry, N., W.-Y. Lian, and E. S. Titi. 1993. <span>“Preserving Symmetries in the Proper Orthogonal Decomposition.”</span> <em>SIAM Journal on Scientific Computing</em> 14: 483–505. <a href="https://doi.org/10.1137/0914030">https://doi.org/10.1137/0914030</a>.
+</div>
+<div id="ref-berry2015" class="csl-entry" role="listitem">
+Berry, T., D. Giannakis, and J. Harlim. 2015. <span>“Nonparametric Forecasting of Low-Dimensional Dynamical Systems.”</span> <em>Physical Review E</em> 91: 032915. <a href="https://doi.org/10.1103/PhysRevE.91.032915">https://doi.org/10.1103/PhysRevE.91.032915</a>.
+</div>
+<div id="ref-berry2020" class="csl-entry" role="listitem">
+Berry, T., D. Giannakis, and J. Harlim. 2020. <span>“Bridging Data Science and Dynamical Systems Theory.”</span> <em>Notices of the American Mathematical Society</em> 67 (9): 1336–49. <a href="https://doi.org/10.1090/noti2151">https://doi.org/10.1090/noti2151</a>.
+</div>
+<div id="ref-brenowitz2016" class="csl-entry" role="listitem">
+Brenowitz, N. D., D. Giannakis, and A. J. Majda. 2016. <span>“Nonlinear <span>Laplacian</span> Spectral Analysis of <span>Rayleigh–Bénard</span> Convection.”</span> <em>Journal of Computational Physics</em> 315: 536–53. <a href="https://doi.org/10.1016/j.jcp.2016.03.051">https://doi.org/10.1016/j.jcp.2016.03.051</a>.
+</div>
+<div id="ref-bushuk2014" class="csl-entry" role="listitem">
+Bushuk, M., D. Giannakis, and A. J. Majda. 2014. <span>“Reemergence Mechanisms for <span>North Pacific</span> Sea Ice Revealed Through Nonlinear <span>Laplacian</span> Spectral Analysis.”</span> <em>Journal of Climate</em> 27: 6265–87. <a href="https://doi.org/10.1175/JCLI-D-13-00256.1">https://doi.org/10.1175/JCLI-D-13-00256.1</a>.
+</div>
+<div id="ref-coifman2006" class="csl-entry" role="listitem">
+Coifman, R. R., and S. Lafon. 2006. <span>“Diffusion Maps.”</span> <em>Applied and Computational Harmonic Analysis</em> 21 (1): 5–30. <a href="https://doi.org/10.1016/j.acha.2006.04.006">https://doi.org/10.1016/j.acha.2006.04.006</a>.
+</div>
+<div id="ref-comeau2019" class="csl-entry" role="listitem">
+Comeau, D., D. Giannakis, Z. Zhao, and A. J. Majda. 2019. <span>“Predicting Regional and Pan-<span>Arctic</span> Sea Ice Anomalies with Kernel Analog Forecasting.”</span> <em>Climate Dynamics</em> 52 (9–10): 5507–25. <a href="https://doi.org/10.1007/s00382-018-4459-x">https://doi.org/10.1007/s00382-018-4459-x</a>.
+</div>
+<div id="ref-comeau2017" class="csl-entry" role="listitem">
+Comeau, D., Z. Zhao, D. Giannakis, and A. J. Majda. 2017. <span>“Data-Driven Prediction Strategies for Low-Frequency Patterns of <span>North Pacific</span> Climate Variability.”</span> <em>Climate Dynamics</em> 48 (5–6): 1855–72. <a href="https://doi.org/10.1007/s00382-016-3177-5">https://doi.org/10.1007/s00382-016-3177-5</a>.
+</div>
+<div id="ref-das2019" class="csl-entry" role="listitem">
+Das, S., and D. Giannakis. 2019. <span>“Delay-Coordinate Maps and the Spectra of <span>Koopman</span> Operators.”</span> <em>Journal of Statistical Physics</em> 175 (6): 1107–45. <a href="https://doi.org/10.1007/s10955-019-02272-w">https://doi.org/10.1007/s10955-019-02272-w</a>.
+</div>
+<div id="ref-das2020" class="csl-entry" role="listitem">
+Das, S., and D. Giannakis. 2020. <span>“Koopman Spectra in Reproducing Kernel <span>Hilbert</span> Spaces.”</span> <em>Applied and Computational Harmonic Analysis</em> 49 (2): 573–607. <a href="https://doi.org/10.1016/j.acha.2020.05.008">https://doi.org/10.1016/j.acha.2020.05.008</a>.
+</div>
+<div id="ref-das2021" class="csl-entry" role="listitem">
+Das, S., D. Giannakis, and J. Slawinska. 2021. <span>“Reproducing Kernel <span>Hilbert</span> Space Compactification of Unitary Evolution Groups.”</span> <em>Applied and Computational Harmonic Analysis</em> 54: 75–136. <a href="https://doi.org/10.1016/j.acha.2021.02.004">https://doi.org/10.1016/j.acha.2021.02.004</a>.
+</div>
+<div id="ref-froyland2021" class="csl-entry" role="listitem">
+Froyland, G., D. Giannakis, B. R. Lintner, M. Pike, and J. Slawinska. 2021. <span>“Spectral Analysis of Climate Dynamics with Operator-Theoretic Approaches.”</span> <em>Nature Communications</em> 12: 6570. <a href="https://doi.org/10.1038/s41467-021-26357-x">https://doi.org/10.1038/s41467-021-26357-x</a>.
+</div>
+<div id="ref-froyland2024" class="csl-entry" role="listitem">
+Froyland, G., D. Giannakis, E. Luna, and J. Slawinska. 2024. <span>“Revealing Trends and Persistent Cycles of Non-Autonomous Systems with Operator-Theoretic Techniques: Applications to Past and Present Climate Dynamics.”</span> <em>Nature Communications</em> 15. <a href="https://doi.org/10.1038/s41467-024-48033-6">https://doi.org/10.1038/s41467-024-48033-6</a>.
+</div>
+<div id="ref-ghil2002" class="csl-entry" role="listitem">
+Ghil, M., M. R. Allen, M. D. Dettinger, et al. 2002. <span>“Advanced Spectral Methods for Climatic Time Series.”</span> <em>Reviews of Geophysics</em> 40 (1): 1003. <a href="https://doi.org/10.1029/2000RG000092">https://doi.org/10.1029/2000RG000092</a>.
+</div>
+<div id="ref-giannakis2019acha" class="csl-entry" role="listitem">
+Giannakis, D. 2019. <span>“Data-Driven Spectral Decomposition and Forecasting of Ergodic Dynamical Systems.”</span> <em>Applied and Computational Harmonic Analysis</em> 47 (2): 338–96. <a href="https://doi.org/10.1016/j.acha.2017.09.001">https://doi.org/10.1016/j.acha.2017.09.001</a>.
+</div>
+<div id="ref-giannakis2021rms" class="csl-entry" role="listitem">
+Giannakis, D. 2021. <span>“Delay-Coordinate Maps, Coherence, and Approximate Spectra of Evolution Operators.”</span> <em>Research in the Mathematical Sciences</em> 8: 8. <a href="https://doi.org/10.1007/s40687-020-00239-y">https://doi.org/10.1007/s40687-020-00239-y</a>.
+</div>
+<div id="ref-nlsacode" class="csl-entry" role="listitem">
+<span class="nocase">Giannakis, D. et al.</span> 2026. <em><span>NLSA</span>: Operator Methods for Dynamical Systems (<span>Python</span> and <span>MATLAB</span> Code)</em>. <a href="https://github.com/dg227/NLSA">https://github.com/dg227/NLSA</a>.
+</div>
+<div id="ref-giannakis2020physd" class="csl-entry" role="listitem">
+Giannakis, D., and S. Das. 2020. <span>“Extraction and Prediction of Coherent Patterns in Incompressible Flows Through Space-Time <span>Koopman</span> Analysis.”</span> <em>Physica D</em> 402: 132211. <a href="https://doi.org/10.1016/j.physd.2019.132211">https://doi.org/10.1016/j.physd.2019.132211</a>.
+</div>
+<div id="ref-giannakis2024tensor" class="csl-entry" role="listitem">
+Giannakis, D., M. M. L. Jebelli, M. Montgomery, P. Pfeffer, J. Schumacher, and J. Slawinska. 2024. <em>Tensor Network Approximation of <span>Koopman</span> Operators</em>. <a href="https://arxiv.org/abs/2407.07242">https://arxiv.org/abs/2407.07242</a>.
+</div>
+<div id="ref-giannakis2018jfm" class="csl-entry" role="listitem">
+Giannakis, D., A. Kolchinskaya, D. Krasnov, and J. Schumacher. 2018. <span>“Koopman Analysis of the Long-Term Evolution in a Turbulent Convection Cell.”</span> <em>Journal of Fluid Mechanics</em> 847: 735–67. <a href="https://doi.org/10.1017/jfm.2018.297">https://doi.org/10.1017/jfm.2018.297</a>.
+</div>
+<div id="ref-giannakis2012nlsa" class="csl-entry" role="listitem">
+Giannakis, D., and A. J. Majda. 2012. <span>“Nonlinear <span>Laplacian</span> Spectral Analysis for Time Series with Intermittency and Low-Frequency Variability.”</span> <em>Proceedings of the National Academy of Sciences</em> 109 (7): 2222–27. <a href="https://doi.org/10.1073/pnas.1118984109">https://doi.org/10.1073/pnas.1118984109</a>.
+</div>
+<div id="ref-giannakis2022pra" class="csl-entry" role="listitem">
+Giannakis, D., A. Ourmazd, P. Pfeffer, J. Schumacher, and J. Slawinska. 2022. <span>“Embedding Classical Dynamics in a Quantum Computer.”</span> <em>Physical Review A</em> 105: 052404. <a href="https://doi.org/10.1103/PhysRevA.105.052404">https://doi.org/10.1103/PhysRevA.105.052404</a>.
+</div>
+<div id="ref-giannakis2019vsa" class="csl-entry" role="listitem">
+Giannakis, D., A. Ourmazd, J. Slawinska, and Z. Zhao. 2019. <span>“Spatiotemporal Pattern Extraction by Spectral Analysis of Vector-Valued Observables.”</span> <em>Journal of Nonlinear Science</em> 29 (5): 2385–445. <a href="https://doi.org/10.1007/s00332-019-09548-1">https://doi.org/10.1007/s00332-019-09548-1</a>.
+</div>
+<div id="ref-giannakis2018jclim" class="csl-entry" role="listitem">
+Giannakis, D., and J. Slawinska. 2018. <span>“Indo-<span>Pacific</span> Variability on Seasonal to Multidecadal Time Scales. <span>Part II</span>: Multiscale Atmosphere–Ocean Linkages.”</span> <em>Journal of Climate</em> 31 (2): 693–725. <a href="https://doi.org/10.1175/JCLI-D-17-0031.1">https://doi.org/10.1175/JCLI-D-17-0031.1</a>.
+</div>
+<div id="ref-giannakis2015pmlr" class="csl-entry" role="listitem">
+Giannakis, D., J. Slawinska, and Z. Zhao. 2015. <span>“Spatiotemporal Feature Extraction with Data-Driven <span>Koopman</span> Operators.”</span> <em>Proceedings of the 1st International Workshop on Feature Extraction: Modern Questions and Challenges at NIPS 2015</em>, Proceedings of machine learning research, vol. 44: 103–15. <a href="https://proceedings.mlr.press/v44/giannakis15.html">https://proceedings.mlr.press/v44/giannakis15.html</a>.
+</div>
+<div id="ref-lintner2023" class="csl-entry" role="listitem">
+Lintner, B. R., D. Giannakis, M. Pike, and J. Slawinska. 2023. <span>“Identification of the <span>Madden–Julian</span> <span>Oscillation</span> with Data-Driven <span>Koopman</span> Spectral Analysis.”</span> <em>Geophysical Research Letters</em> 50: e2023GL102743. <a href="https://doi.org/10.1029/2023GL102743">https://doi.org/10.1029/2023GL102743</a>.
+</div>
+<div id="ref-sabeerali2017" class="csl-entry" role="listitem">
+Sabeerali, C. T., R. S. Ajayamohan, D. Giannakis, and A. J. Majda. 2017. <span>“Extraction and Prediction of Indices for Monsoon Intraseasonal Oscillations: An Approach Based on Nonlinear <span>Laplacian</span> Spectral Analysis.”</span> <em>Climate Dynamics</em>, ahead of print. <a href="https://doi.org/10.1007/s00382-016-3491-y">https://doi.org/10.1007/s00382-016-3491-y</a>.
+</div>
+<div id="ref-slawinska2017" class="csl-entry" role="listitem">
+Slawinska, J., and D. Giannakis. 2017. <span>“Indo-<span>Pacific</span> Variability on Seasonal to Multidecadal Time Scales. <span>Part I</span>: Intrinsic <span>SST</span> Modes in Models and Observations.”</span> <em>Journal of Climate</em> 30 (14): 5265–94. <a href="https://doi.org/10.1175/JCLI-D-16-0176.1">https://doi.org/10.1175/JCLI-D-16-0176.1</a>.
+</div>
+<div id="ref-slawinska2018ssp" class="csl-entry" role="listitem">
+Slawinska, J., A. Ourmazd, and D. Giannakis. 2018. <span>“A New Approach to Signal Processing of Spatiotemporal Data.”</span> <em>2018 IEEE Statistical Signal Processing Workshop (SSP)</em> (Freiburg, Germany). <a href="https://doi.org/10.1109/SSP.2018.8450704">https://doi.org/10.1109/SSP.2018.8450704</a>.
+</div>
+<div id="ref-szekely2016" class="csl-entry" role="listitem">
+Székely, E., D. Giannakis, and A. J. Majda. 2016. <span>“Extraction and Predictability of Coherent Intraseasonal Signals in Infrared Brightness Temperature Data.”</span> <em>Climate Dynamics</em> 46 (5): 1473–502. <a href="https://doi.org/10.1007/s00382-015-2658-2">https://doi.org/10.1007/s00382-015-2658-2</a>.
+</div>
+<div id="ref-takens1981" class="csl-entry" role="listitem">
+Takens, F. 1981. <span>“Detecting Strange Attractors in Turbulence.”</span> In <em>Dynamical Systems and Turbulence, Warwick 1980</em>, vol. 898. Lecture Notes in Mathematics. Springer. <a href="https://doi.org/10.1007/BFb0091924">https://doi.org/10.1007/BFb0091924</a>.
+</div>
+<div id="ref-tung2014" class="csl-entry" role="listitem">
+Tung, W.-w., D. Giannakis, and A. J. Majda. 2014. <span>“Symmetric and Antisymmetric Convection Signals in the <span>Madden–Julian</span> <span>Oscillation</span>. <span>Part I</span>: Basic Modes in Infrared Brightness Temperature.”</span> <em>Journal of the Atmospheric Sciences</em> 71: 3302–26. <a href="https://doi.org/10.1175/JAS-D-13-0122.1">https://doi.org/10.1175/JAS-D-13-0122.1</a>.
+</div>
+<div id="ref-wang2020" class="csl-entry" role="listitem">
+Wang, X., J. Slawinska, and D. Giannakis. 2020. <span>“Extended-Range Statistical <span>ENSO</span> Prediction Through Operator-Theoretic Techniques for Nonlinear Dynamics.”</span> <em>Scientific Reports</em> 10: 2636. <a href="https://doi.org/10.1038/s41598-020-59128-7">https://doi.org/10.1038/s41598-020-59128-7</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

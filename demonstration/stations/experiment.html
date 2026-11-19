@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Design of the station forecast experiment: the station records, processing and quality control, predictors and lead times, training and test periods, baselines, verification, hazard statistics, event case studies and the real-time season.">
+
+<title>Experiment design – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../demonstration/stations.html">Stations</a></li><li class="breadcrumb-item"><a href="../../demonstration/stations/experiment.html">Experiment design</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Application and settings overview</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The problem</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/weather-hazards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hours to days: weather hazards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/s2s.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weeks to months: subseasonal to seasonal</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/forecast-targets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecast targets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Model data</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/era5-daily.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ERA5 daily</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/era5-monthly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ERA5 monthly</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Stations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/southwest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Southwestern United States</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/western-pacific.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tropical western Pacific</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/pituffik.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Greenland (Pituffik)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/experiment.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Experiment design</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#experiments-at-a-glance" id="toc-experiments-at-a-glance" class="nav-link active" data-scroll-target="#experiments-at-a-glance">Experiments at a glance</a></li>
+  <li><a href="#the-station-records" id="toc-the-station-records" class="nav-link" data-scroll-target="#the-station-records">The station records</a></li>
+  <li><a href="#processing-and-quality-control" id="toc-processing-and-quality-control" class="nav-link" data-scroll-target="#processing-and-quality-control">Processing and quality control</a></li>
+  <li><a href="#predictors-targets-and-lead-times" id="toc-predictors-targets-and-lead-times" class="nav-link" data-scroll-target="#predictors-targets-and-lead-times">Predictors, targets and lead times</a></li>
+  <li><a href="#training-and-test-periods" id="toc-training-and-test-periods" class="nav-link" data-scroll-target="#training-and-test-periods">Training and test periods</a></li>
+  <li><a href="#baselines" id="toc-baselines" class="nav-link" data-scroll-target="#baselines">Baselines</a></li>
+  <li><a href="#scores" id="toc-scores" class="nav-link" data-scroll-target="#scores">Scores</a></li>
+  <li><a href="#success-criteria" id="toc-success-criteria" class="nav-link" data-scroll-target="#success-criteria">Success criteria</a></li>
+  <li><a href="#hazard-statistics" id="toc-hazard-statistics" class="nav-link" data-scroll-target="#hazard-statistics">Hazard statistics</a></li>
+  <li><a href="#event-case-studies" id="toc-event-case-studies" class="nav-link" data-scroll-target="#event-case-studies">Event case studies</a></li>
+  <li><a href="#the-real-time-season" id="toc-the-real-time-season" class="nav-link" data-scroll-target="#the-real-time-season">The real-time season</a></li>
+  <li><a href="#data-products" id="toc-data-products" class="nav-link" data-scroll-target="#data-products">Data products</a></li>
+  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline">Timeline</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../demonstration/stations.html">Stations</a></li><li class="breadcrumb-item"><a href="../../demonstration/stations/experiment.html">Experiment design</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Experiment design</h1>
+<p class="subtitle lead">How the station forecasts are made and judged</p>
+</div>
+
+<div>
+  <div class="description">
+    Design of the station forecast experiment: the station records, processing and quality control, predictors and lead times, training and test periods, baselines, verification, hazard statistics, event case studies and the real-time season.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Draft for internal review
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Not yet cleared for public release. This page follows the Demonstration Plan and the draft final report. Details, such as the training and test years, will be fixed in the Final Demonstration Plan.</p>
+</div>
+</div>
+<p>The station experiment asks whether the toolkit can forecast conditions at the stations, and whether its forecasts are reliable. It is the third layer of the <a href="../../demonstration/index.html">demonstration</a>: the Koopman indices of ENSO and the MJO, extracted from <a href="../../demonstration/era5-monthly.html">ERA5 monthly</a> and <a href="../../demonstration/era5-daily.html">ERA5 daily</a> data, become predictors for the station forecasts.</p>
+<section id="experiments-at-a-glance" class="level2">
+<h2 class="anchored" data-anchor-id="experiments-at-a-glance">Experiments at a glance</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Experiment</th>
+<th>Stations</th>
+<th>What is tested</th>
+<th>Status, September 2026</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Station forecasts, <a href="../../demonstration/stations/southwest.html">southwestern United States</a></td>
+<td>8 anchor sites and the full network</td>
+<td>Three predictor sets; daily values at 1–14 days and weekly means at 1–4 weeks</td>
+<td>Planned</td>
+</tr>
+<tr class="even">
+<td>Station forecasts, <a href="../../demonstration/stations/western-pacific.html">tropical western Pacific</a></td>
+<td>7 forward sites</td>
+<td>As above, with forecasts also conditioned on the MJO and ENSO indices</td>
+<td>Planned</td>
+</tr>
+<tr class="odd">
+<td>Station forecasts, <a href="../../demonstration/stations/pituffik.html">Pituffik</a></td>
+<td>Pituffik Space Base</td>
+<td>Station predictors (done), then with ERA5 predictors; leads up to 5 days</td>
+<td>In progress</td>
+</tr>
+<tr class="even">
+<td>Hazard statistics</td>
+<td>All regions</td>
+<td>Station conditions given the phase of the Koopman indices and of conventional indices</td>
+<td>Planned</td>
+</tr>
+<tr class="odd">
+<td>Event case studies</td>
+<td>Three events</td>
+<td>Whether the toolkit would have given useful warning</td>
+<td>In progress</td>
+</tr>
+<tr class="even">
+<td>Uncertainty</td>
+<td>All regions</td>
+<td>Reliability of the probabilistic forecasts</td>
+<td>Planned</td>
+</tr>
+<tr class="odd">
+<td>Real-time season</td>
+<td>All regions</td>
+<td>Forecasts issued on a fixed schedule, archived, and verified afterward</td>
+<td>Planned, November 2026 to April 2027</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-station-records" class="level2">
+<h2 class="anchored" data-anchor-id="the-station-records">The station records</h2>
+<p>The records are <strong>daily statistics</strong> supplied by the U.S. Air Force 14th Weather Squadron, for about <strong>140 stations</strong> in the southwestern United States and northern Mexico, the tropical western Pacific, and Greenland. Most records start in 1975 and run to the present. The record at Guam spans more than 70 years.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Daily statistics</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Temperature</td>
+<td>Maximum, minimum and mean</td>
+</tr>
+<tr class="even">
+<td>Sea-level pressure</td>
+<td>Maximum, minimum and mean</td>
+</tr>
+<tr class="odd">
+<td>Station pressure</td>
+<td>Maximum, minimum and mean</td>
+</tr>
+<tr class="even">
+<td>Wind</td>
+<td>Mean zonal (east–west) and meridional (north–south) components</td>
+</tr>
+<tr class="odd">
+<td>Precipitation</td>
+<td>Daily total</td>
+</tr>
+</tbody>
+</table>
+<p>The raw records are used under the terms of the data transfer and are not redistributed. The open-source toolkit contains the code that reads them, but not the records themselves.</p>
+</section>
+<section id="processing-and-quality-control" class="level2">
+<h2 class="anchored" data-anchor-id="processing-and-quality-control">Processing and quality control</h2>
+<ol type="1">
+<li><strong>Common format.</strong> Each station’s records are converted to a uniform daily format, and units are harmonized, for example pressure in hectopascals.</li>
+<li><strong>Continuous time axis.</strong> The dates are completed to a continuous daily axis. Missing days are filled by linear interpolation, and the number of filled days is reported for each station and variable.</li>
+<li><strong>Screening.</strong> Duplicate and invalid entries are removed. Each record is compared with the nearest <a href="../../demonstration/era5-daily.html">ERA5</a> grid cell to flag outliers, unit errors and breaks in the series.</li>
+<li><strong>Anomalies.</strong> A climatology for each calendar day, estimated over the training period, is removed, and variables can be standardized.</li>
+<li><strong>Gap tests.</strong> Days and blocks of days, from one day to several weeks, are removed at random from complete records, such as the long Guam record, and filled again, to measure how much the interpolation affects the results. Skill is also recomputed with interpolated days left out of the verification.</li>
+</ol>
+<p>Each station has an entry in a metadata table, with its identifier, name, coordinates, elevation where available, data source, variables, period of record and fraction of missing days. The processing history of each input is stored with the results.</p>
+</section>
+<section id="predictors-targets-and-lead-times" class="level2">
+<h2 class="anchored" data-anchor-id="predictors-targets-and-lead-times">Predictors, targets and lead times</h2>
+<p>Three sets of predictors are compared:</p>
+<ol type="1">
+<li><strong>Station only:</strong> the station’s own variables.</li>
+<li><strong>Station plus ERA5:</strong> with large-scale <a href="../../demonstration/era5-daily.html">ERA5</a> fields added.</li>
+<li><strong>Station plus Koopman indices:</strong> with the MJO and ENSO indices added.</li>
+</ol>
+<p>Forecasts are made with <a href="../../methodology/kaf.html">kernel analog forecasting</a>. Forecast probabilities come from the kernel weights of the analog forecasts. Probabilistic forecasts with <a href="../../methodology/qmda.html">quantum mechanical data assimilation</a> are planned: QMDA is implemented in the MATLAB version of the toolkit but not yet in the Python version (see the <a href="../../documentation/blocks/forecasting.html#quantum-mechanical-data-assimilation">Documentation</a>).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Target</th>
+<th>Sampling</th>
+<th>Lead times</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Station temperature, pressure and wind anomalies</td>
+<td>Daily</td>
+<td>1–14 days</td>
+</tr>
+<tr class="even">
+<td>Station weekly and monthly means</td>
+<td>Weekly, monthly</td>
+<td>1–4 weeks; 1–3 months</td>
+</tr>
+</tbody>
+</table>
+<p>Anomalies are departures from the climatology of the calendar day. Weekly and monthly means are used at the longer leads, where daily values are no longer predictable. The full network of each region is used to learn regional patterns and to compute aggregate statistics; the anchor and forward sites are evaluated in detail.</p>
+</section>
+<section id="training-and-test-periods" class="level2">
+<h2 class="anchored" data-anchor-id="training-and-test-periods">Training and test periods</h2>
+<ul>
+<li><strong>Chronological split.</strong> The training period comes before the test period. Any training sample whose delay window, or the stretch of days it is asked to predict, overlaps the test period is excluded, so no forecast uses information from the period it is verified against.</li>
+<li><strong>Climatology from training data.</strong> The climatologies that define the anomalies are estimated on the training period only.</li>
+<li><strong>Long test periods.</strong> Test periods are several years long and include unusual seasons, so that skill is not judged on a single regime.</li>
+<li><strong>A forecast every day.</strong> Forecasts are started on every day of the test period.</li>
+<li><strong>How much data is needed.</strong> The training record is also shortened, for example 1975–2000 instead of 1975–2015, and skill is computed again.</li>
+</ul>
+</section>
+<section id="baselines" class="level2">
+<h2 class="anchored" data-anchor-id="baselines">Baselines</h2>
+<p>Every forecast is scored against the same simple baselines, computed on the same days and anomalies. Their purpose is to find the lead time beyond which the toolkit adds information, not to stand in for the best operational forecasts.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 73%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Baseline</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Persistence</td>
+<td>Today’s anomaly, carried forward unchanged to every lead time</td>
+</tr>
+<tr class="even">
+<td>Climatology</td>
+<td>The long-term average for the calendar day, that is, a zero anomaly</td>
+</tr>
+<tr class="odd">
+<td>Autoregressive models, AR(1) to AR(3)</td>
+<td>A linear regression of the anomaly on its last one to three values, fitted on the training period</td>
+</tr>
+<tr class="even">
+<td>Station-only toolkit</td>
+<td>The toolkit with predictors limited to the station’s own variables, which isolates the benefit of the added predictors</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="scores" class="level2">
+<h2 class="anchored" data-anchor-id="scores">Scores</h2>
+<p>For a forecast <span class="math inline">\(\hat a_n(\tau)\)</span> issued on day <span class="math inline">\(n\)</span> for lead time <span class="math inline">\(\tau\)</span>, and the anomaly <span class="math inline">\(a_{n+\tau}\)</span> that actually occurred, the anomaly correlation and the normalized root-mean-square error over the test period are</p>
+<p><span class="math display">\[
+\mathrm{AC}(\tau) = \frac{\sum_n \left(a_{n+\tau} - \bar a_\tau\right)\left(\hat a_n(\tau) - \bar{\hat a}_\tau\right)}
+{\left[\sum_n \left(a_{n+\tau} - \bar a_\tau\right)^2 \, \sum_n \left(\hat a_n(\tau) - \bar{\hat a}_\tau\right)^2\right]^{1/2}},
+\qquad
+\mathrm{NRMSE}(\tau) = \left[\frac{\sum_n \left(a_{n+\tau} - \hat a_n(\tau)\right)^2}{\sum_n a_{n+\tau}^2}\right]^{1/2},
+\]</span></p>
+<p>where the overbars are means over the test period. An NRMSE of 1 is the error of the climatology forecast. Skill relative to a baseline is reported as the mean-square-error skill score, <span class="math inline">\(1 - \mathrm{NRMSE}^2 / \mathrm{NRMSE}_\mathrm{ref}^2\)</span>, and the bias is the mean forecast error.</p>
+<p>Probabilistic forecasts are scored with the continuous ranked probability score and with Brier scores for exceeding the 10th and 90th percentiles of the climatological distribution <span class="citation" data-cites="gneiting2007">(<a href="#ref-gneiting2007" role="doc-biblioref">Gneiting and Raftery 2007</a>)</span>. Reliability diagrams and rank histograms show whether the forecast probabilities can be taken at face value <span class="citation" data-cites="hamill2001">(<a href="#ref-hamill2001" role="doc-biblioref">Hamill 2001</a>)</span>, and the spread–skill ratio compares the spread of the forecast ensemble with its error.</p>
+<p><strong>Statistical significance.</strong> Successive daily forecasts are far from independent, so naive confidence intervals would overstate significance. The uncertainty of every score is estimated with a moving-block bootstrap, using blocks longer than the time over which anomalies stay correlated. A forecast counts as an improvement on a baseline only if the confidence interval of the difference excludes zero. Skill is shown as a function of lead time with its confidence band, so the lead at which the toolkit stops improving on a baseline can be read off the plot. Scores aggregated over stations weight every station equally, and their spread across stations is shown as well.</p>
+</section>
+<section id="success-criteria" class="level2">
+<h2 class="anchored" data-anchor-id="success-criteria">Success criteria</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Objective</th>
+<th>Success criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Station-level skill</td>
+<td>Anomaly correlation and NRMSE better than all three baselines at leads of 1–5 days at a majority of the anchor sites; an anomaly correlation of at least 0.5 at a lead of 3 days at Pituffik; added predictors extend skill beyond the station-only forecasts</td>
+</tr>
+<tr class="even">
+<td>Hazard statistics and case studies</td>
+<td>Station conditions given the phase of an index differ significantly from climatology, and more so for the Koopman indices than for conventional ones; these conditional statistics can be predicted weeks to months ahead; in each case study, the forecast probability of the event exceeds its climatological rate at a useful lead time</td>
+</tr>
+<tr class="odd">
+<td>Uncertainty</td>
+<td>Rank histograms close to flat; spread–skill ratio near one; reliability within sampling uncertainty; continuous ranked probability score better than that of climatology</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hazard-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="hazard-statistics">Hazard statistics</h2>
+<p>The Koopman indices are useful for hazards if they tell us how the odds of a hazard change, and if those odds can themselves be forecast.</p>
+<ul>
+<li><strong>Conditional distributions.</strong> A station variable, such as daily precipitation or maximum temperature, is filtered to keep the intraseasonal or the interannual band. Its distribution is then computed separately for each phase of the index and compared with the overall climatological distribution. Significance is tested by shuffling the index in blocks.</li>
+<li><strong>Koopman against conventional indices.</strong> The same comparison is made with conventional indices: extended empirical orthogonal functions, the real-time multivariate MJO index and the Niño 3.4 index.</li>
+<li><strong>Hazards as local extremes.</strong> A hazard is defined as exceeding a percentile of the station’s own climatology, for example the 95th percentile of daily maximum temperature, so that the event has the same climatological frequency at every station.</li>
+<li><strong>Forecast odds.</strong> Probabilities of exceeding the threshold, conditioned on the forecast index, are verified with Brier scores and reliability diagrams.</li>
+</ul>
+</section>
+<section id="event-case-studies" class="level2">
+<h2 class="anchored" data-anchor-id="event-case-studies">Event case studies</h2>
+<p>Three case studies test whether the toolkit would have given useful warning of specific events.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 57%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>Question</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>E1. The 2026/27 El Niño and its effects on the demonstration regions</td>
+<td>How early and how accurately did the toolkit foresee the strength and timing of the event, and how much does the ENSO index say about winter conditions at the stations?</td>
+<td>Selected; in progress</td>
+</tr>
+<tr class="even">
+<td>E2. A hazard event in the southwestern United States</td>
+<td>Do forecasts of the indices raise the probability of a heat, monsoon, dust or wildfire-weather event above climatology at a useful lead time?</td>
+<td>To be selected</td>
+</tr>
+<tr class="odd">
+<td>E3. A hazard event in the western Pacific or at Pituffik</td>
+<td>Does the toolkit foresee a burst of convection, a typhoon passage, or a cold or wind event at a useful lead time?</td>
+<td>To be selected</td>
+</tr>
+</tbody>
+</table>
+<p>Each study reports the state of the relevant index at and before the event; the forecasts of the index and of the event probability at each lead time, compared with the climatological rate and the baselines; the conditional statistics of the station variables; and a short, general summary of the event. A missed event is reported as prominently as a success.</p>
+<p>To avoid choosing events after the fact because the toolkit did well on them, events must meet criteria set in advance:</p>
+<ul>
+<li>a documented impact, in the records of the 14th Weather Squadron or in public sources;</li>
+<li>continuous data at the nearest stations around the event;</li>
+<li>for past events, the event and a buffer as long as the longest lead time are left out of training;</li>
+<li>a link to a mode that the toolkit tracks;</li>
+<li>a spread of regions and hazards across the three studies;</li>
+<li>agreement of the 14th Weather Squadron.</li>
+</ul>
+</section>
+<section id="the-real-time-season" class="level2">
+<h2 class="anchored" data-anchor-id="the-real-time-season">The real-time season</h2>
+<p>Alongside the retrospective forecasts, a real-time season is proposed for <strong>November 2026 to April 2027</strong>. Five rules keep it a fair test:</p>
+<ol type="1">
+<li><strong>Frozen configuration.</strong> All settings are chosen with data from before the season, recorded with a version tag, and not changed during the season. Retraining with new data is allowed, with the same settings.</li>
+<li><strong>Past data only.</strong> A forecast issued on a given day uses only observations available on that day.</li>
+<li><strong>A fixed schedule.</strong> Station forecasts are issued daily, MJO outlooks at least every five days, and ENSO forecasts monthly.</li>
+<li><strong>Archived before verification.</strong> Each forecast is stored with its issue date, configuration tag and a checksum, and posted to the <a href="../../forecast/archive.html">forecast archive</a>, so it cannot be changed once the outcome is known.</li>
+<li><strong>Same verification as the hindcasts.</strong> The same scores, data and baselines are used, for the season as a whole and, for the stations, for the months in which the hazards of interest occur.</li>
+</ol>
+</section>
+<section id="data-products" class="level2">
+<h2 class="anchored" data-anchor-id="data-products">Data products</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 57%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Product</th>
+<th>Content</th>
+<th>Format</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hindcast archive</td>
+<td>Forecasts, baselines and verifying anomalies by station, variable and lead time</td>
+<td>NetCDF</td>
+</tr>
+<tr class="even">
+<td>Real-time forecast archive</td>
+<td>Forecasts as issued, with configuration tag and checksum</td>
+<td>NetCDF, JSON</td>
+</tr>
+<tr class="odd">
+<td>Skill tables</td>
+<td>Anomaly correlation, NRMSE, bias and continuous ranked probability score, with confidence intervals</td>
+<td>CSV</td>
+</tr>
+<tr class="even">
+<td>Event packages</td>
+<td>Indices, forecasts, conditional statistics and summary for each case study</td>
+<td>HTML, NetCDF</td>
+</tr>
+<tr class="odd">
+<td>Configuration and logs</td>
+<td>Experiment settings, code versions and quality-control logs</td>
+<td>Python; YAML or JSON planned</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="timeline" class="level2">
+<h2 class="anchored" data-anchor-id="timeline">Timeline</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 23%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Period</th>
+<th>Station work</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>I. Development</td>
+<td>September 2024 to mid-2026</td>
+<td>Toolkit development; station records acquired and converted to a common format</td>
+</tr>
+<tr class="even">
+<td>II. Hindcasts</td>
+<td>To September 2026</td>
+<td>Large-scale modes and their forecasts; first station experiments at Pituffik</td>
+</tr>
+<tr class="odd">
+<td>III. Real-time season</td>
+<td>November 2026 to April 2027 (proposed)</td>
+<td>Real-time forecasts and event case studies; Final Demonstration Plan due 1 December 2026</td>
+</tr>
+<tr class="even">
+<td>IV. Analysis and reporting</td>
+<td>Spring and summer 2027</td>
+<td>Station experiments analyzed, user evaluation; Final Report due 1 July 2027</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>Results will appear on the <strong>Results</strong> tab of each region’s page: <a href="../../demonstration/stations/southwest.html">southwestern United States</a>, <a href="../../demonstration/stations/western-pacific.html">tropical western Pacific</a> and <a href="../../demonstration/stations/pituffik.html">Pituffik</a>. Station-level results are posted only after they have been reviewed with the 14th Weather Squadron.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-gneiting2007" class="csl-entry" role="listitem">
+Gneiting, T., and A. E. Raftery. 2007. <span>“Strictly Proper Scoring Rules, Prediction, and Estimation.”</span> <em>Journal of the American Statistical Association</em> 102 (477): 359–78. <a href="https://doi.org/10.1198/016214506000001437">https://doi.org/10.1198/016214506000001437</a>.
+</div>
+<div id="ref-hamill2001" class="csl-entry" role="listitem">
+Hamill, T. M. 2001. <span>“Interpretation of Rank Histograms for Verifying Ensemble Forecasts.”</span> <em>Monthly Weather Review</em> 129 (3): 550–60. <a href="https://doi.org/10.1175/1520-0493(2001)129<0550:IORHFV>2.0.CO;2">https://doi.org/10.1175/1520-0493(2001)129&lt;0550:IORHFV&gt;2.0.CO;2</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

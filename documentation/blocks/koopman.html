@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="The Koopman block of the NLSA Python toolkit: the Galerkin basis, the diffusion-regularized generator, compactified Laplace and Gauss transforms (resolvent methods), Dirichlet energies, eigenfrequencies, and how Koopman eigenfunctions are evaluated, exported and forecast.">
+
+<title>5. Koopman analysis – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/index.html">Calculation blocks</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/koopman.html">5. Koopman analysis</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Introduction</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">The code</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/code-structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../documentation/blocks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Calculation blocks</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Calculation blocks">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Setup and run control</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/delay-embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Delay embedding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/kernel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Kernel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/koopman.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">5. Koopman analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/skill-outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Skill and outputs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/pseudo-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pseudo-code</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Reference</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/hyperparameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing hyperparameters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/options.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">All options</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-galerkin-basis" id="toc-the-galerkin-basis" class="nav-link active" data-scroll-target="#the-galerkin-basis">The Galerkin basis</a></li>
+  <li><a href="#diffusion-regularized-generator" id="toc-diffusion-regularized-generator" class="nav-link" data-scroll-target="#diffusion-regularized-generator">Diffusion-regularized generator</a></li>
+  <li><a href="#compactified-integral-transforms" id="toc-compactified-integral-transforms" class="nav-link" data-scroll-target="#compactified-integral-transforms">Compactified integral transforms</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#using-the-eigenfunctions" id="toc-using-the-eigenfunctions" class="nav-link" data-scroll-target="#using-the-eigenfunctions">Using the eigenfunctions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/index.html">Calculation blocks</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/koopman.html">5. Koopman analysis</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">5. Koopman analysis</h1>
+<p class="subtitle lead">Patterns that oscillate with a single frequency</p>
+</div>
+
+<div>
+  <div class="description">
+    The Koopman block of the NLSA Python toolkit: the Galerkin basis, the diffusion-regularized generator, compactified Laplace and Gauss transforms (resolvent methods), Dirichlet energies, eigenfrequencies, and how Koopman eigenfunctions are evaluated, exported and forecast.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The Koopman operator moves functions of the state forward along the dynamics. Its eigenfunctions <span class="math inline">\(\zeta_k\)</span> evolve in the simplest possible way, <span class="math inline">\(\zeta_k(t) = e^{i\omega_k t}\,\zeta_k(0)\)</span>: their real and imaginary parts oscillate with a single frequency <span class="math inline">\(\omega_k\)</span>. In climate data they pick out the annual cycle, ENSO, the MJO and their combinations, and serve as <strong>indices</strong> of these phenomena. The theory is on the <a href="../../methodology/koopman.html">Koopman operator theory</a> page.</p>
+<p>The toolkit approximates the Koopman <strong>generator</strong> (the rate of change of functions along the dynamics) in the basis of <a href="../../documentation/blocks/kernel.html">kernel eigenfunctions</a>, with one of two schemes:</p>
+<ul>
+<li><strong>Diffusion-regularized generator</strong> <span class="citation" data-cites="giannakis2019acha">(<a href="#ref-giannakis2019acha" role="doc-biblioref">Giannakis 2019</a>)</span>. Parameters in <code>KoopmanParsDiff</code>; computed by <code>koop.compute_generator_matrix</code> and <code>koop.compute_diffusion_regularized_generator_eigen</code>. Used in the ENSO Koopman script and in <code>koopman_diffusion_regularization.py</code> (Lorenz 63).</li>
+<li><strong>Compactified integral transforms</strong>, or resolvent methods <span class="citation" data-cites="das2021 valva2024">(<a href="#ref-das2021" role="doc-biblioref">Das et al. 2021</a>; <a href="#ref-valva2024" role="doc-biblioref">Valva and Giannakis 2024</a>)</span>. Parameters in <code>KoopmanParsTransf</code>; computed by <code>koop.compute_integral_transform_matrix</code> and <code>koop.compute_integral_transform_eigen_comp</code>. Used in <code>koopman_resolvent_compactification.py</code> (Lorenz 63).</li>
+</ul>
+<p>Here <code>koop</code> is <code>nlsa.jax.koopman</code>.</p>
+<section id="the-galerkin-basis" class="level2">
+<h2 class="anchored" data-anchor-id="the-galerkin-basis">The Galerkin basis</h2>
+<p>Both schemes work in a finite basis of kernel eigenfunctions, the <strong>Galerkin space</strong>, chosen with <code>which_eigs_galerkin</code>. The constant eigenfunction <span class="math inline">\(\varphi_0\)</span> is always an exact Koopman eigenfunction (with frequency 0) and is handled separately, so the convention differs from the other options that select eigenfunctions:</p>
+<div class="doc-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 40%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>which_eigs_galerkin</code></th>
+<th>Basis</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>integer <em>L</em></td>
+<td><span class="math inline">\(\varphi_1, \dots, \varphi_L\)</span></td>
+<td><code>256</code> gives <span class="math inline">\(\varphi_1, \dots, \varphi_{256}\)</span></td>
+</tr>
+<tr class="even">
+<td>tuple <code>(a, b)</code></td>
+<td><span class="math inline">\(\varphi_a, \dots, \varphi_b\)</span></td>
+<td><code>(1, 64)</code></td>
+</tr>
+<tr class="odd">
+<td>list</td>
+<td>the listed eigenfunctions</td>
+<td><code>[1, 2, 5, 6]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The properties <code>dim_galerkin</code> (the number of basis functions) and <code>which_kernel_eigs</code> (the basis together with <span class="math inline">\(\varphi_0\)</span>) of the parameter object give the sizes used elsewhere, for example <code>vec.l2_vector_algebra(shape=(koopman_pars.dim_galerkin + 1,), dtype=jax_env.complex_dtype)</code> for the space of Koopman expansion coefficients. The Galerkin space must not be larger than the number of kernel eigenfunctions computed (<code>num_eigs</code> of the kernel parameters).</p>
+</section>
+<section id="diffusion-regularized-generator" class="level2">
+<h2 class="anchored" data-anchor-id="diffusion-regularized-generator">Diffusion-regularized generator</h2>
+<p>The scheme of the ENSO example, in five steps:</p>
+<ol type="1">
+<li><strong>Velocities along the trajectory.</strong> For each training sample, the rate of change of its delay window is estimated with a central finite difference of order <code>fd_order</code> along the time series (<code>clim.make_data_driven_tangent_evaluation_functional_fd</code>).</li>
+<li><strong>Directional derivatives.</strong> The derivative of each basis function along that velocity, <span class="math inline">\(v\cdot\nabla\varphi_j(x_n)\)</span>, is computed by automatic differentiation of the <a href="../../documentation/blocks/kernel.html#out-of-sample-extension">Nyström extension</a> of <span class="math inline">\(\varphi_j\)</span>.</li>
+<li><strong>Generator matrix.</strong> <span class="math inline">\(V_{ij} = \langle \varphi'_i, v\cdot\nabla\varphi_j\rangle\)</span> for the <em>L</em> basis functions (<code>koop.compute_generator_matrix</code>, saved as <code>gen_mat.npy</code>).</li>
+<li><strong>Regularization.</strong> Diffusion is subtracted to damp rough, poorly resolved functions: <span class="math display">\[
+L_\tau = \tfrac12 \big(V - V^\top\big) - \tau\, \mathrm{diag}(\eta_1, \dots, \eta_L)
+\]</span> with <code>antisym=True</code>, or <span class="math inline">\(V - \tau\,\mathrm{diag}(\eta)\)</span> without antisymmetrization, where <span class="math inline">\(\eta_j = -4\ln\lambda_j/\varepsilon^2\)</span> are the Laplace eigenvalues of the basis functions.</li>
+<li><strong>Eigendecomposition.</strong> <span class="math inline">\(L_\tau c_k = \gamma_k c_k\)</span> gives the Koopman eigenfunctions <span class="math inline">\(\zeta_k = \sum_j c_{jk}\varphi_j\)</span>, with generator eigenvalues <span class="math inline">\(\gamma_k\)</span> whose imaginary part is the angular frequency <span class="math inline">\(\omega_k\)</span> and whose real part is a damping rate due to the regularization. Each eigenfunction gets a <strong>Dirichlet energy</strong> <span class="math display">\[
+E_k = \sum_j |c_{jk}|^2 \Big(\frac{1}{\lambda_j} - 1\Big),
+\]</span> which measures its roughness (0 for the constant function). The eigenfunctions are sorted by energy or by frequency, the constant function <span class="math inline">\(\zeta_0\)</span> (eigenvalue 0) is placed first, and <code>num_eigs</code> of them are kept (<code>koop.compute_diffusion_regularized_generator_eigen</code>).</li>
+</ol>
+<p>Eigenvalues come in complex-conjugate pairs <span class="math inline">\(\pm\omega_k\)</span>, with eigenfunctions that are complex conjugates of each other. Sorting by energy puts the smooth, physically meaningful eigenfunctions first.</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>KoopmanParsDiff</code> (<code>nlsa.jax.koopman</code>, defined in <code>src/nlsa/koopman.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fd_order</code></td>
+<td><code>2</code> or <code>4</code> or <code>6</code> or <code>8</code></td>
+<td>required</td>
+<td>Order (2, 4, 6 or 8) of the central finite differences used for time derivatives along the trajectory. Reserve <code>fd_order // 2</code> samples before and after with <code>num_before</code> and <code>num_after</code>.</td>
+</tr>
+<tr class="even">
+<td><code>dt</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Time step. Recorded in the output folder name only: the finite differences use the sampling interval of the data (one sample in the climate pipeline, <code>DataPars.dt</code> for Lorenz 63). The ENSO example sets it to 1.</td>
+</tr>
+<tr class="odd">
+<td><code>tau</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Strength τ of the diffusion regularization: the generator is replaced by V − τΔ, which damps rough eigenfunctions. The examples use 0.002 to 0.01.</td>
+</tr>
+<tr class="even">
+<td><code>antisym</code></td>
+<td><code>bool</code></td>
+<td>required</td>
+<td>Keep only the antisymmetric part (V − Vᵀ)/2 of the generator matrix, the structure the generator has for measure-preserving dynamics.</td>
+</tr>
+<tr class="odd">
+<td><code>which_eigs_galerkin</code></td>
+<td><code>int</code> or <code>tuple[int, int]</code> or <code>list[int]</code></td>
+<td>required</td>
+<td>Kernel eigenfunctions spanning the Galerkin space (the constant one is added separately): an integer <em>L</em> means φ₁ … φ_<em>L</em>; a tuple <code>(a, b)</code> means φ_a … φ_b; a list gives the indices.</td>
+</tr>
+<tr class="even">
+<td><code>num_eigs</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Number of Koopman eigenpairs kept after sorting, including the constant eigenfunction. <code>None</code> keeps nearly all of them.</td>
+</tr>
+<tr class="odd">
+<td><code>laplacian_method</code></td>
+<td><code>"log"</code> or <code>"lin"</code> or <code>"inv"</code></td>
+<td><code>"log"</code></td>
+<td>Formula for converting kernel eigenvalues λ into Laplace eigenvalues η: <code>"log"</code> η = −4 ln λ / ε², <code>"lin"</code> η = 4(1 − λ)/ε², <code>"inv"</code> η = (1/λ − 1) rescaled by a reference eigenvalue. In the current code the value only enters the output folder name: the regularization always uses <code>"log"</code>.</td>
+</tr>
+<tr class="even">
+<td><code>sort_by</code></td>
+<td><code>"energy"</code> or <code>"frequency"</code></td>
+<td><code>"frequency"</code></td>
+<td>Order of the results: <code>"energy"</code> (smallest Dirichlet energy, i.e.&nbsp;smoothest, first) or <code>"frequency"</code> (smallest |frequency| first).</td>
+</tr>
+<tr class="odd">
+<td><code>eval_tx_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for evaluating the time derivatives on the samples (used by the Lorenz 63 scripts).</td>
+</tr>
+<tr class="even">
+<td><code>grad_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the directional derivatives of the basis functions.</td>
+</tr>
+<tr class="odd">
+<td><code>gram_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the inner products that form the generator matrix.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="compactified-integral-transforms" class="level2">
+<h2 class="anchored" data-anchor-id="compactified-integral-transforms">Compactified integral transforms</h2>
+<p>The second scheme approximates an integral transform of the Koopman operator instead of the generator itself, which avoids differentiating the eigenfunctions:</p>
+<ol type="1">
+<li><strong>Transform.</strong> For each basis function, <span class="math inline">\((T\varphi_j)(x_n) = \sum_{m=0}^{M} w_m\, \varphi_j(x_{n+m})\)</span> with <span class="math inline">\(M\)</span> = <code>num_quad</code>, approximates <span class="math inline">\(\int_0^{M\Delta t} w(t)\, \varphi_j(x(t_n + t))\, dt\)</span>, where <span class="math inline">\(w(t) = e^{-zt}\)</span> (Laplace transform, the resolvent) or <span class="math inline">\(e^{-(zt)^2}\)</span> (Gauss transform), <span class="math inline">\(z\)</span> = <code>bandwidth</code>, and <span class="math inline">\(w_m\)</span> includes the trapezoidal or Simpson quadrature weights.</li>
+<li><strong>Matrix.</strong> <span class="math inline">\(A_{ij} = \langle\varphi'_i, T\varphi_j\rangle\)</span>, antisymmetrized.</li>
+<li><strong>Compactification.</strong> <span class="math inline">\(\tilde A = \Lambda A \Lambda\)</span> with <span class="math inline">\(\Lambda = \mathrm{diag}(\lambda_j^\tau)\)</span> (<code>smoothing_kernel="exponential"</code>) or <span class="math inline">\(\mathrm{diag}\big((1 - \sqrt{\eta_j/\eta_{\max}})^\tau\big)\)</span> (<code>"fejer"</code>).</li>
+<li><strong>Eigendecomposition</strong>, with a Hermitian solver when <code>antisym=True</code>.</li>
+<li><strong>Generator eigenvalues</strong> from those of the transform, by inverting the transform’s formula (<code>koop.invert_qz</code> for the Laplace transform, <code>koop.invert_dawson</code> for the Gauss transform).</li>
+</ol>
+<p>The quadrature uses the <code>num_quad</code> samples after each training sample, so the training data need <code>num_after</code> ≥ <code>num_quad</code>. The Lorenz 63 script builds the quadrature samples with <code>nlsa_models.lorenz63.make_data_driven_quadrature_evaluation_functional</code>; the climate pipeline has no dedicated function yet (<code>clim.make_data_driven_evaluation_functional</code> with <code>num_after=num_quad</code> evaluates functions on the same samples, but has not been tried for this purpose).</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>KoopmanParsTransf</code> (<code>nlsa.jax.koopman</code>, defined in <code>src/nlsa/koopman.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>transform</code></td>
+<td><code>"laplace"</code> or <code>"gauss"</code></td>
+<td>required</td>
+<td>Integral transform of the Koopman evolution: <code>"laplace"</code> (weights <span class="math inline">\(e^{-zt}\)</span>, the resolvent) or <code>"gauss"</code> (weights <span class="math inline">\(e^{-(zt)^2}\)</span>).</td>
+</tr>
+<tr class="even">
+<td><code>quadrature</code></td>
+<td><code>"trapezoidal"</code> or <code>"simpson"</code></td>
+<td>required</td>
+<td>Rule for the time integral: <code>"trapezoidal"</code> or <code>"simpson"</code> (Simpson needs an even <code>num_quad</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>num_quad</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of quadrature intervals. The transform uses the next <code>num_quad</code> samples after each training sample, so reserve them with <code>num_after</code>.</td>
+</tr>
+<tr class="even">
+<td><code>bandwidth</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Transform parameter <em>z</em>. Larger values weight short times more heavily.</td>
+</tr>
+<tr class="odd">
+<td><code>dt</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Time step of the quadrature (the sampling interval of the data).</td>
+</tr>
+<tr class="even">
+<td><code>tau</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Exponent τ of the smoothing weights that make the operator compact.</td>
+</tr>
+<tr class="odd">
+<td><code>which_eigs_galerkin</code></td>
+<td><code>int</code> or <code>tuple[int, int]</code> or <code>list[int]</code></td>
+<td>required</td>
+<td>As for <code>KoopmanParsDiff</code>.</td>
+</tr>
+<tr class="even">
+<td><code>antisym</code></td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+<td>Use the antisymmetric part of the transform matrix and a Hermitian eigensolver.</td>
+</tr>
+<tr class="odd">
+<td><code>num_eigs</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As for <code>KoopmanParsDiff</code>.</td>
+</tr>
+<tr class="even">
+<td><code>laplacian_method</code></td>
+<td><code>"log"</code> or <code>"lin"</code> or <code>"inv"</code></td>
+<td><code>"log"</code></td>
+<td>As for <code>KoopmanParsDiff</code>: recorded in the folder name; the Laplace eigenvalues used by the <code>"fejer"</code> smoothing are always computed with <code>"log"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>smoothing_kernel</code></td>
+<td><code>"exponential"</code> or <code>"fejer"</code></td>
+<td><code>"exponential"</code></td>
+<td>Smoothing weights: <code>"exponential"</code> λ_j^τ (kernel eigenvalues to the power τ) or <code>"fejer"</code> (1 − √(η_j / η_max))^τ.</td>
+</tr>
+<tr class="even">
+<td><code>sort_by</code></td>
+<td><code>"energy"</code> or <code>"frequency"</code></td>
+<td><code>"frequency"</code></td>
+<td>As for <code>KoopmanParsDiff</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>eval_quad_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for evaluating the basis functions at the quadrature samples.</td>
+</tr>
+<tr class="even">
+<td><code>quad_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the quadrature over basis functions.</td>
+</tr>
+<tr class="odd">
+<td><code>gram_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Batch size for the inner products that form the transform matrix.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The classes <code>KoopmanParsLapl</code> and <code>KoopmanParsGauss</code> in <code>nlsa.koopman</code> are earlier versions of <code>KoopmanParsTransf</code> and are no longer used.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>Both schemes return a <code>KoopmanEigen</code>:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>KoopmanEigen</code> (<code>nlsa.jax.koopman</code>, defined in <code>src/nlsa/jax/koopman/_koopman.py</code>)</caption>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 23%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>evals</code></td>
+<td>array</td>
+<td>Eigenvalues of the operator that was diagonalized (the regularized generator, or the transform for resolvent schemes).</td>
+</tr>
+<tr class="even">
+<td><code>gen_evals</code></td>
+<td>array</td>
+<td>Generator eigenvalues; the imaginary part is the angular frequency, the real part a growth or decay rate.</td>
+</tr>
+<tr class="odd">
+<td><code>engys</code></td>
+<td>array</td>
+<td>Dirichlet energy of each eigenfunction, a measure of roughness (smaller is smoother).</td>
+</tr>
+<tr class="even">
+<td><code>efreqs</code></td>
+<td>array</td>
+<td>Eigenfrequencies ω, in radians per unit time (per sample in the climate pipeline).</td>
+</tr>
+<tr class="odd">
+<td><code>eperiods</code></td>
+<td>array</td>
+<td>Eigenperiods 2π/ω, in the same time units.</td>
+</tr>
+<tr class="even">
+<td><code>evec_coeffs</code></td>
+<td>array</td>
+<td>Expansion coefficients of the Koopman eigenfunctions in the kernel basis.</td>
+</tr>
+<tr class="odd">
+<td><code>dual_evec_coeffs</code></td>
+<td>array</td>
+<td>Expansion coefficients of the dual eigenfunctions (used to project data onto the eigenfunctions).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Its methods <code>evecs(kernel_eigen, which_kernel_eigs)</code> and <code>dual_evecs(kernel_eigen, which_kernel_eigs)</code> return the eigenfunctions and their duals on the training samples. Times are counted in samples, so in the climate pipeline the frequencies are in radians per month (or per day). The ENSO script converts them when it prints the eigenvalue table:</p>
+<div class="doc-table">
+<table class="table-striped table-hover caption-top table">
+<caption>The Koopman eigenvalue table printed by the ENSO script</caption>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Conversion for monthly data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Growth rate (1/year)</td>
+<td><span class="math inline">\(12\, \mathrm{Re}\,\gamma_k\)</span></td>
+</tr>
+<tr class="even">
+<td>Dirichlet energy</td>
+<td><span class="math inline">\(E_k\)</span></td>
+</tr>
+<tr class="odd">
+<td>Eigenfrequency (cycles/year)</td>
+<td><span class="math inline">\(12\, \omega_k / 2\pi\)</span></td>
+</tr>
+<tr class="even">
+<td>Eigenperiod (years)</td>
+<td><span class="math inline">\(2\pi / (12\, \omega_k)\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The annual cycle appears at 1 cycle per year, the semiannual cycle at 2, and ENSO as a pair with a period of 3–5 years (0.2–0.33 cycles per year). Its index in the sorted list depends on the settings, so check the table before choosing which eigenfunction to forecast or plot.</p>
+</section>
+<section id="using-the-eigenfunctions" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-eigenfunctions">Using the eigenfunctions</h2>
+<div class="doc-table">
+<table class="table-striped table-hover caption-top table">
+<caption>Functions that use Koopman eigenfunctions</caption>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Values of eigenfunction <em>k</em> on training or test samples (Nyström extension), for example as a climate index</td>
+<td><code>koop.evaluate_eigenfunction</code></td>
+</tr>
+<tr class="even">
+<td>Spatial patterns (Koopman modes)</td>
+<td><code>clim.compute_eigenfunction_projections</code>, with <code>koopman_eigen.dual_evecs(...)</code>; see <a href="../../documentation/blocks/skill-outputs.html#spatial-patterns">Skill and outputs</a></td>
+</tr>
+<tr class="odd">
+<td>Forecast of an eigenfunction, or Koopman forecast of a target</td>
+<td>See <a href="../../documentation/blocks/forecasting.html">Forecasting</a></td>
+</tr>
+<tr class="even">
+<td>Table of eigenfunction values with dates, for use as predictors elsewhere</td>
+<td><code>clim.koopman_efuncs_to_data_frame</code></td>
+</tr>
+<tr class="odd">
+<td>Plots</td>
+<td><code>koop.plot_operator_matrix</code> (<code>"generator_mat"</code>)<br><code>koop.plot_generator_spectrum</code> (<code>"generator_spec"</code>)<br><code>clim.make_koopman_evecs_plotter</code> (<code>"koopman_eigen"</code>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A complex eigenfunction is an index with an <strong>amplitude</strong> <span class="math inline">\(|\zeta_k|\)</span> (how strong the phenomenon is) and a <strong>phase</strong> <span class="math inline">\(\arg\zeta_k\)</span> (where it is in its cycle), as in the phase diagrams on the <a href="../../documentation/experiments.html">Experiments</a> page.</p>
+<p>How to choose τ, the Galerkin space and the other settings is discussed in <a href="../../documentation/hyperparameters.html#koopman-analysis">Choosing hyperparameters</a>.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-das2021" class="csl-entry" role="listitem">
+Das, S., D. Giannakis, and J. Slawinska. 2021. <span>“Reproducing Kernel <span>Hilbert</span> Space Compactification of Unitary Evolution Groups.”</span> <em>Applied and Computational Harmonic Analysis</em> 54: 75–136. <a href="https://doi.org/10.1016/j.acha.2021.02.004">https://doi.org/10.1016/j.acha.2021.02.004</a>.
+</div>
+<div id="ref-giannakis2019acha" class="csl-entry" role="listitem">
+Giannakis, D. 2019. <span>“Data-Driven Spectral Decomposition and Forecasting of Ergodic Dynamical Systems.”</span> <em>Applied and Computational Harmonic Analysis</em> 47 (2): 338–96. <a href="https://doi.org/10.1016/j.acha.2017.09.001">https://doi.org/10.1016/j.acha.2017.09.001</a>.
+</div>
+<div id="ref-valva2024" class="csl-entry" role="listitem">
+Valva, C., and D. Giannakis. 2024. <span>“Consistent Spectral Approximation of <span>Koopman</span> Operators Using Resolvent Compactification.”</span> <em>Nonlinearity</em>, ahead of print. <a href="https://doi.org/10.1088/1361-6544/ad4ade">https://doi.org/10.1088/1361-6544/ad4ade</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

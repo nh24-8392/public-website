@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="The data block of the NLSA Python toolkit: data specifications for ERA5 reanalysis and 14th Weather Squadron station records, time settings, climatology removal, smoothing and standardization, spatial sampling, file requirements, and the Lorenz 63 test data.">
+
+<title>2. Data – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/index.html">Calculation blocks</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/data.html">2. Data</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Introduction</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">The code</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/code-structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../documentation/blocks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Calculation blocks</span></a>
+            <button type="button" class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section: Calculation blocks">
+              <i class="bi bi-chevron-right ms-2" aria-hidden="true"></i>
+            </button> 
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Setup and run control</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">2. Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/delay-embedding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Delay embedding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/kernel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Kernel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/koopman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Koopman analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/forecasting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/blocks/skill-outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Skill and outputs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/pseudo-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pseudo-code</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Reference</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/hyperparameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Choosing hyperparameters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../documentation/options.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">All options</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#processing-steps" id="toc-processing-steps" class="nav-link active" data-scroll-target="#processing-steps">Processing steps</a></li>
+  <li><a href="#time-settings" id="toc-time-settings" class="nav-link" data-scroll-target="#time-settings">Time settings</a></li>
+  <li><a href="#climatology-and-standardization" id="toc-climatology-and-standardization" class="nav-link" data-scroll-target="#climatology-and-standardization">Climatology and standardization</a>
+  <ul class="collapse">
+  <li><a href="#standardization" id="toc-standardization" class="nav-link" data-scroll-target="#standardization">Standardization</a></li>
+  </ul></li>
+  <li><a href="#era5-reanalysis" id="toc-era5-reanalysis" class="nav-link" data-scroll-target="#era5-reanalysis">ERA5 reanalysis</a>
+  <ul class="collapse">
+  <li><a href="#domain-and-spatial-sampling" id="toc-domain-and-spatial-sampling" class="nav-link" data-scroll-target="#domain-and-spatial-sampling">Domain and spatial sampling</a></li>
+  <li><a href="#files" id="toc-files" class="nav-link" data-scroll-target="#files">Files</a></li>
+  <li><a href="#data-specification-and-variables" id="toc-data-specification-and-variables" class="nav-link" data-scroll-target="#data-specification-and-variables">Data specification and variables</a></li>
+  </ul></li>
+  <li><a href="#station-records" id="toc-station-records" class="nav-link" data-scroll-target="#station-records">Station records</a>
+  <ul class="collapse">
+  <li><a href="#southwestern-united-states-and-western-pacific" id="toc-southwestern-united-states-and-western-pacific" class="nav-link" data-scroll-target="#southwestern-united-states-and-western-pacific">Southwestern United States and western Pacific</a></li>
+  <li><a href="#pituffik-greenland" id="toc-pituffik-greenland" class="nav-link" data-scroll-target="#pituffik-greenland">Pituffik, Greenland</a></li>
+  </ul></li>
+  <li><a href="#predictors-and-target" id="toc-predictors-and-target" class="nav-link" data-scroll-target="#predictors-and-target">Predictors and target</a></li>
+  <li><a href="#result" id="toc-result" class="nav-link" data-scroll-target="#result">Result</a></li>
+  <li><a href="#lorenz-63" id="toc-lorenz-63" class="nav-link" data-scroll-target="#lorenz-63">Lorenz 63</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../documentation/code-structure.html">The code</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/index.html">Calculation blocks</a></li><li class="breadcrumb-item"><a href="../../documentation/blocks/data.html">2. Data</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">2. Data</h1>
+<p class="subtitle lead">Reading ERA5 fields and station records, and turning them into predictors and a target</p>
+</div>
+
+<div>
+  <div class="description">
+    The data block of the NLSA Python toolkit: data specifications for ERA5 reanalysis and 14th Weather Squadron station records, time settings, climatology removal, smoothing and standardization, spatial sampling, file requirements, and the Lorenz 63 test data.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Every experiment has <strong>predictors</strong> and a <strong>target</strong>. The predictors (called <em>covariates</em> in the code, class <code>Covariate</code>) describe the state of the system at the time a forecast is made. The target (<em>response</em>, class <code>Response</code>) is the quantity to forecast, or to verify against.</p>
+<p>Both are made of <strong>data specifications</strong>: an <code>era5.DataSpecs</code> for a reanalysis field or a <code>ws44.DataSpecs</code> for station records. A data specification says which variables to read, over which domain or at which stations, for which period, from which files, and how to remove the climatology and standardize. For example, the predictors of the Niño 3.4 forecasts:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sst_field <span class="op">=</span> era5.DataSpecs(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">vars</span><span class="op">=</span>[era5.Var.SST],                                   <span class="co"># sea surface temperature</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    domain<span class="op">=</span>era5.nino34_domain(step_lon<span class="op">=</span><span class="dv">4</span>, step_lat<span class="op">=</span><span class="dv">4</span>),     <span class="co"># every 4th grid point</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    time<span class="op">=</span>Time(date_range<span class="op">=</span>(<span class="st">"1940-01-01"</span>, <span class="st">"2019-12-31"</span>), sampling<span class="op">=</span><span class="st">"monthly"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              custom_climatology_date_range<span class="op">=</span>(<span class="st">"1940-01-01"</span>, <span class="st">"2019-12-31"</span>)),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    io<span class="op">=</span>era5.IO(input_path<span class="op">=</span><span class="st">"/storage/data/era5/monthly_1940-2025_nc"</span>, file_format<span class="op">=</span><span class="st">"nc"</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    climatology<span class="op">=</span>Climatology(remove<span class="op">=</span><span class="va">False</span>, standardize<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>predictors <span class="op">=</span> Covariate(specs<span class="op">=</span>(sst_field,))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="processing-steps" class="level2">
+<h2 class="anchored" data-anchor-id="processing-steps">Processing steps</h2>
+<p><code>clim.extract_data_arrays(data_pars)</code> reads the predictors and the target of a <code>DataPars</code> object and returns them as arrays. For each ERA5 data specification, <code>clim.read_gridded_dataset</code> does the following, in this order:</p>
+<ol type="1">
+<li><strong>Open the files.</strong> All files in the folder <code>io.input_path</code> with the extension <code>io.file_format</code> are opened together as one data set, sorted by latitude, and cut to the domain.</li>
+<li><strong>Spatial sampling.</strong> Grid points are kept, thinned, averaged in blocks or averaged over the domain, as set by <code>Domain.sampling</code> (see <a href="#era5-reanalysis">below</a>).</li>
+<li><strong>Climatology.</strong> If <code>Climatology.remove</code> is set, the mean of each calendar month (monthly data) or of each day of the year (daily data) over the climatology period is subtracted.</li>
+<li><strong>Smoothing.</strong> If <code>Time.rolling_window</code> is set, a running mean over that many samples is applied.</li>
+<li><strong>Standardization.</strong> If <code>Climatology.standardize</code> is set, the data are centred and scaled with statistics from the climatology period (see <a href="#standardization">Standardization</a>).</li>
+<li><strong>Dates.</strong> The period <code>Time.date_range</code> is selected.</li>
+</ol>
+<p>The arrays are then assembled: all grid points of all variables become the columns of one array, with one row per time; <strong>columns with any missing value are dropped</strong> (for example land points of a sea surface temperature field); and the arrays of the different data specifications of the predictors are placed side by side. If <code>DataPars.velocity_covariate</code> is set, the rate of change of every column is computed with a central finite difference and stored alongside (see <a href="../../documentation/blocks/delay-embedding.html#velocities">Delay embedding</a>).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The climatology period comes from the training data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Steps 3–5 use the climatology period, and the dates are selected only at the end. So the climatology period can lie outside the date range, and the test data can (and should) use the climatology of the training period: give both the same <code>custom_climatology_date_range</code>. The files must then cover both the dates and the climatology period.</p>
+</div>
+</div>
+</section>
+<section id="time-settings" class="level2">
+<h2 class="anchored" data-anchor-id="time-settings">Time settings</h2>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Time</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>date_range</code></td>
+<td><code>tuple[str, str]</code></td>
+<td>required</td>
+<td>First and last date (<code>"YYYY-MM-DD"</code>) of the data. For training data this is the training period, for test data the test period.</td>
+</tr>
+<tr class="even">
+<td><code>sampling</code></td>
+<td><code>"monthly"</code> or <code>"daily"</code></td>
+<td>required</td>
+<td>Time sampling: <code>"monthly"</code> or <code>"daily"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>rolling_window</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Length, in samples, of a running mean applied after the climatology is removed. <code>None</code> means no smoothing.</td>
+</tr>
+<tr class="even">
+<td><code>rolling_mode</code></td>
+<td><code>"forward"</code> or <code>"backward"</code> or <code>"center"</code></td>
+<td><code>"center"</code></td>
+<td>Alignment of the running-mean window: <code>"center"</code> (centred), <code>"backward"</code> (the current and previous samples) or <code>"forward"</code> (the current and following samples).</td>
+</tr>
+<tr class="odd">
+<td><code>custom_climatology_date_range</code></td>
+<td><code>tuple[str, str]</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Period used to compute the climatology and the standardization statistics. If <code>None</code>, <code>date_range</code> is used. Set it to the training period for both training and test data, so that test anomalies use the training climatology.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The running mean uses the samples that are available near the ends of the record (<code>min_periods=1</code>), so the first and last values are averages over fewer samples. One exception: for ERA5 data with <code>rolling_mode="forward"</code>, the last <code>rolling_window − 1</code> dates of the files get no value, so the files must extend at least that far beyond the end of <code>date_range</code>.</p>
+</section>
+<section id="climatology-and-standardization" class="level2">
+<h2 class="anchored" data-anchor-id="climatology-and-standardization">Climatology and standardization</h2>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Climatology</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>remove</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Subtract the mean annual cycle (the average for each calendar month, or each day of the year for daily data) computed over the climatology period.</td>
+</tr>
+<tr class="even">
+<td><code>standardize</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Rescale the data using statistics from the climatology period (see <em>Standardization</em> above).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="standardization" class="level3">
+<h3 class="anchored" data-anchor-id="standardization">Standardization</h3>
+<p>Standardization puts the predictors on a common scale. The mean is taken over the climatology period, separately at each grid point (after any climatology removal and smoothing). The scaling depends on the data:</p>
+<div class="doc-table">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Scaling</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ERA5, <code>"pointwise"</code> sampling</td>
+<td>Each variable is divided by the square root of its <strong>total</strong> variance, summed over all grid points and averaged over time. The field as a whole has unit variance, and the relative amplitudes of the grid points are kept.</td>
+</tr>
+<tr class="even">
+<td>ERA5, any other sampling</td>
+<td>Each grid point or average is divided by its own standard deviation.</td>
+</tr>
+<tr class="odd">
+<td>Station records</td>
+<td>Each variable of each station is scaled to zero mean and unit variance.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For a pointwise field <span class="math inline">\(x(s, t)\)</span> at grid points <span class="math inline">\(s\)</span>, with means <span class="math inline">\(\bar x(s)\)</span> over the climatology period of <span class="math inline">\(T_c\)</span> samples,</p>
+<p><span class="math display">\[
+\tilde x(s, t) = \frac{x(s, t) - \bar x(s)}{\Big[\frac{1}{T_c} \sum_{t} \sum_{s'} \big(x(s', t) - \bar x(s')\big)^2\Big]^{1/2}}.
+\]</span></p>
+<p>This matters when predictors are combined. A pointwise ERA5 field contributes one unit of variance per variable however many grid points it has, while each station variable, and each grid point of a coarsened field, contributes one unit. Since the kernel compares predictors through their total distance, these weights decide how much each block of predictors counts.</p>
+</section>
+</section>
+<section id="era5-reanalysis" class="level2">
+<h2 class="anchored" data-anchor-id="era5-reanalysis">ERA5 reanalysis</h2>
+<section id="domain-and-spatial-sampling" class="level3">
+<h3 class="anchored" data-anchor-id="domain-and-spatial-sampling">Domain and spatial sampling</h3>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Domain</code> (<code>nlsa_models.era5</code>, defined in <code>src/nlsa_models/era5.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sampling</code></td>
+<td><code>"pointwise"</code> or <code>"coarsened"</code> or <code>"area_averaged"</code> or <code>"meridionally_averaged"</code> or <code>"zonally_averaged"</code></td>
+<td>required</td>
+<td>How grid points are used: <code>"pointwise"</code>, <code>"coarsened"</code>, <code>"area_averaged"</code>, <code>"meridionally_averaged"</code> or <code>"zonally_averaged"</code> (see <em>Spatial sampling</em>).</td>
+</tr>
+<tr class="even">
+<td><code>min_lon</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Western edge of the domain, in degrees east (0–360).</td>
+</tr>
+<tr class="odd">
+<td><code>max_lon</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Eastern edge of the domain, in degrees east (0–360).</td>
+</tr>
+<tr class="even">
+<td><code>min_lat</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Southern edge of the domain, in degrees north.</td>
+</tr>
+<tr class="odd">
+<td><code>max_lat</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Northern edge of the domain, in degrees north.</td>
+</tr>
+<tr class="even">
+<td><code>step_lon</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Step in grid points along longitude: keep every <code>step_lon</code>-th point (<code>"pointwise"</code>) or average blocks of <code>step_lon</code> points (<code>"coarsened"</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>step_lat</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Step in grid points along latitude, as for <code>step_lon</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Spatial sampling options (<code>era5.Domain.sampling</code>)</caption>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 28%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>sampling</code></th>
+<th>Result</th>
+<th>Role of <code>step_lon</code>, <code>step_lat</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"pointwise"</code></td>
+<td>The field at every grid point</td>
+<td>Keep every <code>step_lon</code>-th longitude and <code>step_lat</code>-th latitude; with ERA5’s 0.25° grid, 4 gives a 1° grid.</td>
+</tr>
+<tr class="even">
+<td><code>"coarsened"</code></td>
+<td>Averages over blocks of grid points</td>
+<td>Block size; at least one step must be given.</td>
+</tr>
+<tr class="odd">
+<td><code>"area_averaged"</code></td>
+<td>One value per time: the average over the domain</td>
+<td>Not used.</td>
+</tr>
+<tr class="even">
+<td><code>"meridionally_averaged"</code></td>
+<td>A profile in longitude: the average over latitude</td>
+<td>If <code>step_lon</code> is given, blocks of <code>step_lon</code> longitudes are averaged first.</td>
+</tr>
+<tr class="odd">
+<td><code>"zonally_averaged"</code></td>
+<td>A profile in latitude: the average over longitude</td>
+<td>No effect on the result. (The code coarsens longitude by <code>step_lat</code> before averaging over all longitudes.)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Averages are plain means over grid points, not weighted by the area of the grid cells. This makes little difference near the equator but gives more weight to high latitudes in large domains. Domains are cut with <code>min_lon</code> &lt; <code>max_lon</code> in degrees east from 0 to 360, so a domain cannot cross the 0° meridian.</p>
+<p>Three domains are predefined; all accept the <code>sampling</code>, <code>step_lon</code> and <code>step_lat</code> arguments:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Predefined domains in <code>nlsa_models.era5</code></caption>
+<colgroup>
+<col style="width: 29%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Longitudes</th>
+<th>Latitudes</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>era5.nino34_domain()</code></td>
+<td>190°E–240°E (170°W–120°W)</td>
+<td>5°S–5°N</td>
+<td>Niño 3.4 predictors and index</td>
+</tr>
+<tr class="even">
+<td><code>era5.indo_pacific_domain()</code></td>
+<td>28°E–290°E</td>
+<td>60°S–20°N</td>
+<td>Indo-Pacific SST for Koopman modes</td>
+</tr>
+<tr class="odd">
+<td><code>era5.global_domain()</code></td>
+<td>0°–360°E</td>
+<td>90°S–90°N</td>
+<td>Spatial patterns (projections)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For other regions, create the domain directly, for example the MJO target box: <code>era5.Domain(sampling="area_averaged", min_lon=120, max_lon=150, min_lat=-5, max_lat=5)</code>.</p>
+</section>
+<section id="files" class="level3">
+<h3 class="anchored" data-anchor-id="files">Files</h3>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>IO</code> (<code>nlsa_models.era5</code>, defined in <code>src/nlsa_models/era5.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>input_path</code></td>
+<td><code>str</code> or <code>Path</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Folder with the ERA5 files. All files with the chosen extension in the folder are opened together as one data set.</td>
+</tr>
+<tr class="even">
+<td><code>file_format</code></td>
+<td><code>"grib"</code> or <code>"nc"</code></td>
+<td><code>"nc"</code></td>
+<td>File format: <code>"nc"</code> (NetCDF) or <code>"grib"</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The code expects:</p>
+<ul>
+<li><p><strong>One data set per folder.</strong> Every file with the given extension in the folder is opened, and the files are combined along time.</p></li>
+<li><p><strong>Coordinates</strong> named <code>time</code>, <code>latitude</code> and <code>longitude</code>, with longitudes from 0° to 360°. ERA5 NetCDF files from the current Copernicus Climate Data Store name the time coordinate <code>valid_time</code> instead; rename it once after downloading:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_dataset(<span class="st">"era5_sst_monthly.nc"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> ds.rename({<span class="st">"valid_time"</span>: <span class="st">"time"</span>}).drop_vars([<span class="st">"expver"</span>, <span class="st">"number"</span>], errors<span class="op">=</span><span class="st">"ignore"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ds.to_netcdf(<span class="st">"era5_sst_monthly_time.nc"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>One value per month or per day, without gaps.</strong> The number of samples is computed from the dates, so missing months or days would misalign the data.</p></li>
+<li><p><strong>Coverage</strong> of both the date range and the climatology period.</p></li>
+</ul>
+<p>GRIB files (<code>file_format="grib"</code>) are read with cfgrib, which is installed with the toolkit.</p>
+</section>
+<section id="data-specification-and-variables" class="level3">
+<h3 class="anchored" data-anchor-id="data-specification-and-variables">Data specification and variables</h3>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataSpecs</code> (<code>nlsa_models.era5</code>, defined in <code>src/nlsa_models/era5.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>vars</code></td>
+<td><code>Sequence[Var]</code></td>
+<td>required</td>
+<td>ERA5 variables to read (see the variable table).</td>
+</tr>
+<tr class="even">
+<td><code>domain</code></td>
+<td><code>Domain</code></td>
+<td>required</td>
+<td>Spatial domain and spatial sampling, as an <code>era5.Domain</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>time</code></td>
+<td><code>Time</code></td>
+<td>required</td>
+<td>Period, time sampling and smoothing, as a <code>climate.Time</code>.</td>
+</tr>
+<tr class="even">
+<td><code>io</code></td>
+<td><code>IO</code></td>
+<td>required</td>
+<td>Location and format of the files, as an <code>era5.IO</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>climatology</code></td>
+<td><code>Climatology</code></td>
+<td><code>Climatology()</code></td>
+<td>Anomaly and standardization settings, as a <code>climate.Climatology</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Var</code> (<code>nlsa_models.era5</code>)</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 17%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Member</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AVG_TNLWRF</code></td>
+<td><code>"avg_tnlwrf"</code></td>
+<td>Mean top net long-wave radiation flux. This is the outgoing longwave radiation with a negative sign, since ERA5 counts downward fluxes as positive.</td>
+</tr>
+<tr class="even">
+<td><code>MSL</code></td>
+<td><code>"msl"</code></td>
+<td>Mean sea level pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>SST</code></td>
+<td><code>"sst"</code></td>
+<td>Sea surface temperature.</td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>"sp"</code></td>
+<td>Surface pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>CAPE</code></td>
+<td><code>"cape"</code></td>
+<td>Convective available potential energy.</td>
+</tr>
+<tr class="even">
+<td><code>TCWV</code></td>
+<td><code>"tcwv"</code></td>
+<td>Total column water vapor.</td>
+</tr>
+<tr class="odd">
+<td><code>T2M</code></td>
+<td><code>"t2m"</code></td>
+<td>2 meter temperature.</td>
+</tr>
+<tr class="even">
+<td><code>TSR</code></td>
+<td><code>"tsr"</code></td>
+<td>Top net shortwave (solar) radiation.</td>
+</tr>
+<tr class="odd">
+<td><code>TTR</code></td>
+<td><code>"ttr"</code></td>
+<td>Top net longwave (thermal) radiation.</td>
+</tr>
+<tr class="even">
+<td><code>CP</code></td>
+<td><code>"cp"</code></td>
+<td>Convective precipitation.</td>
+</tr>
+<tr class="odd">
+<td><code>LSP</code></td>
+<td><code>"lsp"</code></td>
+<td>Large-scale precipitation.</td>
+</tr>
+<tr class="even">
+<td><code>TENV</code></td>
+<td><code>"10v"</code></td>
+<td>10-meter V wind component.</td>
+</tr>
+<tr class="odd">
+<td><code>SSRO</code></td>
+<td><code>"ssro"</code></td>
+<td>Subsurface runoff</td>
+</tr>
+<tr class="even">
+<td><code>LAI_HV</code></td>
+<td><code>"lai_hv"</code></td>
+<td>Leaf area index, high vegetation.</td>
+</tr>
+<tr class="odd">
+<td><code>LAI_LW</code></td>
+<td><code>"lai_lv"</code></td>
+<td>Leaf area index, low vegetation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The value of each member is the name of the variable in the files. To use another ERA5 variable, add a member to <code>era5.Var</code> with its name in your files.</p>
+</section>
+</section>
+<section id="station-records" class="level2">
+<h2 class="anchored" data-anchor-id="station-records">Station records</h2>
+<p>The station records of the U.S. Air Force 14th Weather Squadron are read by <code>nlsa_models.ws44</code>, which has two sets of classes: one for the stations of the southwestern United States and the western Pacific, and one (<code>HighLat…</code>) for Pituffik Space Base in Greenland, whose records come in a different format. For each station and variable, the reader fills missing days by linear interpolation (and prints how many were filled), averages to months if <code>sampling="monthly"</code>, then removes the climatology, smooths, standardizes and selects the dates, as for ERA5 data.</p>
+<section id="southwestern-united-states-and-western-pacific" class="level3">
+<h3 class="anchored" data-anchor-id="southwestern-united-states-and-western-pacific">Southwestern United States and western Pacific</h3>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>IO</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>input_path</code></td>
+<td><code>str</code> or <code>Path</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Folder with one <code>&lt;STATION&gt;_dailystats.csv</code> file per station.</td>
+</tr>
+<tr class="even">
+<td><code>file_format</code></td>
+<td><code>"csv"</code></td>
+<td><code>"csv"</code></td>
+<td>File format; only <code>"csv"</code> is supported.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataSpecs</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>vars</code></td>
+<td><code>Sequence[Var]</code></td>
+<td>required</td>
+<td>Station variables, as <code>ws44.Var</code> members (columns of the daily-statistics files).</td>
+</tr>
+<tr class="even">
+<td><code>stations</code></td>
+<td><code>Sequence[Station]</code></td>
+<td>required</td>
+<td>Stations, as <code>ws44.Station</code> members (ICAO codes). Each station adds its variables as columns of the predictor vector.</td>
+</tr>
+<tr class="odd">
+<td><code>time</code></td>
+<td><code>Time</code></td>
+<td>required</td>
+<td>Period, time sampling and smoothing, as a <code>climate.Time</code>. Monthly sampling averages the daily values.</td>
+</tr>
+<tr class="even">
+<td><code>io</code></td>
+<td><code>IO</code></td>
+<td>required</td>
+<td>Location of the files, as a <code>ws44.IO</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>climatology</code></td>
+<td><code>Climatology</code></td>
+<td><code>Climatology()</code></td>
+<td>Anomaly and standardization settings, as a <code>climate.Climatology</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The files are named <code>&lt;ICAO code&gt;_dailystats.csv</code> (for example <code>KEDW_dailystats.csv</code>), one per station, with columns <code>YEAR</code>, <code>MO</code> and <code>DAY</code> for the date and one column per variable, named by the values below. Units follow the names: temperature in °C, wind in m/s, precipitation in inches.</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Var</code> (<code>nlsa_models.ws44</code>)</caption>
+<thead>
+<tr class="header">
+<th>Member</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TEMP_C_MAX</code></td>
+<td><code>"temp_c_max"</code></td>
+<td>Max temperature.</td>
+</tr>
+<tr class="even">
+<td><code>TEMP_C_MIN</code></td>
+<td><code>"temp_c_min"</code></td>
+<td>Min temperature.</td>
+</tr>
+<tr class="odd">
+<td><code>TEMP_C_MEAN</code></td>
+<td><code>"temp_c_mean"</code></td>
+<td>Mean temperature.</td>
+</tr>
+<tr class="even">
+<td><code>SLP_MAX</code></td>
+<td><code>"slp_max"</code></td>
+<td>Max sea level pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>SLP_MIN</code></td>
+<td><code>"slp_min"</code></td>
+<td>Min sea level pressure.</td>
+</tr>
+<tr class="even">
+<td><code>SLP_MEAN</code></td>
+<td><code>"slp_mean"</code></td>
+<td>Mean sea level pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>STP_MAX</code></td>
+<td><code>"stp_max"</code></td>
+<td>Max station pressure.</td>
+</tr>
+<tr class="even">
+<td><code>STP_MIN</code></td>
+<td><code>"stp_min"</code></td>
+<td>Min station pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>STP_MEAN</code></td>
+<td><code>"stp_mean"</code></td>
+<td>Mean station pressure.</td>
+</tr>
+<tr class="even">
+<td><code>U_WIND_MPS_MEAN</code></td>
+<td><code>"u_wind_mps_mean"</code></td>
+<td>Mean zonal winds.</td>
+</tr>
+<tr class="odd">
+<td><code>V_WIND_MPS_MEAN</code></td>
+<td><code>"v_wind_mps_mean"</code></td>
+<td>Mean meridional winds.</td>
+</tr>
+<tr class="even">
+<td><code>DAILY_PRECIP_IN</code></td>
+<td><code>"daily_precip_in"</code></td>
+<td>Precipitation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The 66 registered stations (<code>ws44.Station</code>)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Station</code> (<code>nlsa_models.ws44</code>)</caption>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Station</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>KABQ</code></td>
+<td>Albuquerque International Sunport (Kirtland AFB), NM</td>
+</tr>
+<tr class="even">
+<td><code>KBLH</code></td>
+<td>Blythe Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KBUR</code></td>
+<td>Hollywood Burbank Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KCDS</code></td>
+<td>Childress Municipal Airport, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KCNM</code></td>
+<td>Cavern City Air Terminal, NM</td>
+</tr>
+<tr class="even">
+<td><code>KCRQ</code></td>
+<td>McClellan-Palomar Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KCVN</code></td>
+<td>Clovis Regional Airport, NM</td>
+</tr>
+<tr class="even">
+<td><code>KCVS</code></td>
+<td>Cannon AFB, NM</td>
+</tr>
+<tr class="odd">
+<td><code>KDAG</code></td>
+<td>Barstow-Daggett Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KDLF</code></td>
+<td>Laughlin AFB, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KDMA</code></td>
+<td>Davis–Monthan AFB, AZ</td>
+</tr>
+<tr class="even">
+<td><code>KDMN</code></td>
+<td>Deming Municipal Airport, NM</td>
+</tr>
+<tr class="odd">
+<td><code>KDRT</code></td>
+<td>Del Rio International Airport, TX</td>
+</tr>
+<tr class="even">
+<td><code>KDUG</code></td>
+<td>Bisbee Douglas International Airport, AZ</td>
+</tr>
+<tr class="odd">
+<td><code>KEDW</code></td>
+<td>Edwards AFB, CA</td>
+</tr>
+<tr class="even">
+<td><code>KELP</code></td>
+<td>El Paso International Airport, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KFHU</code></td>
+<td>Libby Army Airfield, AZ</td>
+</tr>
+<tr class="even">
+<td><code>KGDP</code></td>
+<td>Guadalupe Pass Weather Station, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KHHR</code></td>
+<td>Hawthorne Municipal Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KHMN</code></td>
+<td>Holloman AFB, NM</td>
+</tr>
+<tr class="odd">
+<td><code>KHOB</code></td>
+<td>Lea County Regional Airport, NM</td>
+</tr>
+<tr class="even">
+<td><code>KINK</code></td>
+<td>Winkler County Airport, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KIPL</code></td>
+<td>Imperial County Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KIWA</code></td>
+<td>Phoenix–Mesa Gateway Airport (former Williams AFB), AZ</td>
+</tr>
+<tr class="odd">
+<td><code>KLAX</code></td>
+<td>Los Angeles International Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KLBB</code></td>
+<td>Lubbock, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KLGB</code></td>
+<td>Long Beach Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KLPC</code></td>
+<td>Lompoc Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KLRU</code></td>
+<td>Las Cruces International Airport, NM</td>
+</tr>
+<tr class="even">
+<td><code>KLSV</code></td>
+<td>Nellis AFB, NV</td>
+</tr>
+<tr class="odd">
+<td><code>KLUF</code></td>
+<td>Luke AFB, AZ</td>
+</tr>
+<tr class="even">
+<td><code>KMAF</code></td>
+<td>Midland International Air &amp; Space Port, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KMRF</code></td>
+<td>Marfa Municipal, TX</td>
+</tr>
+<tr class="even">
+<td><code>KNJK</code></td>
+<td>El Centro NAF, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KNSI</code></td>
+<td>San Nicolas Island NOLF, CA</td>
+</tr>
+<tr class="even">
+<td><code>KNTD</code></td>
+<td>Point Mugu NAS, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KNYL</code></td>
+<td>Marine Corps Air Station, Yuma, AZ</td>
+</tr>
+<tr class="even">
+<td><code>KNZY</code></td>
+<td>North Island NAS, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KONT</code></td>
+<td>Ontario International Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KOXR</code></td>
+<td>Oxnard Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KPHX</code></td>
+<td>Phoenix Sky Harbor International Airport, AZ</td>
+</tr>
+<tr class="even">
+<td><code>KPRC</code></td>
+<td>Prescott Regional Airport, AZ</td>
+</tr>
+<tr class="odd">
+<td><code>KPSP</code></td>
+<td>Palm Springs International Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KRIV</code></td>
+<td>March Air Reserve Base, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KROW</code></td>
+<td>Roswell International Air Center, NM</td>
+</tr>
+<tr class="even">
+<td><code>KREE</code></td>
+<td>Reese AFB, TX</td>
+</tr>
+<tr class="odd">
+<td><code>KSAD</code></td>
+<td>Safford Regional Airport, AZ</td>
+</tr>
+<tr class="even">
+<td><code>KSAN</code></td>
+<td>San Diego International Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KSBA</code></td>
+<td>Santa Barbara Municipal Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KSMX</code></td>
+<td>Santa Maria Public Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KSDB</code></td>
+<td>Sandberg Airstrip, CA</td>
+</tr>
+<tr class="even">
+<td><code>KSEE</code></td>
+<td>Gillespie Field, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KSUU</code></td>
+<td>Travis Air Force Base, CA</td>
+</tr>
+<tr class="even">
+<td><code>KSJT</code></td>
+<td>San Angelo Regional Airport (Mathis Field), TX</td>
+</tr>
+<tr class="odd">
+<td><code>KSMO</code></td>
+<td>Santa Monica Municipal Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>KSNA</code></td>
+<td>John Wayne Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KSRR</code></td>
+<td>Sierra Blanca Regional Airport, NM</td>
+</tr>
+<tr class="even">
+<td><code>KTCS</code></td>
+<td>Truth or Consequences Municipal Airport, NM</td>
+</tr>
+<tr class="odd">
+<td><code>KTUS</code></td>
+<td>Tucson International Airport, AZ</td>
+</tr>
+<tr class="even">
+<td><code>KTRM</code></td>
+<td>Jacqueline Cochran Regional Airport, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KWJF</code></td>
+<td>General William J. Fox Airfield, CA</td>
+</tr>
+<tr class="even">
+<td><code>KVBG</code></td>
+<td>Vandenberg Space Force Base, CA</td>
+</tr>
+<tr class="odd">
+<td><code>KVNY</code></td>
+<td>Van Nuys Airport, CA</td>
+</tr>
+<tr class="even">
+<td><code>PGUA</code></td>
+<td>Andersen AFB, Guam</td>
+</tr>
+<tr class="odd">
+<td><code>PKWA</code></td>
+<td>Bucholz Army Airfield, Kwajalein Atoll, Marshall Islands</td>
+</tr>
+<tr class="even">
+<td><code>PWAK</code></td>
+<td>Wake Island Airfield, Wake Atoll</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>To add a station, add its ICAO code to <code>ws44.Station</code> and put its file in the data folder.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pituffik-greenland" class="level3">
+<h3 class="anchored" data-anchor-id="pituffik-greenland">Pituffik, Greenland</h3>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>HighLatIO</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>input_path</code></td>
+<td><code>str</code> or <code>Path</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Folder with one subfolder per station; all CSV files in a station’s subfolder are merged on their <code>obs_date</code> column.</td>
+</tr>
+<tr class="even">
+<td><code>file_format</code></td>
+<td><code>"csv"</code></td>
+<td><code>"csv"</code></td>
+<td>File format; only <code>"csv"</code> is supported.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>HighLatDataSpecs</code> (<code>nlsa_models.ws44</code>, defined in <code>src/nlsa_models/ws44.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>vars</code></td>
+<td><code>Sequence[HighLatVar]</code></td>
+<td>required</td>
+<td>Variables, as <code>ws44.HighLatVar</code> members.</td>
+</tr>
+<tr class="even">
+<td><code>stations</code></td>
+<td><code>Sequence[HighLatStation]</code></td>
+<td>required</td>
+<td>Stations, as <code>ws44.HighLatStation</code> members (currently <code>BGTL</code>, Pituffik Space Base).</td>
+</tr>
+<tr class="odd">
+<td><code>time</code></td>
+<td><code>Time</code></td>
+<td>required</td>
+<td>Period, time sampling and smoothing, as a <code>climate.Time</code>.</td>
+</tr>
+<tr class="even">
+<td><code>io</code></td>
+<td><code>HighLatIO</code></td>
+<td>required</td>
+<td>Location of the files, as a <code>ws44.HighLatIO</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>climatology</code></td>
+<td><code>Climatology</code></td>
+<td><code>Climatology()</code></td>
+<td>Anomaly and standardization settings, as a <code>climate.Climatology</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The records are in a subfolder named after the station, <code>BGTL/</code>, which may contain several CSV files. Each file has an <code>obs_date</code> column, a <code>platformid</code> column (dropped on reading) and variable columns named by the values below; the files are merged on <code>obs_date</code>.</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>HighLatVar</code> (<code>nlsa_models.ws44</code>)</caption>
+<thead>
+<tr class="header">
+<th>Member</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>MAXTEMP</code></td>
+<td><code>"maxtemp"</code></td>
+<td>Max temperature.</td>
+</tr>
+<tr class="even">
+<td><code>MINTEMP</code></td>
+<td><code>"mintemp"</code></td>
+<td>Min temperature.</td>
+</tr>
+<tr class="odd">
+<td><code>MEANTEMP</code></td>
+<td><code>"meantemp"</code></td>
+<td>Mean temperature.</td>
+</tr>
+<tr class="even">
+<td><code>MAXSLP</code></td>
+<td><code>"maxslp"</code></td>
+<td>Max sea level pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>MINSLP</code></td>
+<td><code>"minslp"</code></td>
+<td>Min sea level pressure.</td>
+</tr>
+<tr class="even">
+<td><code>MEANSLP</code></td>
+<td><code>"meanslp"</code></td>
+<td>Mean sea level pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>MAXSTP</code></td>
+<td><code>"maxstp"</code></td>
+<td>Max station pressure.</td>
+</tr>
+<tr class="even">
+<td><code>MINSTP</code></td>
+<td><code>"minstp"</code></td>
+<td>Min station pressure.</td>
+</tr>
+<tr class="odd">
+<td><code>MEANSTP</code></td>
+<td><code>"meanstp"</code></td>
+<td>Mean station pressure.</td>
+</tr>
+<tr class="even">
+<td><code>AVG_U_WIND</code></td>
+<td><code>"avg_u_wind"</code></td>
+<td>Mean zonal winds.</td>
+</tr>
+<tr class="odd">
+<td><code>AVG_V_WIND</code></td>
+<td><code>"avg_v_wind"</code></td>
+<td>Mean meridional winds.</td>
+</tr>
+<tr class="even">
+<td><code>PRECIP_IN</code></td>
+<td><code>"precip_in"</code></td>
+<td>Precipitation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>HighLatStation</code> (<code>nlsa_models.ws44</code>)</caption>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Station</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BGTL</code></td>
+<td>Pituffik Space Base (formerly Thule Air Base), Greenland</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="predictors-and-target" class="level2">
+<h2 class="anchored" data-anchor-id="predictors-and-target">Predictors and target</h2>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Covariate</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>specs</code></td>
+<td>sequence of <code>era5.DataSpecs</code>, <code>ws44.DataSpecs</code> or <code>ws44.HighLatDataSpecs</code></td>
+<td>required</td>
+<td>One or more data specifications (ERA5 or station). Their columns are joined side by side into the predictor vector.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>Response</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>specs</code></td>
+<td><code>era5.DataSpecs</code> (area-averaged), <code>ws44.DataSpecs</code> or <code>ws44.HighLatDataSpecs</code></td>
+<td>required</td>
+<td>One data specification for the quantity to forecast: an ERA5 field with <code>"area_averaged"</code> sampling (for example the Niño 3.4 index) or a station variable.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The predictors and the target are combined in a <code>DataPars</code> object, one for the training period and one for the test period. Its first two fields are:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataPars</code> (<code>nlsa_models.climate</code>, defined in <code>src/nlsa_models/climate.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>covariate</code></td>
+<td><code>Covariate</code></td>
+<td>required</td>
+<td>Predictors, as a <code>climate.Covariate</code>.</td>
+</tr>
+<tr class="even">
+<td><code>response</code></td>
+<td><code>Response</code></td>
+<td>required</td>
+<td>Forecast target, as a <code>climate.Response</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The other fields of <code>DataPars</code> set up the delay embedding; they are described in the <a href="../../documentation/blocks/delay-embedding.html">next block</a>.</p>
+</section>
+<section id="result" class="level2">
+<h2 class="anchored" data-anchor-id="result">Result</h2>
+<p><code>clim.extract_data_arrays(data_pars, dtype)</code> returns an <code>NPData</code> object of NumPy arrays, which <code>to_device(dtype, shardings)</code> copies to the CPU or GPU as a <code>Data</code> object of JAX arrays:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption>Data containers in <code>nlsa_models.climate</code></caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Object</th>
+<th>Field</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>NPData</code></td>
+<td><code>time</code></td>
+<td>Dates of all samples in the period (a pandas <code>DatetimeIndex</code>)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>covariate</code></td>
+<td>Predictors: one row per date and one column per grid point and variable; with velocities, an array of shape (dates, 2, columns) holding the values and their rates of change</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>response</code></td>
+<td>Target: one value per date</td>
+</tr>
+<tr class="even">
+<td><code>Data</code></td>
+<td><code>covariate</code>, <code>response</code></td>
+<td>The same arrays, on the device, in the precision of the run</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="lorenz-63" class="level2">
+<h2 class="anchored" data-anchor-id="lorenz-63">Lorenz 63</h2>
+<p>For the Lorenz 63 examples the data are not read from files but simulated: <code>nlsa_models.lorenz63</code> integrates the Lorenz 63 equations with the standard parameters (σ = 10, ρ = 28, β = 8/3) with an adaptive Runge–Kutta solver (<a href="https://docs.kidger.site/diffrax/">Diffrax</a>), discards a spin-up period, and samples the trajectory at intervals <code>dt</code>. Its <code>DataPars</code> class combines the data and the embedding settings:</p>
+<div class="doc-table">
+<table class="table-striped table-hover nowrap-first caption-top table">
+<caption><code>DataPars</code> (<code>nlsa_models.lorenz63</code>, defined in <code>src/nlsa_models/lorenz63.py</code>)</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Type or values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>covariate</code></td>
+<td><code>"x"</code> or <code>"y"</code> or <code>"z"</code> or <code>"xy"</code> or <code>"xyz"</code></td>
+<td>required</td>
+<td>Components of the Lorenz 63 state used as predictors: <code>"x"</code>, <code>"y"</code>, <code>"z"</code>, <code>"xy"</code> or <code>"xyz"</code>.</td>
+</tr>
+<tr class="even">
+<td><code>response</code></td>
+<td><code>"x"</code> or <code>"y"</code> or <code>"z"</code></td>
+<td>required</td>
+<td>Component to forecast: <code>"x"</code>, <code>"y"</code> or <code>"z"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>dt</code></td>
+<td><code>float</code></td>
+<td>required</td>
+<td>Sampling interval, in model time units.</td>
+</tr>
+<tr class="even">
+<td><code>x0</code></td>
+<td><code>tuple[float, float, float]</code></td>
+<td>required</td>
+<td>Initial condition of the simulated trajectory.</td>
+</tr>
+<tr class="odd">
+<td><code>num_spinup</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Samples discarded at the start of the simulation, so that the trajectory is on the attractor.</td>
+</tr>
+<tr class="even">
+<td><code>num_samples</code></td>
+<td><code>int</code></td>
+<td>required</td>
+<td>Number of samples left after spin-up, delay embedding and finite differences (set directly here, unlike the climate pipeline where it follows from the dates).</td>
+</tr>
+<tr class="odd">
+<td><code>num_half_delays</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>delay_embedding_mode</code></td>
+<td><code>"explicit"</code> or <code>"on_the_fly"</code></td>
+<td><code>"on_the_fly"</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>num_before</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>num_after</code></td>
+<td><code>int</code></td>
+<td><code>0</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>velocity_covariate</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="even">
+<td><code>velocity_fd_order</code></td>
+<td><code>2</code> or <code>4</code> or <code>6</code> or <code>8</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>eval_batch_size</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>As for the climate <code>DataPars</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="The southwestern station network of the demonstration: its landscapes, climate and hazards, the eight anchor sites, profiles of every station, and the planned results.">
+
+<title>Southwestern United States – A computational toolkit for data-driven analysis and modeling of complex spatiotemporal dynamics using operator-theoretic techniques: Applications to natural hazards</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c9843f0e1439dea1af9dc544bfe1ba1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed fullcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xxl " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">A computational toolkit for data-driven analysis <br>and modeling of complex spatiotemporal dynamics <br>using operator-theoretic techniques: <br>Applications to natural hazards</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-our-predictions" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Our predictions</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-our-predictions">    
+        <li>
+    <a class="dropdown-item" href="../../forecast/enso.html">
+ <span class="dropdown-text">ENSO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/greenland.html">
+ <span class="dropdown-text">Air Force station in Greenland</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../forecast/mjo.html">
+ <span class="dropdown-text">MJO</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-methodology" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Methodology</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-methodology">    
+        <li>
+    <a class="dropdown-item" href="../../methodology/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/koopman.html">
+ <span class="dropdown-text">Koopman operator theory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/data-driven-methods.html">
+ <span class="dropdown-text">Data-driven methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/kaf.html">
+ <span class="dropdown-text">Kernel analog forecasting (KAF)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../methodology/qmda.html">
+ <span class="dropdown-text">Quantum mechanical data assimilation (QMDA)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-documentation" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Documentation</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-documentation">    
+        <li class="dropdown-header">Introduction</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/getting-started.html">
+ <span class="dropdown-text">Using Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/experiments.html">
+ <span class="dropdown-text">Experiments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">The code</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/code-structure.html">
+ <span class="dropdown-text">Code structure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/blocks/index.html">
+ <span class="dropdown-text">Calculation blocks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/pseudo-code.html">
+ <span class="dropdown-text">Pseudo-code</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Reference</li>
+        <li>
+    <a class="dropdown-item" href="../../documentation/hyperparameters.html">
+ <span class="dropdown-text">Choosing hyperparameters</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../documentation/options.html">
+ <span class="dropdown-text">All options</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-demonstration" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Demonstration</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-demonstration">    
+        <li class="dropdown-header">Application and settings overview</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/index.html">
+ <span class="dropdown-text">The problem</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/weather-hazards.html">
+ <span class="dropdown-text">Hours to days: weather hazards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/s2s.html">
+ <span class="dropdown-text">Weeks to months: subseasonal to seasonal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/forecast-targets.html">
+ <span class="dropdown-text">Forecast targets</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Model data</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-daily.html">
+ <span class="dropdown-text">ERA5 daily</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/era5-monthly.html">
+ <span class="dropdown-text">ERA5 monthly</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Stations</li>
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/southwest.html">
+ <span class="dropdown-text">Southwestern United States</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/western-pacific.html">
+ <span class="dropdown-text">Tropical western Pacific</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/pituffik.html">
+ <span class="dropdown-text">Greenland (Pituffik)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../demonstration/stations/experiment.html">
+ <span class="dropdown-text">Experiment design</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../funding.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../forecast/archive.html"> 
+<span class="menu-text">Archive Forecast</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://serdp-estcp.mil"> 
+<span class="menu-text">ESTCP</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ESTCP-WEBSITE/website"> <i class="bi bi-github" role="img" aria-label="GitHub repository">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../demonstration/stations.html">Stations</a></li><li class="breadcrumb-item"><a href="../../demonstration/stations/southwest.html">Southwestern United States</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Application and settings overview</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The problem</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/weather-hazards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hours to days: weather hazards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/s2s.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weeks to months: subseasonal to seasonal</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/forecast-targets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Forecast targets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Model data</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/era5-daily.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ERA5 daily</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/era5-monthly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ERA5 monthly</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Stations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/southwest.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Southwestern United States</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/western-pacific.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tropical western Pacific</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/pituffik.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Greenland (Pituffik)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../demonstration/stations/experiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiment design</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../demonstration/stations.html">Stations</a></li><li class="breadcrumb-item"><a href="../../demonstration/stations/southwest.html">Southwestern United States</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Southwestern United States</h1>
+<p class="subtitle lead">The primary demonstration region: 96 stations and eight anchor sites</p>
+</div>
+
+<div>
+  <div class="description">
+    The southwestern station network of the demonstration: its landscapes, climate and hazards, the eight anchor sites, profiles of every station, and the planned results.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Draft for internal review
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Not yet cleared for public release. Confirm with the data provider which station information may be published.</p>
+</div>
+</div>
+<p>The southwestern network is the main test of the station forecasts. It has <strong>96 stations</strong> across southern California, Arizona, New Mexico, west Texas and northern Mexico, and <strong>eight anchor sites</strong> where the forecasts are evaluated in detail. How the forecasts are made and judged is described in the <a href="../../demonstration/stations/experiment.html">experiment design</a>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Regional characteristics</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Anchor sites</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">All stations</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Results</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<section id="setting" class="level3">
+<h3 class="anchored" data-anchor-id="setting">Setting</h3>
+<p>The network reaches from the Pacific coast of California to west Texas, nearly 2,000 km to the east, and south into seven Mexican states. The region is arid to semi-arid. Elevations range from about 40 ft below sea level in the Imperial Valley to 6,814 ft at Sierra Blanca Regional Airport in New Mexico.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Landscape</th>
+<th>Example stations</th>
+<th>Typical weather</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pacific coast and offshore islands</td>
+<td>KVBG, KNTD, KLAX, KSAN, KNZY, KNSI, KNUC</td>
+<td>Marine-layer fog and low stratus, strong onshore winds, salt air</td>
+</tr>
+<tr class="even">
+<td>Los Angeles Basin and inland valleys</td>
+<td>KBUR, KVNY, KONT, KCNO, KRIV, KPOC</td>
+<td>Inversions and haze, Santa Ana winds, wildfire smoke, flash floods in winter storms</td>
+</tr>
+<tr class="odd">
+<td>Central Valley</td>
+<td>KSUU</td>
+<td>Dense tule fog in winter, wildfire smoke, wind shifts with the summer delta breeze</td>
+</tr>
+<tr class="even">
+<td>Mojave Desert</td>
+<td>KEDW, KPMD, KWJF, KDAG, KNXP, KEED, KLSV</td>
+<td>Large day–night temperature swings, strong winds and blowing dust, summer heat</td>
+</tr>
+<tr class="odd">
+<td>Low desert basins: Imperial and Coachella valleys, lower Colorado River</td>
+<td>KNJK, KIPL, KPSP, KTRM, KBLH, KNYL, MMML</td>
+<td>Extreme heat, dust storms, monsoon storms fed by moisture from the Gulf of California</td>
+</tr>
+<tr class="even">
+<td>Sonoran Desert of Arizona and Sonora</td>
+<td>KPHX, KLUF, KIWA, KDMA, KTUS, KGXF, MMHO</td>
+<td>Extreme heat, monsoon thunderstorms, haboobs and flash floods</td>
+</tr>
+<tr class="odd">
+<td>Arizona and New Mexico uplands</td>
+<td>KPRC, KFHU, KSRR</td>
+<td>Thunderstorms over the mountains, terrain-driven turbulence, wildfire</td>
+</tr>
+<tr class="even">
+<td>Chihuahuan Desert and Rio Grande valley</td>
+<td>KABQ, KTCS, KLRU, KHMN, KELP, MMCS, MMCU</td>
+<td>Dust storms, thunderstorm downbursts, inversions, mountain waves near the ranges</td>
+</tr>
+<tr class="odd">
+<td>Southern High Plains</td>
+<td>KCVS, KCVN, KHOB, KLBB, KREE</td>
+<td>Dryline thunderstorms with hail and tornadoes, high winds and dust, winter ice</td>
+</tr>
+<tr class="even">
+<td>West Texas and the Rio Grande border</td>
+<td>KMAF, KINK, KMRF, KGDP, KSJT, KDRT, KDLF</td>
+<td>High winds and dust from dry lakebeds, severe thunderstorms with hail, flash floods, heat</td>
+</tr>
+<tr class="odd">
+<td>Gulf of California coast</td>
+<td>MMGM, MMLT, MMCN, MMLM</td>
+<td>Gulf moisture meeting desert heat: low stratus, monsoon storms, humidity and salt air</td>
+</tr>
+<tr class="even">
+<td>Northeastern Mexico</td>
+<td>MMMY, MMAN, MMMV, MMTC, MMPG</td>
+<td>Severe spring and summer thunderstorms with hail, heat, dust, winds shaped by the Sierra Madre Oriental</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-station-network" class="level3">
+<h3 class="anchored" data-anchor-id="the-station-network">The station network</h3>
+<p>The network includes the airfields of the main installations in the region, together with civil airports that provide spatial context. The Mexican stations are included for their regional relevance. Most records run from 1975 to the present.</p>
+<div id="fig-sw" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Map of the southwestern United States and northern Mexico with about 85 small station markers and eight labeled red diamonds for the anchor sites.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="../fig-sw-network.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: The southwestern station network. Red diamonds are the eight anchor sites; blue circles are other network stations for which coordinates are available."><img src="../fig-sw-network.png" class="img-fluid figure-img" alt="Map of the southwestern United States and northern Mexico with about 85 small station markers and eight labeled red diamonds for the anchor sites."></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The southwestern station network. Red diamonds are the eight anchor sites; blue circles are other network stations for which coordinates are available.
+</figcaption>
+</figure>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>State</th>
+<th>Stations</th>
+<th>Anchor sites</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>California</td>
+<td>44</td>
+<td>KEDW, KNJK, KNSI, KVBG</td>
+</tr>
+<tr class="even">
+<td>Arizona</td>
+<td>15</td>
+<td>KDMA</td>
+</tr>
+<tr class="odd">
+<td>New Mexico</td>
+<td>11</td>
+<td>KABQ, KCVS</td>
+</tr>
+<tr class="even">
+<td>Texas</td>
+<td>11</td>
+<td>KLBB</td>
+</tr>
+<tr class="odd">
+<td>Nevada</td>
+<td>1</td>
+<td>–</td>
+</tr>
+<tr class="even">
+<td>Northern Mexico</td>
+<td>14</td>
+<td>–</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td><strong>96</strong></td>
+<td><strong>8</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="weather-hazards-through-the-year" class="level3">
+<h3 class="anchored" data-anchor-id="weather-hazards-through-the-year">Weather hazards through the year</h3>
+<ul>
+<li><strong>Winter storms (about December to March).</strong> Pacific storms, including atmospheric rivers, bring most of the year’s rain to the California coast and mountains, and can cause flash floods and debris-laden runoff in canyon-fed basins. Freezing rain and ice occasionally affect the High Plains.</li>
+<li><strong>Fog and low cloud.</strong> The southern California coast has frequent marine-layer fog and low stratus, especially in late spring and summer. Inland valleys, such as the Central Valley, have persistent radiation fog in winter.</li>
+<li><strong>Wind and dust (spring).</strong> Strong frontal passages raise dust over the High Plains and the desert basins.</li>
+<li><strong>Dryline storms (spring and early summer).</strong> Thunderstorms with hail and tornadoes form along the dryline in eastern New Mexico and west Texas.</li>
+<li><strong>Extreme heat (summer).</strong> Most severe in the low desert basins, where temperatures often exceed 110°F (43°C). Heat reduces aircraft performance and stresses people and equipment.</li>
+<li><strong>North American Monsoon (about July to September).</strong> Subtropical moisture brings daily thunderstorms across Arizona, New Mexico, southern California, Nevada and northwestern Mexico, with heavy local rain, frequent lightning, intense downbursts and flash floods. Dust-laden outflows can form towering haboobs with near-zero visibility, especially early in the season.</li>
+<li><strong>Santa Ana winds and wildfire (fall and early winter).</strong> Dry downslope winds that can exceed 60–80 mph drive large wildfires, with smoke that spreads hundreds of miles.</li>
+</ul>
+</section>
+<section id="year-to-year-variability-and-large-scale-influences" class="level3">
+<h3 class="anchored" data-anchor-id="year-to-year-variability-and-large-scale-influences">Year-to-year variability and large-scale influences</h3>
+<p>Monsoon strength, onset and duration, the intensity of the wildfire season, and multi-year droughts all vary strongly from year to year. Drought also makes dust events more frequent.</p>
+<ul>
+<li><strong>ENSO</strong> is a principal source of year-to-year variability in winter precipitation. El Niño winters tend to be wetter than normal across much of the region and La Niña winters drier, and both phases change the odds of floods and droughts <span class="citation" data-cites="cayan1999">(<a href="#ref-cayan1999" role="doc-biblioref">Cayan et al. 1999</a>)</span>.</li>
+<li><strong>The MJO</strong> modulates surges of moist air from the Gulf of California into northwestern Mexico and Arizona, and with them the timing of active and break periods of the monsoon <span class="citation" data-cites="lorenz2006">(<a href="#ref-lorenz2006" role="doc-biblioref">Lorenz and Hartmann 2006</a>)</span>.</li>
+</ul>
+<p>These are the modes that the Koopman ENSO and MJO indices track. The station forecasts test whether adding the indices as predictors improves skill at the stations.</p>
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Eight anchor sites were selected for the diversity of their terrain and hazards. The detailed station-level evaluation is reported for these sites, while the full network is used to learn regional patterns and to compute aggregate statistics. They are the red diamonds on the map in <em>Regional characteristics</em>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 23%">
+<col style="width: 28%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Station</th>
+<th>Setting</th>
+<th>Main weather hazards</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KEDW</td>
+<td>Edwards AFB, CA</td>
+<td>Western Mojave Desert, among dry lakebeds</td>
+<td>Large day–night temperature swings, downslope winds, occasional thunderstorms and dust</td>
+</tr>
+<tr class="even">
+<td>KNJK</td>
+<td>Naval Air Facility El Centro, CA</td>
+<td>Imperial Valley, a desert basin below sea level</td>
+<td>Extreme heat, desert winds, occasional low visibility</td>
+</tr>
+<tr class="odd">
+<td>KVBG</td>
+<td>Vandenberg SFB, CA</td>
+<td>Central California coast</td>
+<td>Coastal fog, marine stratus, temperature inversions, fire weather</td>
+</tr>
+<tr class="even">
+<td>KNSI</td>
+<td>San Nicolas Island, CA</td>
+<td>Offshore island in a persistent marine-stratus zone</td>
+<td>Marine fog, low cloud ceilings, strong crosswinds</td>
+</tr>
+<tr class="odd">
+<td>KDMA</td>
+<td>Davis–Monthan AFB, AZ</td>
+<td>Sonoran Desert basin near Tucson</td>
+<td>Extreme heat, monsoon dust storms and outflows, rapidly developing thunderstorms</td>
+</tr>
+<tr class="even">
+<td>KCVS</td>
+<td>Cannon AFB, NM</td>
+<td>High Plains of eastern New Mexico</td>
+<td>Dryline thunderstorms, hail, high winds, dust storms</td>
+</tr>
+<tr class="odd">
+<td>KABQ</td>
+<td>Albuquerque Sunport / Kirtland AFB, NM</td>
+<td>Rio Grande valley below the Sandia Mountains</td>
+<td>Thermal inversions, haze, mountain waves, dryline storms</td>
+</tr>
+<tr class="even">
+<td>KLBB</td>
+<td>Lubbock, TX</td>
+<td>Southern High Plains</td>
+<td>Dryline storms, severe thunderstorms with hail, dust storms, winter freezing rain</td>
+</tr>
+</tbody>
+</table>
+<section id="kedw-edwards-air-force-base-ca" class="level3">
+<h3 class="anchored" data-anchor-id="kedw-edwards-air-force-base-ca">KEDW · Edwards Air Force Base, CA</h3>
+<p>In the western Mojave Desert, among the dry Rogers and Rosamond lakebeds. The basin has large day–night temperature swings, frequent downslope winds and little cloud. Visibility is usually good, but temperature and turbulence near the ground are hard to forecast, and occasional thunderstorms start along outflow from the Sierra Nevada. Crosswind shear, dew-point depression and density altitude are key forecast quantities.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Winds loft fine dust from Rogers Dry Lake, reducing visibility and wearing engines. Strong thermal turbulence and dust devils on hot afternoons. Occasional frontal winds above 40–50 mph, and rare rain that floods the lakebeds.</li>
+<li><strong>Long-term risks:</strong> Large day–night temperature swings stress runways and structures. Changing wind patterns could affect planning for flights and landings, and persistent dust requires constant mitigation.</li>
+</ul>
+</section>
+<section id="knjk-naval-air-facility-el-centro-vraciu-field-ca" class="level3">
+<h3 class="anchored" data-anchor-id="knjk-naval-air-facility-el-centro-vraciu-field-ca">KNJK · Naval Air Facility El Centro (Vraciu Field), CA</h3>
+<p>In the Imperial Valley, a desert basin about 42 ft below sea level. Strong surface heating, with summer temperatures that routinely exceed 110°F, raises the density altitude and produces low-level turbulence and convective updrafts. Moisture from the nearby Salton Sea adds variability in humidity that can degrade optical and infrared sensors.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Imperial Valley about 42 ft below sea level: summer temperatures often above 115°F, low-level thermal turbulence, and frequent dust from desert winds and farming.</li>
+<li><strong>Long-term risks:</strong> Persistent drought, airborne dust and surface erosion degrade equipment and infrastructure. The isolated location makes resupply more sensitive to disruption.</li>
+</ul>
+</section>
+<section id="kvbg-vandenberg-space-force-base-ca" class="level3">
+<h3 class="anchored" data-anchor-id="kvbg-vandenberg-space-force-base-ca">KVBG · Vandenberg Space Force Base, CA</h3>
+<p>On rugged coastal bluffs of California’s Central Coast, where cold ocean currents and a coastal eddy create sharp microclimates: sudden onset of fog, low stratus and temperature inversions. The base is exposed to fire weather during Santa Ana wind events and, over the long term, to coastal erosion.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Where the Pacific coast meets the Transverse Ranges: highly vulnerable to wildfires driven by terrain-channeled winds and dry vegetation, such as the 2016 Canyon Fire, which burned more than 12,000 acres. Persistent marine layers and coastal fog frequently impair visual and infrared tracking.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought, salt-air corrosion and coastal erosion. Shifting fog bands and temperature inversions are hard to model, and rugged terrain with limited evacuation routes complicates wildfire response.</li>
+</ul>
+</section>
+<section id="knsi-san-nicolas-island-naval-outlying-field-ca" class="level3">
+<h3 class="anchored" data-anchor-id="knsi-san-nicolas-island-naval-outlying-field-ca">KNSI · San Nicolas Island Naval Outlying Field, CA</h3>
+<p>A remote island airfield about 55 nautical miles offshore of Point Mugu, in a zone of persistent marine stratus. Low cloud ceilings, coastal fog and strong crosswinds are frequent. The island is isolated, with no nearby alternate airfield, so accurate short-term forecasts matter, and constant wind and salt air speed up equipment wear.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> An exposed island with little shelter from terrain: strong onshore winds, frequent low marine stratus and salt-laden fog degrade visibility and radio signal quality.</li>
+<li><strong>Long-term risks:</strong> Constant corrosive marine air degrades exposed equipment. Rough seas or prolonged fog can delay resupply, and erosion of the shallow mesas and windblown sand can undermine foundations.</li>
+</ul>
+</section>
+<section id="kdma-davismonthan-air-force-base-tucson-az" class="level3">
+<h3 class="anchored" data-anchor-id="kdma-davismonthan-air-force-base-tucson-az">KDMA · Davis–Monthan Air Force Base (Tucson), AZ</h3>
+<p>In a low basin of the Sonoran Desert at Tucson, framed by the Santa Catalina and Rincon Mountains. Spring and summer temperatures are among the highest in the country, and convective dust storms are frequent in the monsoon season. Air forced up the surrounding mountains often triggers fast-developing thunderstorms with a risk of microbursts, and the city’s heat island adds to the heat. Wind shear, the mixing of dust layers and fire weather are key forecast quantities.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Monsoon thunderstorms with flash floods and lightning. Convective dust storms (haboobs) roll through Tucson. Occasional microburst wind shear threatens parked aircraft and shade structures.</li>
+<li><strong>Long-term risks:</strong> Long runs of 100°F+ days force adjusted maintenance schedules and raise cooling demand. Wildfire smoke from nearby mountains lowers summer air quality, and water scarcity is a concern.</li>
+</ul>
+</section>
+<section id="kcvs-cannon-air-force-base-clovis-nm" class="level3">
+<h3 class="anchored" data-anchor-id="kcvs-cannon-air-force-base-clovis-nm">KCVS · Cannon Air Force Base (Clovis), NM</h3>
+<p>On the High Plains of eastern New Mexico, among rolling mesas and farmland that produce seasonal blowing dust and high pollen counts. In spring the position of the dryline varies from day to day, so clear skies can give way quickly to thunderstorms with hail. Sudden drops in cloud ceiling, dew-point spread and low-level turbulence are key forecast quantities.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Sudden dryline thunderstorms near the New Mexico–Texas line, with downbursts, hail and tornadoes. Frequent wind shear and dust lofting over the open High Plains. Gusty low-level winds.</li>
+<li><strong>Long-term risks:</strong> Periodic drought intensifies dust and reduces low-level moisture, at times obscuring night skies. Extreme heat stresses engines and electronic cooling, and large temperature swings wear runways and hangars.</li>
+</ul>
+</section>
+<section id="kabq-albuquerque-international-sunport-kirtland-afb-nm" class="level3">
+<h3 class="anchored" data-anchor-id="kabq-albuquerque-international-sunport-kirtland-afb-nm">KABQ · Albuquerque International Sunport (Kirtland AFB), NM</h3>
+<p>In the Rio Grande valley below the Sandia Mountains, next to Kirtland AFB. The mountains generate mountain waves and gravity waves and make the vertical temperature profile variable. Dryline convection from the southeast brings dust and the threat of supercell thunderstorms. Elevated mixed layers and strong daytime heating complicate forecasts.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Summer monsoon thunderstorms with lightning, microbursts and flash floods in arroyos. Occasional dust storms (haboobs) reduce visibility.</li>
+<li><strong>Long-term risks:</strong> Extreme heat strains roads and runways. Drought and water scarcity affect utilities and firefighting resources. Inversion layers trap pollutants.</li>
+</ul>
+</section>
+<section id="klbb-lubbock-preston-smith-international-airport-tx" class="level3">
+<h3 class="anchored" data-anchor-id="klbb-lubbock-preston-smith-international-airport-tx">KLBB · Lubbock Preston Smith International Airport, TX</h3>
+<p>On the southern High Plains, one of the most volatile weather regions of the United States. Fast-developing thunderstorms, dryline interactions and dust from the surrounding farmland are frequent, bringing hail, wind shear and, in season, tornadoes. In winter, occasional freezing rain and ice affect the airfield.</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the southern Plains’ Tornado Alley: spring severe thunderstorms with large hail and tornado risk. High Plains winds raise dust storms, such as the well-known 2011 Lubbock haboob. Occasional winter ice storms coat runways.</li>
+<li><strong>Long-term risks:</strong> Drought cycles intensify dust and sandblasting. Swings from 100°F summers to winter snow complicate maintenance, and nearby wind farms may slightly alter low-level winds.</li>
+</ul>
+</section>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>Profiles of every station described in the Demonstration Plan, grouped by state. Click a group to expand it. <strong>Short-term hazards</strong> are the weather that affects day-to-day activities; <strong>long-term risks</strong> are conditions that build up over seasons and years. Anchor sites are marked. The profiles include Brown Field Municipal Airport in San Diego, which is described in the Demonstration Plan but is not in the current station list.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>California (45 stations)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>KBLH</strong> · Blythe Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the lower Colorado River valley: strong westerly winds, dust storms and monsoon convection with moisture from the Gulf of California reduce visibility and affect low-level flying.</li>
+<li><strong>Long-term risks:</strong> The desert environment brings persistent wildfire vulnerability, heat damage to airfield infrastructure and dust on electronics. A declining water table and prolonged drought strain infrastructure.</li>
+</ul>
+<p><strong>KBUR</strong> · Hollywood Burbank Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Narrow airspace near the mountains brings turbulence, wind shear and challenging approaches. Visibility can drop quickly with marine layers or wildfire smoke.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought and high fire risk threaten flight schedules and air quality. Heat extremes and earthquake exposure require continual maintenance and emergency planning.</li>
+</ul>
+<p><strong>KCMA</strong> · Camarillo Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Strong coastal winds and periodic marine-layer fog reduce visibility, especially in the morning and evening. Wildfire smoke from inland canyons in late summer and fall.</li>
+<li><strong>Long-term risks:</strong> Drought and prolonged heat in the coastal foothills increase wildfire risk. Salt air and fog cycles corrode communications equipment.</li>
+</ul>
+<p><strong>KCNO</strong> · Chino Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Inland thermal gradients and seasonal Santa Ana winds frequently cause turbulence and crosswinds. Wildfire smoke and poor air quality reduce visibility in late summer and fall.</li>
+<li><strong>Long-term risks:</strong> Persistent drought, high temperatures and ultraviolet exposure fatigue aging taxiways and equipment. Dust degrades optical and electronic sensors.</li>
+</ul>
+<p><strong>KCRQ</strong> · McClellan-Palomar Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Marine-layer fog and shifting coastal winds frequently reduce visibility, especially in the early morning and in spring and fall.</li>
+<li><strong>Long-term risks:</strong> Inland wildfires, intensified by drought and heavy fuel loads, can affect flight corridors and access roads. Salt air and temperature swings wear communications equipment.</li>
+</ul>
+<p><strong>KDAG</strong> · Barstow-Daggett Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Mojave Desert winds, convective turbulence and frequent dust storms degrade visibility and helicopter handling. Busy helicopter traffic requires coordinated use of the airspace.</li>
+<li><strong>Long-term risks:</strong> Rising temperatures and drought reduce air density and increase the power helicopters need to lift. Wildfire encroachment and heat damage threaten infrastructure.</li>
+</ul>
+<p><strong>KEDW</strong> · Edwards Air Force Base · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> Winds loft fine dust from Rogers Dry Lake, reducing visibility and wearing engines. Strong thermal turbulence and dust devils on hot afternoons. Occasional frontal winds above 40–50 mph, and rare rain that floods the lakebeds.</li>
+<li><strong>Long-term risks:</strong> Large day–night temperature swings stress runways and structures. Changing wind patterns could affect planning for flights and landings, and persistent dust requires constant mitigation.</li>
+</ul>
+<p><strong>KEED</strong> · Needles Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Mojave Desert near where California, Nevada and Arizona meet: summer temperatures above 110°F (43°C) raise density altitude and reduce engine performance. Monsoon storms bring downbursts and short flash floods.</li>
+<li><strong>Long-term risks:</strong> Persistent aridity, wind erosion and dust degrade optical sensors, navigation equipment and exposed infrastructure. High winds and dust intrusions add long-term stress on electronics.</li>
+</ul>
+<p><strong>KEMT</strong> · San Gabriel Valley Airport (El Monte)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the San Gabriel Valley: frequent thermal inversions, local haze and stagnant air, especially in summer, reduce visibility. Afternoon convective turbulence.</li>
+<li><strong>Long-term risks:</strong> More days of extreme heat (above 99°F) and persistent air pollution in the Los Angeles Basin are projected, accelerating wear on electronics and infrastructure. The basin’s shape traps airborne particles.</li>
+</ul>
+<p><strong>KFUL</strong> · Fullerton Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Occasional low coastal clouds, fog and localized wind shear in the transition seasons. The location in the Los Angeles Basin limits maneuvering room for large aircraft.</li>
+<li><strong>Long-term risks:</strong> Heat and poor air quality from wildfires and smog affect avionics and sensor calibration, and heat stresses infrastructure.</li>
+</ul>
+<p><strong>KHHR</strong> · Hawthorne Municipal Airport (Jack Northrop Field)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Los Angeles Basin: occasional coastal fog and low marine-layer ceilings reduce visibility. Wildfire smoke incursions in the fire season.</li>
+<li><strong>Long-term risks:</strong> Recurring drought and heat stress airfield surfaces and support systems. The urban heat island and trapped smoke raise background particulate levels.</li>
+</ul>
+<p><strong>KIPL</strong> · Imperial County Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Imperial Valley near the Salton Trough: strong westerly winds, dust storms and fine particulates reduce visibility in dry periods. Summer monsoon convection brings sudden downbursts and brief, severe local storms in the afternoon.</li>
+<li><strong>Long-term risks:</strong> Extreme heat and aridity raise wildfire risk and fatigue pavements and fuel systems, and dust settles on electronics. Lying below sea level, the area may face groundwater and flood challenges during surges of tropical moisture from the Gulf of California.</li>
+</ul>
+<p><strong>KLAX</strong> · Los Angeles International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Marine-layer fog, sudden drops in visibility and variable coastal weather frequently reduce arrival and departure rates.</li>
+<li><strong>Long-term risks:</strong> Corrosive marine air wears airport systems, hangars and ground equipment. Occasional inland wind surges and heat episodes stress cooling systems.</li>
+</ul>
+<p><strong>KLGB</strong> · Long Beach Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Morning coastal fog and marine layer reduce visibility. Onshore winds can produce wind shear on short runways. Occasional Santa Ana winds bring turbulence and smoke from inland fires.</li>
+<li><strong>Long-term risks:</strong> Salt-air corrosion of hangars and electronics is a continual challenge. Sea-level rise could affect nearby port facilities, and the urban heat island adds heat stress.</li>
+</ul>
+<p><strong>KLPC</strong> · Lompoc Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Frequent marine-layer incursions, especially in summer, reduce visibility in the early morning. Winds channeled through the Lompoc Valley cause crosswinds for light and medium aircraft.</li>
+<li><strong>Long-term risks:</strong> Seasonal drought and stressed vegetation increase wildfire risk to the airfield and access roads. Dust and coastal salt particles raise maintenance needs.</li>
+</ul>
+<p><strong>KMYF</strong> · Montgomery–Gibbs Executive Airport (San Diego)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Low marine-layer ceilings, fog and occasional crosswinds, especially in the transition seasons, limit visibility.</li>
+<li><strong>Long-term risks:</strong> Recurring drought, heat waves and the urban heat island strain support infrastructure, increase energy demand and wear avionics. Dense surrounding development limits maneuvering room.</li>
+</ul>
+<p><strong>KNFG</strong> · Marine Corps Air Station Camp Pendleton</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Frequent marine-layer fog and coastal stratus sharply reduce visibility, especially in the early morning and in the transition seasons.</li>
+<li><strong>Long-term risks:</strong> Gradual coastal erosion and salt damage affect runways and aviation infrastructure. Prolonged drought and wildfires spreading from inland terrain can disrupt access.</li>
+</ul>
+<p><strong>KNJK</strong> · Naval Air Facility El Centro (Vraciu Field) · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Imperial Valley about 42 ft below sea level: summer temperatures often above 115°F, low-level thermal turbulence, and frequent dust from desert winds and farming.</li>
+<li><strong>Long-term risks:</strong> Persistent drought, airborne dust and surface erosion degrade equipment and infrastructure. The isolated location makes resupply more sensitive to disruption.</li>
+</ul>
+<p><strong>KNSI</strong> · San Nicolas Island Naval Outlying Field · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> An exposed island with little shelter from terrain: strong onshore winds, frequent low marine stratus and salt-laden fog degrade visibility and radio signal quality.</li>
+<li><strong>Long-term risks:</strong> Constant corrosive marine air degrades exposed equipment. Rough seas or prolonged fog can delay resupply, and erosion of the shallow mesas and windblown sand can undermine foundations.</li>
+</ul>
+<p><strong>KNTD</strong> · Point Mugu NAS</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Marine-layer fog, coastal stratus and strong onshore winds frequently limit visibility, especially in the early morning and evening.</li>
+<li><strong>Long-term risks:</strong> Infrastructure is increasingly exposed to sea-level fluctuations, tidal surge and shoreline erosion. Inland fires in drought seasons add further strain.</li>
+</ul>
+<p><strong>KNUC</strong> · San Clemente Island Naval Auxiliary Landing Field</p>
+<ul>
+<li><strong>Short-term hazards:</strong> An isolated island with strong coastal winds, low marine cloud ceilings and sea-spray corrosion. Sudden drops in visibility are common, especially in spring and fall.</li>
+<li><strong>Long-term risks:</strong> Salt air, fog and strong ultraviolet light wear airfield surfaces, navigation systems and sensors. Limited fresh water and difficult resupply during drought or rough seas strain support.</li>
+</ul>
+<p><strong>KNXP</strong> · Twentynine Palms Expeditionary Air Field</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Mojave Desert above 2,000 ft elevation: intense daytime heating, strong convective turbulence and blowing dust. Afternoon heat spikes and crosswinds.</li>
+<li><strong>Long-term risks:</strong> The arid high desert cracks surfaces and degrades electronics through ultraviolet exposure, heat and dust. Seasonal wildfires in the foothills and flash floods in desert washes can cut access roads.</li>
+</ul>
+<p><strong>KNZY</strong> · North Island Naval Air Station</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Coastal fog and marine layer severely limit morning flying. Low cloud ceilings and occasional Santa Ana winds disrupt flight operations.</li>
+<li><strong>Long-term risks:</strong> Vulnerable to flooding that threatens runway, hangar and pier access. Coastal erosion and saltwater intrusion threaten infrastructure, rising heat and humidity reduce helicopter performance, and changes in the marine layer could shorten daily flying windows.</li>
+</ul>
+<p><strong>KONT</strong> · Ontario International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Strong Santa Ana winds, especially in fall and winter, bring crosswinds and dust. The Greater Los Angeles basin has congested airspace.</li>
+<li><strong>Long-term risks:</strong> Seasonal wildfire smoke and dust degrade visibility, air filters and sensors, and long poor-air-quality episodes disrupt ground work. Occasional inland flooding from intense winter storms affects access roads.</li>
+</ul>
+<p><strong>KOXR</strong> · Oxnard Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Marine-layer fog and low coastal stratus frequently reduce visibility and delay flights. Busy neighboring military airspace adds congestion.</li>
+<li><strong>Long-term risks:</strong> Chronic coastal erosion could compromise runway integrity and port access. Long-term changes in the marine layer may increase the frequency and duration of low visibility.</li>
+</ul>
+<p><strong>KPMD</strong> · Palmdale Regional Airport (USAF Plant 42)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the western Mojave Desert: strong crosswinds, dry convective turbulence and sudden temperature inversions. Seasonal high-desert windstorms and dusty gust fronts reduce runway visibility.</li>
+<li><strong>Long-term risks:</strong> Persistent drought, ultraviolet exposure and airborne dust degrade electronics and airframes. Recurring wildfire smoke from the surrounding foothills impairs air quality and engine performance.</li>
+</ul>
+<p><strong>KPOC</strong> · Brackett Field Airport (La Verne)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In a foothill basin near the San Gabriel Mountains: terrain-driven wind shear, wildfire smoke and dust buildup, especially during Santa Ana winds.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought, extreme heat and heavy vegetation fuel loads increase the long-term wildfire threat. Surrounding urban growth constrains the airfield.</li>
+</ul>
+<p><strong>KPSP</strong> · Palm Springs International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Coachella Valley, with extreme summer heat above 100°F. Dust storms reduce visibility.</li>
+<li><strong>Long-term risks:</strong> Wildfires are a concern in dry seasons, made worse by high temperatures.</li>
+</ul>
+<p><strong>KRAL</strong> · Riverside Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Occasional inland Santa Ana winds, heat-driven turbulence and poor air quality from wildfire smoke or pollution.</li>
+<li><strong>Long-term risks:</strong> Rapid urban growth adds heat stress and pollution, and drought and ultraviolet exposure wear surfaces. Nearby wildfires in late summer and fall disrupt flights and visibility.</li>
+</ul>
+<p><strong>KRIV</strong> · March Air Reserve Base</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Flash flooding and debris-laden runoff during intense winter storms, especially in canyon-fed basins near the San Jacinto Mountains. Santa Ana winds bring gusty crosswinds, turbulence and higher wildfire ignition risk.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought and hotter summers wear runway surfaces and exposed equipment. Dust and regional wildfire smoke reduce air quality and degrade optical sensors.</li>
+</ul>
+<p><strong>KSAN</strong> · San Diego International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Marine-layer fog, coastal stratus and low ceilings often restrict visibility. A single runway and busy surrounding airspace make delays more likely.</li>
+<li><strong>Long-term risks:</strong> Being on the coast exposes the airport to tidal flooding, sea-level surges and saltwater damage to infrastructure.</li>
+</ul>
+<p><strong>KSBA</strong> · Santa Barbara Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Afternoon northwesterly winds bring gusty conditions on landing and departure. Coastal fog and a transient marine layer reduce morning visibility.</li>
+<li><strong>Long-term risks:</strong> Seasonal wildfires in the surrounding terrain bring recurring smoke and poor visibility. Heat and smoke add wear to aircraft systems.</li>
+</ul>
+<p><strong>KSDB</strong> · Sandberg</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Sudden weather changes, with strong winds and turbulence from the mountainous terrain.</li>
+<li><strong>Long-term risks:</strong> Wildfires in dry seasons threaten infrastructure and access. High elevation and temperature swings wear facilities.</li>
+</ul>
+<p><strong>KSEE</strong> · Gillespie Field</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Coastal marine layers, low stratus and fog, especially in spring and fall. Afternoon crosswinds from canyon outflows affect helicopters at low altitude.</li>
+<li><strong>Long-term risks:</strong> The semi-arid climate increases wildfire vulnerability, reducing air quality and degrading engines and optics. Heat extremes and aging infrastructure reduce cooling capacity.</li>
+</ul>
+<p><strong>KSLI</strong> · Los Alamitos Army Airfield</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Periodic coastal marine-layer conditions and low cloud ceilings, especially in spring and fall. Inland heat gradients cause localized turbulence and haze.</li>
+<li><strong>Long-term risks:</strong> High temperatures, salt air and ultraviolet radiation in the coastal zone wear communications and airfield infrastructure. Drought-driven wildfires in surrounding counties intermittently reduce air quality.</li>
+</ul>
+<p><strong>KSMO</strong> · Santa Monica Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Occasional coastal fog and persistent marine layers, especially on spring and summer mornings, reduce visibility.</li>
+<li><strong>Long-term risks:</strong> Repeated heating and cooling and regional heat extremes wear electronics. The site is not directly in wildfire zones.</li>
+</ul>
+<p><strong>KSMX</strong> · Santa Maria Public Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Coastal winds and turbulence affect approaches and departures. Marine-layer fog reduces visibility.</li>
+<li><strong>Long-term risks:</strong> Semi-arid conditions increase wildfire vulnerability. Drought and temperature swings wear pavements and electronics.</li>
+</ul>
+<p><strong>KSNA</strong> · John Wayne Airport (Orange County)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Coastal marine layers, fog and shifting winds frequently reduce visibility and change approach conditions, especially in spring and fall.</li>
+<li><strong>Long-term risks:</strong> Drought and heat increase the risk of wildfire smoke and wear on ground infrastructure. Occasional flash flooding from intense winter storms affects airport access.</li>
+</ul>
+<p><strong>KSUU</strong> · Travis Air Force Base</p>
+<ul>
+<li><strong>Short-term hazards:</strong> On the southwestern edge of the Central Valley, with dense Tule fog in winter that often drops visibility below 200 m and halts flights. Seasonal dust and smoke from Northern California and Sierra foothill fires degrade air quality. Delta-breeze wind shifts complicate traffic patterns in the warm season.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought raises fire risk, heat extremes stress infrastructure and electronics, and atmospheric rivers bring a potential for flooding.</li>
+</ul>
+<p><strong>KTOA</strong> · Zamperini Field (Torrance)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Near the Pacific coast in the South Bay of Los Angeles: frequent marine-layer fog, low ceilings and thermal inversions, especially in late spring and early summer.</li>
+<li><strong>Long-term risks:</strong> Salt air and persistent ultraviolet light degrade equipment and airfield infrastructure. Smoke from inland canyon fires during fall Santa Ana winds can reduce availability of the airfield.</li>
+</ul>
+<p><strong>KTRM</strong> · Jacqueline Cochran Regional Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Intense summer heat, often 115–120°F, limits aircraft performance. Frequent dust storms and gusty crosswinds reduce visibility, especially in the monsoon season.</li>
+<li><strong>Long-term risks:</strong> Persistent drought and stressed vegetation raise wildfire risk. Heat accelerates wear on runways and equipment.</li>
+</ul>
+<p><strong>KVBG</strong> · Vandenberg Space Force Base · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> Where the Pacific coast meets the Transverse Ranges: highly vulnerable to wildfires driven by terrain-channeled winds and dry vegetation, such as the 2016 Canyon Fire, which burned more than 12,000 acres. Persistent marine layers and coastal fog frequently impair visual and infrared tracking.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought, salt-air corrosion and coastal erosion. Shifting fog bands and temperature inversions are hard to model, and rugged terrain with limited evacuation routes complicates wildfire response.</li>
+</ul>
+<p><strong>KVNY</strong> · Van Nuys Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Few acute weather hazards, but wildfire smoke reduces visibility in the late-summer and autumn fire season. Wind shifts in the San Fernando Valley cause minor turbulence and trap haze.</li>
+<li><strong>Long-term risks:</strong> Drought and wildfire activity raise the likelihood of access disruptions and hazardous air quality. Recurrent heat stresses ground infrastructure, power systems and fuel storage.</li>
+</ul>
+<p><strong>KWJF</strong> · General William J. Fox Airfield</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Strong westerly winds and blowing dust in the Antelope Valley, especially in the afternoon, impair visibility for helicopters and low-flying aircraft.</li>
+<li><strong>Long-term risks:</strong> The semi-arid climate and recurring drought raise wildfire risk along access routes. Temperature extremes wear avionics and ground-based radar.</li>
+</ul>
+<p><strong>Brown Field Municipal Airport, San Diego</strong></p>
+<ul>
+<li><strong>Short-term hazards:</strong> Near the U.S.–Mexico border: strong crosswinds, seasonal dust incursions and heat-driven changes in density altitude.</li>
+<li><strong>Long-term risks:</strong> Wildfire encroachment and prolonged heat stress navigation equipment and infrastructure. Regional haze and pollution degrade visibility.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Arizona (15 stations)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>KDMA</strong> · Davis–Monthan Air Force Base (Tucson) · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> Monsoon thunderstorms with flash floods and lightning. Convective dust storms (haboobs) roll through Tucson. Occasional microburst wind shear threatens parked aircraft and shade structures.</li>
+<li><strong>Long-term risks:</strong> Long runs of 100°F+ days force adjusted maintenance schedules and raise cooling demand. Wildfire smoke from nearby mountains lowers summer air quality, and water scarcity is a concern.</li>
+</ul>
+<p><strong>KDUG</strong> · Bisbee Douglas International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Gusty afternoon winds, sudden dust intrusions and summer monsoon storms reduce visibility.</li>
+<li><strong>Long-term risks:</strong> Fire seasons and prolonged drought raise wildfire risk in the surrounding terrain. Strong ultraviolet exposure, thermal fatigue and monsoon flash floods shorten the life of infrastructure.</li>
+</ul>
+<p><strong>KDVT</strong> · Phoenix Deer Valley Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the northern Phoenix basin: frequent convective turbulence, strong thermal gradients and summer dust intrusions.</li>
+<li><strong>Long-term risks:</strong> Phoenix’s urban heat island and summer temperatures often above 115°F (46°C) stress avionics and airfield surfaces. Persistent drought and windborne dust accelerate wear.</li>
+</ul>
+<p><strong>KFFZ</strong> · Falcon Field Airport (Mesa)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Phoenix metro area of the Sonoran Desert: high summer heat, gusty surface winds, and reduced visibility from blowing dust and occasional wildfire smoke. Thermal turbulence and high density altitude, especially in the afternoon.</li>
+<li><strong>Long-term risks:</strong> Extreme heat, ultraviolet light and dust wear infrastructure, electronics and runway surfaces, and the urban heat island adds to the stress.</li>
+</ul>
+<p><strong>KFHU</strong> · Libby Army Airfield (Fort Huachuca)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Sudden summer monsoon storms with lightning, downbursts and dust. Moderate turbulence from the nearby Huachuca Mountains.</li>
+<li><strong>Long-term risks:</strong> Persistent drought raises wildfire risk in adjacent grasslands and scrub. Extreme temperatures strain runways and electronic equipment, and older infrastructure needs constant maintenance.</li>
+</ul>
+<p><strong>KGXF</strong> · Gila Bend Air Force Auxiliary Field</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Seasonal monsoon storms with convective turbulence, microbursts and flash flooding. Summer heat regularly exceeds 110°F, reducing lift and stressing aircraft systems.</li>
+<li><strong>Long-term risks:</strong> Persistent aridity, extreme temperature cycles and dust wear runways and avionics. Periodic wildfires in the surrounding areas reduce visibility and access.</li>
+</ul>
+<p><strong>KGYR</strong> · Phoenix Goodyear Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Sonoran Desert west of Phoenix: extreme heat, high density altitude and seasonal dust intrusions that reduce visibility. Shared airspace with nearby Luke AFB.</li>
+<li><strong>Long-term risks:</strong> Ultraviolet light, temperature extremes and dust wear airfield infrastructure and avionics. Intermittent high winds and wildfire smoke from the surrounding desert and mountains.</li>
+</ul>
+<p><strong>KIWA</strong> · Phoenix–Mesa Gateway Airport (former Williams AFB)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Monsoon storms bring sudden microburst winds and localized flooding on the flat airfield. Summer dust storms from desert and farmland reduce visibility. Occasional fog on winter mornings.</li>
+<li><strong>Long-term risks:</strong> Summer heat, often above 110°F, affects infrastructure and can restrict flights through high density altitude. Ozone and dust degrade air quality, and water availability is a concern as Phoenix grows.</li>
+</ul>
+<p><strong>KLUF</strong> · Luke Air Force Base</p>
+<ul>
+<li><strong>Short-term hazards:</strong> High-intensity dust storms (haboobs) from the Sonoran Desert west of Phoenix cause sudden loss of visibility and airborne particulates. Monsoon storms from July to September bring convective bursts, lightning and runway washout risk.</li>
+<li><strong>Long-term risks:</strong> Persistent drought and temperatures above 115°F stress avionics, cooling systems and airfield power. Strain on the regional power grid is a further concern.</li>
+</ul>
+<p><strong>KNYL</strong> · Marine Corps Air Station Yuma</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Arid climate with extreme heat, often above 100°F (38°C), affecting people and equipment. Dust storms reduce visibility.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought raises wildfire risk in the surrounding desert, and water scarcity affects long-term sustainability.</li>
+</ul>
+<p><strong>KPHX</strong> · Phoenix Sky Harbor International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Summer heat of 110°F+ reduces aircraft lift and engine performance, and high density altitude narrows takeoff and landing margins. Nearby terrain and urban thermal gradients increase turbulence.</li>
+<li><strong>Long-term risks:</strong> Regional drought, poor air quality and wildfires threaten infrastructure and visibility.</li>
+</ul>
+<p><strong>KPRC</strong> · Prescott Regional Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Gusty, variable afternoon southwest winds over the high-desert terrain. Localized turbulence and thermals in the warm season.</li>
+<li><strong>Long-term risks:</strong> Increasing wildfire exposure and heat events threaten access, degrade sensors and cause long periods of poor air quality. Dryness and dust raise maintenance needs.</li>
+</ul>
+<p><strong>KSAD</strong> · Safford Regional Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Strong westerly winds and seasonal dust storms rapidly reduce visibility. Summer monsoon weather brings convective turbulence, lightning and brief intense rain.</li>
+<li><strong>Long-term risks:</strong> The semi-arid location is increasingly vulnerable to wildfires and heat damage to airfield surfaces and navigation systems. Long dry periods increase wind erosion and dust.</li>
+</ul>
+<p><strong>KSDL</strong> · Scottsdale Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the northeastern Phoenix metro area: intense afternoon thermals, convective turbulence and dust events reduce visibility in the hot months.</li>
+<li><strong>Long-term risks:</strong> The Sonoran Desert climate of extreme heat, prolonged drought and strong ultraviolet light wears infrastructure and electronics. Urban growth limits room for expansion.</li>
+</ul>
+<p><strong>KTUS</strong> · Tucson International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Intense summer heat, dry convective winds and frequent dust intrusions complicate approaches and reduce visibility. Approach corridors overlap with nearby Davis–Monthan AFB.</li>
+<li><strong>Long-term risks:</strong> Heat, ultraviolet exposure and dust abrasion wear runways and airfield systems. Seasonal wildfires, intensified by drought, can disrupt flights and access.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>New Mexico (11 stations)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>KABQ</strong> · Albuquerque International Sunport (Kirtland AFB) · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> Summer monsoon thunderstorms with lightning, microbursts and flash floods in arroyos. Occasional dust storms (haboobs) reduce visibility.</li>
+<li><strong>Long-term risks:</strong> Extreme heat strains roads and runways. Drought and water scarcity affect utilities and firefighting resources. Inversion layers trap pollutants.</li>
+</ul>
+<p><strong>KCNM</strong> · Cavern City Air Terminal</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Rapid weather shifts, including low-level wind shear, convective gust fronts and dry microbursts, especially in the transition seasons. Turbulent air and desert thermals affect takeoff and landing.</li>
+<li><strong>Long-term risks:</strong> Persistent temperature extremes degrade asphalt and increase maintenance. Prolonged drought and wildfire potential threaten power reliability, fuel supply and emergency response.</li>
+</ul>
+<p><strong>KCVN</strong> · Clovis Regional Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Spring and summer convective storms with hail, lightning and microburst winds. Gusty crosswinds and low-level wind shear during frontal passages, especially for helicopters and light aircraft.</li>
+<li><strong>Long-term risks:</strong> The High Plains climate of drought, intense summer heat and winter freeze–thaw cycles wears runways and electronics. Airborne dust and wildfire smoke reduce visibility.</li>
+</ul>
+<p><strong>KCVS</strong> · Cannon Air Force Base (Clovis) · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> Sudden dryline thunderstorms near the New Mexico–Texas line, with downbursts, hail and tornadoes. Frequent wind shear and dust lofting over the open High Plains. Gusty low-level winds.</li>
+<li><strong>Long-term risks:</strong> Periodic drought intensifies dust and reduces low-level moisture, at times obscuring night skies. Extreme heat stresses engines and electronic cooling, and large temperature swings wear runways and hangars.</li>
+</ul>
+<p><strong>KDMN</strong> · Deming Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> High-desert location at 4,314 ft elevation with frequent thermal turbulence, wind shear and strong crosswinds, especially in the transition seasons and during monsoon storms.</li>
+<li><strong>Long-term risks:</strong> Ultraviolet exposure and large temperature cycles wear runways, navigation systems and power infrastructure. Regional wildfires are an intermittent threat in late summer and fall.</li>
+</ul>
+<p><strong>KHMN</strong> · Holloman Air Force Base</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Dust storms sweep in from the adjacent White Sands dunes. Thunderstorm outflows cause rapid wind shifts and sandblasting. Terrain effects from the San Andres Mountains make winds unpredictable.</li>
+<li><strong>Long-term risks:</strong> Extreme heat and aridity require special cooling for equipment. Sand encroaches constantly on facilities and runways, and drought raises wildfire risk in the surrounding ranges.</li>
+</ul>
+<p><strong>KHOB</strong> · Lea County Regional Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Rapid wind shifts during frontal passages and spring convection. Surface heating and dry thermals in the Permian Basin cause moderate turbulence and variable density altitude in peak heat.</li>
+<li><strong>Long-term risks:</strong> High temperatures and low humidity degrade runways and ground equipment. Drought brings wildfire exposure along approach corridors, affecting visibility.</li>
+</ul>
+<p><strong>KLRU</strong> · Las Cruces International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Frequent dust events as westerly winds carry sand from White Sands. Thunderstorm downbursts and dry lightning over the Organ Mountains. Occasional dense fog in the Rio Grande valley in the cooler months.</li>
+<li><strong>Long-term risks:</strong> Extreme heat waves require extra cooling for equipment. Runways wear from thermal expansion and sand scouring. Periodic drought raises wildfire risk in the desert scrub.</li>
+</ul>
+<p><strong>KROW</strong> · Roswell International Air Center</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Strong crosswinds on runways up to 13,000 ft long make approaches difficult. High-based thunderstorms and virga cause sudden downdrafts. Occasional snow and freezing fog in winter at 3,600 ft elevation.</li>
+<li><strong>Long-term risks:</strong> Heat and aridity increase variations in surface pressure that affect aircraft performance. Older infrastructure is less resilient to thermal expansion and flash-flood erosion, and drought brings more dust as vegetation thins.</li>
+</ul>
+<p><strong>KSRR</strong> · Sierra Blanca Regional Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Sudden thunderstorms with lightning and strong winds. The high elevation (6,814 ft) reduces engine performance and lengthens takeoff distances. Mountain terrain adds turbulence and downdrafts on approach and departure.</li>
+<li><strong>Long-term risks:</strong> Persistent drought in the surrounding Lincoln National Forest increases wildfire exposure, smoke and poor air quality. Large temperature swings at high altitude wear avionics and runway surfaces.</li>
+</ul>
+<p><strong>KTCS</strong> · Truth or Consequences Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Localized convection and sudden wind shifts in the Rio Grande valley complicate approaches. Sparse surroundings and minimal air traffic control infrastructure.</li>
+<li><strong>Long-term risks:</strong> Ongoing drying and large day–night temperature swings speed up runway wear. Wind-driven erosion and dust increase maintenance of engines and sensors.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Texas (11 stations)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>KCDS</strong> · Childress Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Severe thunderstorms in spring and summer bring hail, strong winds and tornadoes.</li>
+<li><strong>Long-term risks:</strong> Persistent drought increases wildfire risk, with smoke affecting visibility and air quality. Temperature extremes wear infrastructure and equipment.</li>
+</ul>
+<p><strong>KDLF</strong> · Laughlin Air Force Base (Del Rio)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Summer heat of 105–110°F raises density altitude and reduces engine efficiency. Thunderstorms along the Rio Grande produce localized flash floods, microbursts and lightning. Seasonal migratory birds pose risks at low altitude.</li>
+<li><strong>Long-term risks:</strong> Prolonged heat degrades tarmac and electronics. Falling Amistad Reservoir levels and water scarcity stress emergency infrastructure, and regional development may constrain the surrounding airspace.</li>
+</ul>
+<p><strong>KDRT</strong> · Del Rio International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Severe convective storms along the Rio Grande can cause flash floods, such as the 2021 Del Rio flood. Lightning and hail are threats to light aircraft. Low-level wind shear in the canyons near Amistad Reservoir complicates approaches.</li>
+<li><strong>Long-term risks:</strong> Heat and Gulf humidity strain cooling of aircraft and facilities. Flood risk may grow for infrastructure on low ground, while drought lowers lake levels, raising dust and reducing emergency water supply.</li>
+</ul>
+<p><strong>KELP</strong> · El Paso International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Intense spring dust storms and haboobs, with visibility near zero. Winds funneled through mountain passes can exceed 60 mph. Monsoon flash floods rapidly inundate arroyos and roads.</li>
+<li><strong>Long-term risks:</strong> Chronic drought and water stress affect cooling and firefighting. Frequent heat above 100°F strains vehicles and limits aircraft performance through high density altitude. Sand abrasion wears infrastructure.</li>
+</ul>
+<p><strong>KGDP</strong> · Guadalupe Pass Weather Station</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Intense westerly winds funneled through Guadalupe Pass, especially in the transition seasons, produce strong low-level turbulence and crosswinds.</li>
+<li><strong>Long-term risks:</strong> Windborne dust, strong ultraviolet radiation and freeze–thaw cycles degrade sensors and communications equipment. Dry spells and wildfire risk can impair ground access and interrupt data records.</li>
+</ul>
+<p><strong>KINK</strong> · Winkler County Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Abrupt frontal wind shifts, convective turbulence and desert thermals, most often in spring and fall.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought and intense heat in the Permian Basin increase wildfire risk and wear runways and avionics. Intermittent dust storms reduce visibility and degrade equipment.</li>
+</ul>
+<p><strong>KLBB</strong> · Lubbock Preston Smith International Airport · <em>anchor site</em></p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the southern Plains’ Tornado Alley: spring severe thunderstorms with large hail and tornado risk. High Plains winds raise dust storms, such as the well-known 2011 Lubbock haboob. Occasional winter ice storms coat runways.</li>
+<li><strong>Long-term risks:</strong> Drought cycles intensify dust and sandblasting. Swings from 100°F summers to winter snow complicate maintenance, and nearby wind farms may slightly alter low-level winds.</li>
+</ul>
+<p><strong>KMAF</strong> · Midland International Air and Space Port</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Dry thunderstorms with lightning, and dust storms (haboobs) from nearby playas. Wind gusts of more than 50–60 mph have been recorded, challenging aircraft on approach.</li>
+<li><strong>Long-term risks:</strong> Longer seasons of 100°F+ heat stress tarmac and fuel storage. Increasing dust can infiltrate engines, and thermal stress ages rail lines and roads.</li>
+</ul>
+<p><strong>KMRF</strong> · Marfa Municipal Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> High winds in the region can gust to 60–100 mph, affecting approaches. Severe thunderstorms form over the mountains and cause flash floods in arroyos. Occasional nighttime radiation fog in low basins.</li>
+<li><strong>Long-term risks:</strong> Water scarcity in this desert region could strain emergency services if conditions dry further. Heat and strong UV at 4,800 ft elevation degrade avionics, and limited infrastructure means flood washouts or heat damage can cut off the field.</li>
+</ul>
+<p><strong>KREE</strong> · Reese Technology Center (former Reese AFB)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Strong frontal wind shifts and dryline activity, especially in spring, cause turbulence and crosswinds. Dust events are common and occasionally limit visibility.</li>
+<li><strong>Long-term risks:</strong> High temperature variability and dust in the semi-arid climate wear ground infrastructure, instruments and power systems. Periodic drought and wildfires can disrupt access routes.</li>
+</ul>
+<p><strong>KSJT</strong> · San Angelo Regional Airport (Mathis Field)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Spring severe thunderstorms with large hail and occasional tornadoes. Flash floods from intense downpours. Wind shear over the open plains.</li>
+<li><strong>Long-term risks:</strong> Heat waves and drought degrade runways and strain cooling for electronics. Dust from West Texas deserts affects air quality, and wildfires threaten the surrounding grasslands.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Nevada (1 station)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>KLSV</strong> · Nellis Air Force Base</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Summer heat of 110–115°F in the Las Vegas Valley raises density altitude and heat stress. Outflows from distant thunderstorms create sudden dust storms. Rare monsoon flash floods can inundate parts of the valley, including access roads.</li>
+<li><strong>Long-term risks:</strong> Regional water scarcity could affect power and cooling. Urban growth amplifies heat and can channel floodwaters, and Mojave dust is a chronic problem for sensors and engines.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Northern Mexico (14 stations)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>MMAN</strong> · Del Norte International Airport (Monterrey)</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the Sierra Madre Oriental foothills: terrain-driven turbulence, rapid cloud formation and crosswinds. Intense summer convection and flash flooding in the surrounding valleys.</li>
+<li><strong>Long-term risks:</strong> Recurrent heat, air pollution and dust from surrounding industrial areas. Rugged terrain and complex weather constrain the durability of infrastructure.</li>
+</ul>
+<p><strong>MMCN</strong> · Ciudad Obregón International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Intense convective storms, localized flooding and low visibility during the summer monsoon. Coastal heat meeting inland desert air causes turbulence.</li>
+<li><strong>Long-term risks:</strong> Shifts in Sonora’s rainfall and temperature patterns increase stress on airfield infrastructure and make maintenance less predictable.</li>
+</ul>
+<p><strong>MMCS</strong> · Ciudad Juárez International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the northern Chihuahuan Desert: regular dust storms, thermal turbulence and convective wind shifts, especially in spring before the monsoon. The nearby Sierra de Juárez adds terrain-driven wind variability.</li>
+<li><strong>Long-term risks:</strong> Persistent aridity, temperature extremes and dust wear sensors and airfield surfaces.</li>
+</ul>
+<p><strong>MMCU</strong> · Chihuahua International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> On the Chihuahuan Plateau at 4,500 ft elevation: sudden thermal turbulence, strong westerly crosswinds and high density altitude. Seasonal dust events and dry frontal passages rapidly reduce visibility.</li>
+<li><strong>Long-term risks:</strong> The semi-arid climate brings prolonged drought, surface erosion and dust. Strong ultraviolet light and large daily temperature swings, typical of desert plateaus, add to the wear.</li>
+</ul>
+<p><strong>MMGM</strong> · Guaymas International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Gulf of California moisture meeting inland desert heat brings abrupt changes in visibility, low stratus and coastal turbulence, especially in the monsoon and transition seasons.</li>
+<li><strong>Long-term risks:</strong> Humidity, strong ultraviolet light, salt air and temperature cycling along the coast corrode avionics and exposed equipment.</li>
+</ul>
+<p><strong>MMHO</strong> · Hermosillo International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In an inland basin of the Sonoran Desert: extreme summer heat, thermal updrafts and convective turbulence. Afternoon gust fronts and dust storms reduce visibility, especially in the dry season before the monsoon.</li>
+<li><strong>Long-term risks:</strong> High temperatures, seasonal drought and dry lightning bring long-term wildfire risk and wear on electronics. Arid foothills nearby and episodic flooding in the Yaqui River basin can affect ground travel.</li>
+</ul>
+<p><strong>MMLM</strong> · Los Mochis International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In a transition zone between tropical and arid climates: seasonal convective storms, flash flooding and turbulent wind shifts driven by Gulf moisture and inland terrain.</li>
+<li><strong>Long-term risks:</strong> Heavier rainfall, coastal erosion and limited drainage raise the risk of waterlogged runways. Persistent humidity and salt degrade avionics and sensors.</li>
+</ul>
+<p><strong>MMLT</strong> · Loreto International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> A coastal desert site: strong contrasts between inland heat and Gulf moisture produce convective turbulence, wind shear and brief drops in visibility, especially during the summer monsoon.</li>
+<li><strong>Long-term risks:</strong> Persistent heat, ultraviolet light and salt air from the Gulf corrode equipment. Limited maintenance facilities on site.</li>
+</ul>
+<p><strong>MMML</strong> · Mexicali International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the lower Colorado River valley at the edge of the Sonoran Desert: intense thermal convection, gusty afternoon winds and sudden dust incursions, peaking in the spring and summer before the monsoon.</li>
+<li><strong>Long-term risks:</strong> The arid climate and frequent dust events degrade sensors and avionics. Heat often above 45°C (113°F) stresses airfield infrastructure, energy systems and electronics.</li>
+</ul>
+<p><strong>MMMV</strong> · Monclova International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In a semi-arid basin near the Sierra Madre Oriental: sudden weather shifts, dust storms and turbulent wind shear, especially in spring and early summer.</li>
+<li><strong>Long-term risks:</strong> Prolonged drought, strong ultraviolet light and dust buildup degrade avionics, communications hardware and optics.</li>
+</ul>
+<p><strong>MMMY</strong> · Monterrey International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Intense convective weather in spring and summer, including severe thunderstorms, hail and microbursts. Surrounding mountain ranges complicate approaches.</li>
+<li><strong>Long-term risks:</strong> Extended heat events and increasing wildfire activity in the Sierra Madre Oriental foothills. Heat stress affects avionics and airfield reliability.</li>
+</ul>
+<p><strong>MMPG</strong> · Piedras Negras International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In a semi-arid river basin: rapid temperature shifts, gusty surface winds and seasonal dust events reduce visibility. Flow over nearby terrain adds crosswinds during summer convection.</li>
+<li><strong>Long-term risks:</strong> Extended drought and temperature extremes stress ground infrastructure. Dust, thermal fatigue and ultraviolet light shorten the life of runway surfaces.</li>
+</ul>
+<p><strong>MMTC</strong> · Torreón International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> In the arid interior of Coahuila: extreme summer heat and convective turbulence. Blowing dust in dry spells reduces visibility.</li>
+<li><strong>Long-term risks:</strong> Persistent drought increases wildfire risk and stresses infrastructure. Large temperature variations and dust degrade sensors and surface materials.</li>
+</ul>
+<p><strong>MMTJ</strong> · Tijuana International Airport</p>
+<ul>
+<li><strong>Short-term hazards:</strong> Mountainous terrain and rapid shifts between Pacific marine layers and inland thermal troughs bring crosswinds, turbulence and low visibility.</li>
+<li><strong>Long-term risks:</strong> The Tijuana–San Diego urban corridor is exposed to chronic haze, heat stress and wildfire smoke.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>Station-level forecasts and skill scores will be added here after they have been reviewed with the 14th Weather Squadron. Planned content:</p>
+<ul>
+<li>Skill of daily forecasts at each anchor site at lead times of 1 to 14 days, compared with persistence, climatology and autoregressive baselines.</li>
+<li>Skill of weekly and monthly means at longer lead times.</li>
+<li>How much the ERA5 and Koopman-index predictors add to forecasts that use the station records alone.</li>
+<li>Skill aggregated over the full network, and how it varies from station to station.</li>
+<li>Station conditions given the phase of the ENSO and MJO indices.</li>
+<li>A case study of a hazard event in the region (event E2 of the <a href="../../demonstration/stations/experiment.html#event-case-studies">experiment design</a>).</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-cayan1999" class="csl-entry" role="listitem">
+Cayan, D. R., K. T. Redmond, and L. G. Riddle. 1999. <span>“<span>ENSO</span> and Hydrologic Extremes in the Western <span>United States</span>.”</span> <em>Journal of Climate</em> 12 (9): 2881–93. <a href="https://doi.org/10.1175/1520-0442(1999)012<2881:EAHEIT>2.0.CO;2">https://doi.org/10.1175/1520-0442(1999)012&lt;2881:EAHEIT&gt;2.0.CO;2</a>.
+</div>
+<div id="ref-lorenz2006" class="csl-entry" role="listitem">
+Lorenz, D. J., and D. L. Hartmann. 2006. <span>“The Effect of the <span>MJO</span> on the <span>North American</span> Monsoon.”</span> <em>Journal of Climate</em> 19: 333–43.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DoW ESTCP project NH24-8392. See <a href="../../funding.html">Resources</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a></p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
